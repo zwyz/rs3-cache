@@ -1,0 +1,4 @@
+[command,video_advert_force_remove]
+[command,video_advert_play](int $x1)(boolean)
+[command,video_advert_allow_skip]
+[command,video_advert_has_finished]()(boolean)

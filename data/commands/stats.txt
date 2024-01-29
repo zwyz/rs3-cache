@@ -1,0 +1,5 @@
+[command,stat](stat $x1)(int)
+[command,stat_base](stat $x1)(int)
+[command,stat_visible_xp](stat $x1)(int)
+[command,stat_base_actual](stat $x1)(int)
+[command,stat_visible_xp_actual](stat $x1)(int)

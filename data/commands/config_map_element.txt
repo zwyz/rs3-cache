@@ -1,0 +1,5 @@
+[command,mec_text](mapelement $x1)(string)
+[command,mec_sprite](mapelement $x1)(graphic)
+[command,mec_textsize](mapelement $x1)(int)
+[command,mec_category](mapelement $x1)(category)
+[command,mec_param]todo

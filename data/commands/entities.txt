@@ -1,0 +1,54 @@
+[command,get_entity_screen_position](int $x1)(int,int,int)
+[command,get_loc_screen_position](int $x1)(int,int,int)
+[command,get_obj_screen_position](int $x1)(int,int,int)
+[command,get_entity_screen_position_withoffset](int $x1,coordfine $x2)(int,int,int)
+[command,get_entity_overlay_height]()(int)
+[command,get_loc_overlay_height]()(int)
+[command,get_obj_overlay_height]()(int)
+[command,get_entity_bounding_box]()(boolean,int,int,int,int)
+[command,get_loc_bounding_box]()(boolean,int,int,int,int)
+[command,get_obj_bounding_box]()(boolean,int,int,int,int)
+[command,get_entity_bounding_box_withoffset](int $x1,coordfine $x2)(boolean,int,int,int,int)
+[command,is_targeted_entity]()(boolean)
+[command,get_entity_say]()(string)
+[command,get_displayname_withextras]()(string)
+[command,movescripted](movespeed $x1,coordgrid $x2)
+[command,getgridcoordrelativetocamera](int $x1)(coordgrid)
+[command,setwalkmarker](graphic $x1,model $x2)
+[command,unknown_command_46]()(boolean)
+[command,unknown_command_47]()(boolean)
+[command,highlight_set_npc_show_as_important](int $x1)
+[command,highlight_set_loc_show_as_important](int $x1)
+[command,unknown_command_52](int $x1,int $x2)(boolean)
+[command,loc_name]()(string)
+[command,objstack_find](coordgrid $x1,int $x2,int $x3,int $x4)(boolean)
+[command,objstack_findnext]()(boolean)
+[command,objstack_size]()(int)
+[command,objstack_coord]()(coordgrid)
+[command,objstack_count](int $slot)(int)
+[command,objstack_type](int $slot)(obj)
+[command,objstack_name](int $slot)(string)
+[command,objstack_triggerop](int $slot,int $op)(boolean)
+[command,unknown_command_48](boolean $x1)
+[command,unknown_command_49]()(boolean)
+[command,unknown_command_51]()(boolean)
+[command,unknown_command_50](boolean $x1)
+[command,highlight_get_category_mode](int $x1)(int)
+[command,highlight_set_category_mode](int $x1,int $x2)
+[command,highlight_get_category_default_colour](int $x1)(int,int,int)
+[command,highlight_get_category_colour](int $x1)(int,int,int)
+[command,highlight_set_category_colour](int $x1,int $x2,int $x3,int $x4)
+[command,unknown_command_63]todo signature
+[command,highlight_get_category_scale]todo signature
+[command,highlight_set_category_scale]todo signature
+[command,highlight_get_category_default_mode]todo signature
+[command,highlight_get_category_default_scale]todo signature
+[command,highlight_reset_category_to_default]todo signature
+[command,highlight_set_localplayer_silhouette_mode]todo signature
+[command,unknown_command_64]todo signature
+[command,unknown_command_65]todo signature
+[command,unknown_command_66]todo signature
+[command,highlight_set_base_alpha]todo signature
+[command,unknown_command_67]todo signature
+[command,unknown_command_68]todo signature
+[command,unknown_command_69]todo signature

@@ -1,0 +1,7 @@
+[command,get_npc_stat](npc_stat $x1)(int,int)
+[command,get_npc_name]()(string)
+[command,get_npc_vislevel]()(int)
+[command,is_npc_active]()(boolean)
+[command,is_npc_visible]()(boolean)
+[command,npc_type]()(npc)
+[command,npc_find](int $x1)(npc)

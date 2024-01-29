@@ -1,0 +1,34 @@
+[command,if_close]
+[command,if_opensubclient](component $x1,interface $x2)
+[command,if_closesubclient](component $x1)
+[command,if_hassub](component $x1)(boolean)
+[command,if_hassubmodal](component $x1,interface $x2)(boolean)
+[command,if_hassuboverlay](component $x1,overlayinterface $x2)(boolean)
+[command,if_get_gamescreen]()(component)
+[command,if_set_gamescreen_enabled](boolean $x1)
+[command,setup_messagebox](int $x1,int $x2,int $x3,int $x4,int $x5,int $x6,graphic $x7,graphic $x8,graphic $x9,int $x10,fontmetrics $x11)
+[command,get_currentcursor]()(cursor)
+[command,force_interface_drag]
+[command,cancel_interface_drag]
+[command,unknown_command_21]
+[command,unknown_command_22]()(boolean)
+[command,unknown_command_23]()(boolean)
+[command,targetmode_active]()(boolean)
+[command,targetmode_cancel]
+[command,unknown_command_9](int $x1,int $x2)
+[command,unknown_command_10](int $x1,int $x2)
+[command,unknown_command_11]()(int,int)
+[command,unknown_command_12]()(int)
+[command,unknown_command_13]()(int,int,int)
+[command,unknown_command_14](int $x1)
+[command,unknown_command_15]()(int,int,int,int)
+[command,unknown_command_16](int $x1,int $x2,int $x3,int $x4)
+[command,unknown_command_17]
+[command,unknown_command_24](int $x1,int $x2,int $x3,int $x4)
+[command,unknown_command_25]
+[command,unknown_command_26](boolean $x1)
+[command,interface_setpickingradius](int $x1)
+[command,interface_getpickingradius]()(int)
+[command,unknown_command_40](int $x1)
+[command,window_getinsets]()(int,int,int,int)
+[command,console_enablesnow]

@@ -1,0 +1,2 @@
+[command,writeconsole](string $x1)
+[command,docheat](string $x1)

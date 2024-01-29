@@ -1,0 +1,4 @@
+[command,openurl_nologin](string $x1,boolean $x2)
+[command,openurl](string $x1,string $x2,boolean $x3)
+[command,openurlraw](string $x1,boolean $x2)
+[command,openurl_shim](string $x1,string $x2,string $x3,boolean $x4)

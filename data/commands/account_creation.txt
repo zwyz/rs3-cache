@@ -1,0 +1,19 @@
+[command,notify_accountcreated]
+[command,notify_accountcreatestarted]
+[command,create_get_email]()(string)
+[command,create_reply]()(int)
+[command,create_email_validate_reply]()(int)
+[command,create_connect_reply]()(int)
+[command,create_availablerequest](string $x1)
+[command,create_connectrequest]
+[command,create_createrequest](string $x1,string $x2,int $x3,boolean $x4,string $x5)
+[command,create_setunder13]
+[command,create_step_reached](int $x1)
+[command,create_under13]()(boolean)
+[command,create_name_availablerequest](string $x1)
+[command,create_suggest_name_request]
+[command,create_suggest_name_reply]()(int,string)
+[command,create_name_validate_reply]()(int)
+[command,email_validation_submit_code](string $x1)
+[command,email_validation_change_address](string $x1,string $x2)
+[command,email_validation_add_new_address](string $x1,boolean $x2,boolean $x3,boolean $x4)

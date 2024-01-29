@@ -1,0 +1,16 @@
+[command,db_listall](dbtable $x1)(int)
+[command,db_find]todo
+[command,db_find_with_count]todo
+[command,db_findnext]()(dbrow)
+[command,db_getfield]todo
+[command,db_getfieldcount](dbrow $x1,dbcolumn $x2)(int)
+[command,db_find_refine]todo
+[command,db_find_get](int $x1)(dbrow)
+[command,db_getrowtable](dbrow $x1)(dbtable)
+[command,db_filter_find](int $x1,dbcolumn $x2,boolean $x3,int $x4,int $x5)(int)
+[command,db_filter_value](dbcolumn $x1,int $x2,int $x3,int $x4)(int)
+[command,db_filter_unknown](int $x1)(int)
+[command,db_filter_combine](int $x1,int $x2)(int)
+[command,unknown_command_62]todo signature
+[command,db_filter_substring](dbcolumn $x1,string $x2,int $x3)(int)
+[command,db_filter_column](dbcolumn $x1,dbcolumn $x2,int $op)(int)

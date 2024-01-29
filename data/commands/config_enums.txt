@@ -1,0 +1,9 @@
+[command,enum_string]todo
+[command,enum]todo
+[command,enum_hasoutput]todo
+[command,enum_hasoutput_string](enum $x1,string $x2)(boolean)
+[command,enum_getoutputcount](enum $x1)(int)
+[command,enum_getreversecount]todo
+[command,enum_getreversecount_string](enum $x1, string $x2)(int)
+[command,enum_getreverseindex]todo
+[command,enum_getreverseindex_string]todo

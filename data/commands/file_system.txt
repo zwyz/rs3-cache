@@ -1,0 +1,8 @@
+[command,preload_percent]()(int)
+[command,preload_progress]()(int)
+[command,preload_download_complete]()(boolean)
+[command,preload_download_downloadedsize]()(int)
+[command,preload_download_remainingsize]()(int)
+[command,preload_download_totalsize]()(int)
+[command,preload_download_rate]()(int)
+[command,unknown_command_38](boolean $x1)

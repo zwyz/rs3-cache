@@ -1,0 +1,8 @@
+[command,resume_clanforumqfcdialog](string $x1)
+[command,resume_countdialog](string $x1)
+[command,resume_countdialog_long](string $x1)
+[command,resume_hsldialog](int $x1)
+[command,resume_namedialog](string $x1)
+[command,resume_objdialog](obj $x1)
+[command,resume_stringdialog](string $x1)
+[command,abort_dialog]

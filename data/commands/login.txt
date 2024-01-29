@@ -1,0 +1,56 @@
+[command,login_resetreply]
+[command,login_last_transfer_reply]()(int,int,int)
+[command,login_disallowresult]()(int)
+[command,login_disallowtrigger]()(int)
+[command,login_reply]()(int)
+[command,login_hoptime]()(int)
+[command,login_request](string $x1,string $x2)
+[command,lobby_entergame](string $x1,boolean $x2)
+[command,lobby_entergamereply]()(int)
+[command,lobby_enterlobby](string $x1,string $x2,string $x3,boolean $x4)
+[command,lobby_enterlobby_sso](string $x1,boolean $x2)
+[command,sso_logout]
+[command,shop_open](int $x1)
+[command,shop_opencategories](int $x1,int $x2)
+[command,shop_purchaseitem](string $x1)
+[command,shop_purchaseitemstatus]()(int)
+[command,shop_requestdata]
+[command,shop_requestdatastatus]()(int)
+[command,shop_getcategorycount]()(int)
+[command,shop_getcategoryid](int $x1)(int)
+[command,shop_getcategorynameforindex](int $x1)(string)
+[command,unknown_command_0](int $x1)(string)
+[command,shop_getindexforcategoryid](int $x1)(int)
+[command,shop_getindexforcategoryname](string $x1)(int)
+[command,shop_getcategorydescription](int $x1)(string)
+[command,shop_getproductcount](int $x1)(int)
+[command,shop_isproductavailable](int $x1,int $x2)(int)
+[command,shop_isproductrecommended](int $x1,int $x2)(int)
+[command,shop_getproductdetails](int $x1,int $x2)(string,string,string,string,string,string,int,string)
+[command,sso_available]()(boolean)
+[command,sso_displayname]()(string)
+[command,lobby_leavelobby]
+[command,lobby_enterlobbyreply]()(int)
+[command,login_ban_duration]()(int)
+[command,login_cancel]
+[command,login_continue]
+[command,login_inprogress]()(boolean)
+[command,login_queue_position]()(int)
+[command,login_request_social_network](int $x1,string $x2,int $x3)
+[command,lobby_enterlobby_social_network](social_network $x1,string $x2,boolean $x3,int $x4)
+[command,federated_login](social_network $x1,int $x2)
+[command,federated_login_status]()(int)
+[command,openstore](int $x1,string $x2)
+[command,resend_uid_passport_request]
+[command,affiliate]()(int)
+[command,unknown_command_41]()(int)
+[command,shop_applypendingtransactions]
+[command,marketing_init]
+[command,marketing_sendevent](string $x1)
+[command,marketing_initanalytics]
+[command,marketing_sendanalyticsevent](string $x1)
+[command,marketing_initattribution]
+[command,marketing_sendattributionevent](string $x1)
+[command,login_accountappeal](string $x1)(int)
+[command,logout_getreason]()(int)
+[command,unknown_command_42]()(boolean)

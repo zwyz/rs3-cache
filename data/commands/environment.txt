@@ -1,0 +1,8 @@
+[command,os_ismac]()(boolean)
+[command,os_iswindows]()(boolean)
+[command,os_islinux]()(boolean)
+[command,os_isandroid]()(boolean)
+[command,os_isios]()(boolean)
+[command,os_physicalmemorysize]()(int)
+[command,os_driver_outdated]()(boolean)
+[command,os_driver_vendor]()(int)

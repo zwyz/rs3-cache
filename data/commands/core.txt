@@ -1,0 +1,43 @@
+[command,push_constant_int]()(int)
+[command,push_var]todo
+[command,pop_var]todo
+[command,push_constant_string]todo
+[command,branch]
+[command,branch_not](unknown_int $x1, unknown_int $x2)
+[command,branch_equals](unknown_int $x1, unknown_int $x2)
+[command,branch_less_than](int $x1, int $x2)
+[command,branch_greater_than](int $x1, int $x2)
+[command,branch_less_than_or_equals](int $x1, int $x2)
+[command,branch_greater_than_or_equals](int $x1, int $x2)
+[command,return]todo
+[command,push_varbit]()(int)
+[command,pop_varbit](int $x1)
+[command,push_int_local]()(unknown_int)
+[command,pop_int_local](unknown_int $x1)
+[command,push_string_local]()(unknown_object)
+[command,pop_string_local](unknown_object $x1)
+[command,join_string]todo
+[command,pop_int_discard]todo
+[command,pop_string_discard]todo
+[command,gosub_with_params]todo
+[command,define_array](int $x1)
+[command,push_array_int](int $x1)(unknown_int)
+[command,pop_array_int](int $x1, unknown_int $x2)
+[command,switch](unknown_int $x1)
+[command,push_long_constant]()(long)
+[command,pop_long_discard]todo
+[command,push_long_local]()(unknown_long)
+[command,pop_long_local](unknown_long $x1)
+[command,long_branch_not](unknown_long $x1, unknown_long $x2)
+[command,long_branch_equals](unknown_long $x1, unknown_long $x2)
+[command,long_branch_less_than](long $x1, long $x2)
+[command,long_branch_greater_than](long $x1, long $x2)
+[command,long_branch_less_than_or_equals](long $x1, long $x2)
+[command,long_branch_greater_than_or_equals](long $x1, long $x2)
+[command,push_array_int_leave_index_on_stack]todo
+[command,push_array_int_and_index]todo
+[command,pop_array_int_leave_value_on_stack]todo
+[command,branch_if_true]todo
+[command,branch_if_false]todo
+[command,opcount]()(int)
+[command,var_reference_get](var_reference_int $x1)(int)

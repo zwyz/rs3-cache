@@ -1,0 +1,9 @@
+[command,cutscene2d_play](cutscene2d $x1)
+[command,unknown_command_55](cutscene2d $x1)
+[command,unknown_command_56]
+[command,unknown_command_57]
+[command,cutscene2d_stop](int $x1)
+[command,unknown_command_58](int $x1,int $x2)
+[command,unknown_command_59](string $x1)(int)
+[command,cutscene2d_setplaybackparam](int $x1,cutscene2d $x2,int $x3)
+[command,cutscene2d_getplaybackparam](int $x1,cutscene2d $x2)(int)
