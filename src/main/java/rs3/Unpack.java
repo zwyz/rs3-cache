@@ -230,7 +230,7 @@ public class Unpack {
         unpackConfigGroup(2, 66, (id, data) -> VarUnpacker.unpack(VarDomain.CLAN, id, data), path.resolve("dump.varclan"));
         unpackConfigGroup(2, 67, (id, data) -> VarUnpacker.unpack(VarDomain.CLAN_SETTING, id, data), path.resolve("dump.varclansetting"));
         unpackConfigGroup(2, 68, (id, data) -> VarUnpacker.unpack(VarDomain.CONTROLLER, id, data), path.resolve("dump.varcontroller")); // client ignores
-        unpackConfigGroup(2, 75, (id, data) -> VarUnpacker.unpack(VarDomain.GLOBAL, id, data), path.resolve("dump.varglobal")); // client ignores
+        unpackConfigGroup(2, 75, (id, data) -> VarUnpacker.unpack(VarDomain.SHARED, id, data), path.resolve("dump.varshared")); // client ignores
         unpackConfigGroup(2, 80, (id, data) -> VarUnpacker.unpack(VarDomain.PLAYER_GROUP, id, data), path.resolve("dump.varplayergroup"));
         unpackConfigGroup(2, 69, VarBitUnpacker::unpack, path.resolve("dump.varbit"));
         unpackConfigGroup(2, 11, ParamUnpacker::unpack, path.resolve("dump.param"));

@@ -11,7 +11,7 @@ public enum VarDomain {
     CLAN_SETTING(7),
     CONTROLLER(8),
     PLAYER_GROUP(9),
-    GLOBAL(10),
+    SHARED(10),
     ;
 
     public final int id;
@@ -22,7 +22,7 @@ public enum VarDomain {
 
     public static VarDomain byID(int id) {
         for (var domain : values()) {
-            if (domain.id==id) {
+            if (domain.id == id) {
                 return domain;
             }
         }
