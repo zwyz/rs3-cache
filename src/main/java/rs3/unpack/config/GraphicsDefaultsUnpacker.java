@@ -115,6 +115,7 @@ public class GraphicsDefaultsUnpacker {
             case 26 -> lines.add("objnumcolourb=0x" + Integer.toHexString(packet.g4s()));
             case 27 -> lines.add("objnumcolourt=0x" + Integer.toHexString(packet.g4s()));
             case 28 -> lines.add("objnumcolourq=0x" + Integer.toHexString(packet.g4s()));
+            case 29 -> lines.add("unknown29=" + packet.g4s() + "," + packet.g4s());
 
             default -> throw new IllegalStateException("unknown opcode");
         }

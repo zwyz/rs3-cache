@@ -42,28 +42,19 @@ public class Unpack {
     public static void main(String[] args) throws IOException {
         var root = Path.of("unpacked");
 
-        if (true) {
-            unpackArchiveTransformed(62, b -> GSON.toJson(AnimatorController.decode(new Packet(b))), root.resolve("animators"), ".json");
-            return;
-        }
-
         unpackConfig(root.resolve("scripts"));
         unpackConfigGroup(23, 0, MapAreaUnpacker::unpack, root.resolve("scripts/dump.wma")); // worldmapdata details
-//        unpackConfigGroup(42, 0, MapLabelUnpacker::unpack, root.resolve("scripts/dump.mwl")); // worldmaplabels
         unpackDefaults(root.resolve("defaults"));
         unpackScripts(12, root.resolve("scripts/dump.cs2"));
         unpackConfigArchive(3, 16, InterfaceUnpacker::unpack, root.resolve("scripts/dump.if3"));
         unpackConfigArchive(60, 0, StylesheetUnpacker::unpack, root.resolve("scripts/dump.stylesheet"));
-
         unpackConfigArchive(26, 0, MaterialUnpacker::unpack, root.resolve("scripts/dump.material"));
-//        unpackArchive(58, root.resolve("unknown58"), ".unknown58"); // todo
-//        unpackArchive(62, root.resolve("unknown62"), ".unknown62"); // todo
-
 //        iterateArchive(8, SpriteUnpacker::unpack);
 //        iterateArchive(54, TextureUnpacker::unpack);
         unpackArchive(10, root.resolve("binary"), ".dat");
         unpackArchive(59, root.resolve("ttf"), ".ttf");
         unpackArchiveTransformed(61, VFXUnpacker::unpack, root.resolve("vfx"), ".json");
+        unpackArchiveTransformed(62, b -> GSON.toJson(AnimatorController.decode(new Packet(b))), root.resolve("animators"), ".json");
         unpackGroupTransformed(65, 0, b -> GSON.toJson(new AnimCurve(new Packet(b))), root.resolve("uianimcurve"), ".json");
         unpackGroupTransformed(65, 1, b -> GSON.toJson(new Anim(new Packet(b))), root.resolve("uianim"), ".json");
         unpackArchiveTransformed(66, b -> GSON.toJson(new Cutscene2D(new Packet(b))), root.resolve("cutscene2d"), ".json");
