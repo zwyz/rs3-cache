@@ -38,7 +38,8 @@ public class IDKUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; ++i) {
-                    lines.add("recol=" + packet.g2() + "," + packet.g2());
+                    lines.add("recol" + (i + 1) + "s=" + packet.g2());
+                    lines.add("recol" + (i + 1) + "d=" + packet.g2());
                 }
             }
 
@@ -46,7 +47,8 @@ public class IDKUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; ++i) {
-                    lines.add("retex=" + packet.g2() + "," + packet.g2());
+                    lines.add("retex" + (i + 1) + "s=" + Unpacker.format(Type.MATERIAL, packet.g2()));
+                    lines.add("retex" + (i + 1) + "d=" + Unpacker.format(Type.MATERIAL, packet.g2()));
                 }
             }
 

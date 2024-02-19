@@ -2,7 +2,6 @@ package rs3.unpack.config;
 
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
-import rs3.unpack.VarDomain;
 import rs3.util.Packet;
 
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ public class QuestUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("progressvarp=" + Unpacker.formatVar(VarDomain.PLAYER, packet.g2()) + "," + packet.g4s() + "," + packet.g4s());
+                    lines.add("progressvarp=" + Unpacker.format(Type.VAR_PLAYER, packet.g2()) + "," + packet.g4s() + "," + packet.g4s());
                 }
             }
 
@@ -38,7 +37,7 @@ public class QuestUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("progressvarbit=" + Unpacker.formatVarBit(packet.g2()) + "," + packet.g4s() + "," + packet.g4s());
+                    lines.add("progressvarbit=" + Unpacker.format(Type.VARBIT, packet.g2()) + "," + packet.g4s() + "," + packet.g4s());
                 }
             }
 
@@ -81,7 +80,7 @@ public class QuestUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("varpreq=" + Unpacker.formatVar(VarDomain.PLAYER, packet.g4s()) + "," + packet.g4s() + "," + packet.g4s() + "," + packet.gjstr());
+                    lines.add("varpreq=" + Unpacker.format(Type.VAR_PLAYER, packet.g4s()) + "," + packet.g4s() + "," + packet.g4s() + "," + packet.gjstr());
                 }
             }
 
@@ -89,7 +88,7 @@ public class QuestUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("varbitreq=" + Unpacker.formatVarBit(packet.g4s()) + "," + packet.g4s() + "," + packet.g4s() + "," + packet.gjstr());
+                    lines.add("varbitreq=" + Unpacker.format(Type.VARBIT, packet.g4s()) + "," + packet.g4s() + "," + packet.g4s() + "," + packet.gjstr());
                 }
             }
 

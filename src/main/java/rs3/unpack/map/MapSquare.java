@@ -13,10 +13,6 @@ public class MapSquare {
     private Tile[][][] tiles;
 
     public MapSquare(Map<Integer, byte[]> files) {
-        if (files.containsKey(5)) {
-            decodeFloor(new Packet(files.get(5)));
-        }
-
         if (files.containsKey(6)) {
             environment = new Environment(new Packet(files.get(6)));
         }

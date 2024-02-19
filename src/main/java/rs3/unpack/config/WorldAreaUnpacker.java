@@ -24,8 +24,22 @@ public class WorldAreaUnpacker {
 
             case 2 -> lines.add("colour=" + Integer.toHexString(packet.g3()));
             case 3 -> lines.add("impostorsquare=" + Unpacker.format(Type.COORDGRID, packet.g4s()) + "," + Unpacker.format(Type.COORDGRID, packet.g4s()));
-            case 4 -> lines.add("impostorzone=" + Unpacker.format(Type.COORDGRID, packet.g4s()) + "," + Unpacker.formatTemplateZone(packet.g4s()));
+            case 4 -> lines.add("impostorzone=" + Unpacker.format(Type.COORDGRID, packet.g4s()) + "," + formatTemplateZone(packet.g4s()));
             default -> throw new IllegalStateException("unknown opcode");
         }
+    }
+
+    public static String formatTemplateZone(int value) {
+        if (value >>> 26 != 0) {
+            throw new IllegalStateException("invalid template zone " + value);
+        }
+
+        var level = (value >> 24) & 0x3;
+        var x = ((value >> 14) & 0x3ff) * 8;
+        var z = ((value >> 3) & 0x7ff) * 8;
+        var angle = (value >> 1) & 0x3;
+        var unknown = value & 1;
+
+        return level + "_" + (x / 64) + "_" + (z / 64) + "_" + (x % 64) + "_" + (z % 64) + "," + angle + "," + unknown;
     }
 }

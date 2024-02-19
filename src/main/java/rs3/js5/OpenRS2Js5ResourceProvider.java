@@ -28,7 +28,7 @@ public class OpenRS2Js5ResourceProvider implements Js5ResourceProvider {
             var response = HTTP.send(HttpRequest.newBuilder(URI.create("https://archive.openrs2.org/caches/" + scope + "/" + id + "/archives/" + archive + "/groups/" + group + ".dat")).build(), HttpResponse.BodyHandlers.ofByteArray());
 
             if (response.statusCode() != 200) {
-                throw new IOException("received response " + response.statusCode() + " on archive " + 15 + " group " + group);
+                throw new IOException("received response " + response.statusCode() + " on archive " + archive + " group " + group);
             }
 
             return response.body();

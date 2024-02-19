@@ -95,7 +95,7 @@ public class InterfaceUnpacker {
         }
 
         if (version >= 9) {
-            line(lines, "unknown10=", packet.g1());
+            line(lines, "unknown10=", packet.g1(), 0);
         }
 
         var events = 0;
@@ -596,9 +596,9 @@ public class InterfaceUnpacker {
         return switch (widthmode) {
             case 0 -> "abs";
             case 1 -> "minus";
-            case 2 -> "mode_2";
+            case 2 -> "proportion";
             case 3 -> "mode_3";
-            case 4 -> "mode_4";
+            case 4 -> "aspect";
             default -> throw new IllegalStateException("Unexpected value: " + widthmode);
         };
     }
@@ -608,9 +608,9 @@ public class InterfaceUnpacker {
             case 0 -> "abs_left";
             case 1 -> "abs_centre";
             case 2 -> "abs_right";
-            case 3 -> "xmode_3";
-            case 4 -> "xmode_4";
-            case 5 -> "xmode_5";
+            case 3 -> "proportion_left";
+            case 4 -> "proportion_centre";
+            case 5 -> "proportion_right";
             default -> throw new IllegalStateException("Unexpected value: " + widthmode);
         };
     }
@@ -620,9 +620,9 @@ public class InterfaceUnpacker {
             case 0 -> "abs_top";
             case 1 -> "abs_centre";
             case 2 -> "abs_bottom";
-            case 3 -> "ymode_3";
-            case 4 -> "ymode_4";
-            case 5 -> "ymode_5";
+            case 3 -> "proportion_top";
+            case 4 -> "proportion_centre";
+            case 5 -> "proportion_bottom";
             default -> throw new IllegalStateException("Unexpected value: " + widthmode);
         };
     }

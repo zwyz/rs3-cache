@@ -22,13 +22,13 @@ public class InvUnpacker {
                 return lines;
             }
 
-            case 2 -> lines.add("size=" + packet.g2());
+            case 2 -> lines.add("size=" + packet.g2()); // https://twitter.com/JagexAsh/status/1087312806435794945
 
             case 4 -> {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("stockbase=" + Unpacker.format(Type.OBJ, packet.g2()) + "," + packet.g2());
+                    lines.add("stock" + (i + 1) + "=" + Unpacker.format(Type.OBJ, packet.g2()) + "," + packet.g2()); // https://twitter.com/JagexAsh/status/1087312806435794945
                 }
             }
 

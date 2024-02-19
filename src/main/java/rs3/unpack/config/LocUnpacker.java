@@ -2,7 +2,6 @@ package rs3.unpack.config;
 
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
-import rs3.unpack.VarDomain;
 import rs3.util.Packet;
 
 import java.util.ArrayList;
@@ -60,7 +59,8 @@ public class LocUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; ++i) {
-                    lines.add("recol=" + packet.g2() + "," + packet.g2());
+                    lines.add("recol" + (i + 1) + "s=" + packet.g2());
+                    lines.add("recol" + (i + 1) + "d=" + packet.g2());
                 }
             }
 
@@ -68,7 +68,8 @@ public class LocUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; ++i) {
-                    lines.add("retex=" + packet.g2() + "," + packet.g2());
+                    lines.add("retex" + (i + 1) + "s=" + Unpacker.format(Type.MATERIAL, packet.g2()));
+                    lines.add("retex" + (i + 1) + "d=" + Unpacker.format(Type.MATERIAL, packet.g2()));
                 }
             }
 
@@ -117,13 +118,13 @@ public class LocUnpacker {
                 var multivarbit = packet.g2null();
 
                 if (multivarbit != -1) {
-                    lines.add("multivar=" + Unpacker.formatVarBit(multivarbit));
+                    lines.add("multivar=" + Unpacker.format(Type.VARBIT, multivarbit));
                 }
 
                 var multivarp = packet.g2null();
 
                 if (multivarp != -1) {
-                    lines.add("multivar=" + Unpacker.formatVar(VarDomain.PLAYER, multivarp));
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, multivarp));
                 }
 
                 var count = packet.gSmart1or2();
@@ -160,13 +161,13 @@ public class LocUnpacker {
                 var multivarbit = packet.g2null();
 
                 if (multivarbit != -1) {
-                    lines.add("multivar=" + Unpacker.formatVarBit(multivarbit));
+                    lines.add("multivar=" + Unpacker.format(Type.VARBIT, multivarbit));
                 }
 
                 var multivarp = packet.g2null();
 
                 if (multivarp != -1) {
-                    lines.add("multivar=" + Unpacker.formatVar(VarDomain.PLAYER, multivarp));
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, multivarp));
                 }
 
                 var multidefault = packet.gSmart2or4null();

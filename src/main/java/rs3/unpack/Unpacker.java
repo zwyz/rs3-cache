@@ -16,11 +16,13 @@ public class Unpacker {
     public static final Map<Integer, Type> ENUM_INPUT_TYPE = new HashMap<>();
     public static final Map<Integer, Type> ENUM_OUTPUT_TYPE = new HashMap<>();
     public static final Map<Integer, String> SCRIPT_NAMES = new HashMap<>();
+    public static final Map<Integer, String> GRAPHIC_NAMES = new HashMap<>();
     public static final Map<Integer, String> WMA_NAMES = new HashMap<>();
     public static final Map<Integer, String> STYLESHEET_NAMES = new HashMap<>();
 
     static {
         readNamesTSV(Path.of("data/names/clientscript.tsv"), SCRIPT_NAMES);
+        readNamesTSV(Path.of("data/names/graphic.tsv"), GRAPHIC_NAMES);
         readNamesTSV(Path.of("data/names/stylesheet.tsv"), STYLESHEET_NAMES);
     }
 
@@ -47,6 +49,10 @@ public class Unpacker {
             };
 
             case COORDGRID -> {
+                if (value == -1) {
+                    yield "null";
+                }
+
                 var level = value >> 28;
                 var x = value >>> 14 & 16383;
                 var z = value & 16383;
@@ -91,6 +97,14 @@ public class Unpacker {
                 yield STYLESHEET_NAMES.getOrDefault(value, "stylesheet_" + value);
             }
 
+            case GRAPHIC -> {
+                if (value == -1) {
+                    yield "null";
+                }
+
+                yield GRAPHIC_NAMES.getOrDefault(value, "graphic_" + value);
+            }
+
             case VAR_REFERENCE_INT -> {
                 if (value == -1) {
                     yield "null";
@@ -99,9 +113,21 @@ public class Unpacker {
                 if ((value & 0xff000000) != 0) {
                     yield formatVarBit(value & 0xffff);
                 } else {
-                    yield formatVar((value >> 16) & 0xff, value & 0xffff);
+                    yield formatVar(VarDomain.byID((value >> 16) & 0xff), value & 0xffff);
                 }
             }
+
+            case VAR_PLAYER -> formatVar(VarDomain.PLAYER, value);
+            case VAR_NPC -> formatVar(VarDomain.NPC, value);
+            case VAR_CLIENT -> formatVar(VarDomain.CLIENT, value);
+            case VAR_WORLD -> formatVar(VarDomain.WORLD, value);
+            case VAR_REGION -> formatVar(VarDomain.REGION, value);
+            case VAR_OBJECT -> formatVar(VarDomain.OBJECT, value);
+            case VAR_CLAN -> formatVar(VarDomain.CLAN, value);
+            case VAR_CLAN_SETTING -> formatVar(VarDomain.CLAN_SETTING, value);
+            case VAR_CONTROLLER -> formatVar(VarDomain.CONTROLLER, value);
+            case VAR_PLAYER_GROUP -> formatVar(VarDomain.PLAYER_GROUP, value);
+            case VAR_GLOBAL -> formatVar(VarDomain.GLOBAL, value);
 
             case MOVESPEED -> switch (value) {
                 case 0 -> "stationary";
@@ -232,10 +258,6 @@ public class Unpacker {
         };
     }
 
-    public static String formatVar(int domain, int value) {
-        return "var_" + formatVarDomain(domain) + "_" + value;
-    }
-
     public static String format(Type type, long value) {
         return switch (type) {
             case LONG -> value + "L";
@@ -252,19 +274,6 @@ public class Unpacker {
 
     public static String format(Type type, String value) {
         return value;
-    }
-
-    public static String formatTemplateZone(int value) {
-        if (value >>> 26 != 0) {
-            throw new IllegalStateException("invalid template zone " + value);
-        }
-
-        var level = (value >> 24) & 0x3;
-        var x = (value >> 14) & 0x3ff;
-        var z = (value >> 3) & 0x7ff;
-        var angle = (value >> 1) & 0x3;
-        var unknown = value & 1;
-        return "templatezone_" + level + "_" + x + "_" + z + "_" + angle + "_" + unknown;
     }
 
     public static String formatTypeChar(int value) {
@@ -311,9 +320,9 @@ public class Unpacker {
 
     public static String formatVarLifetime(int value) {
         return switch (value) {
-            case 0 -> "temporary";
-            case 1 -> "permanent";
-            case 2 -> "serverpermanent";
+            case 0 -> "temp"; // https://twitter.com/JagexAsh/status/654366476674183168
+            case 1 -> "perm"; // https://twitter.com/JagexAsh/status/654366476674183168
+            case 2 -> "serverperm";
             default -> throw new IllegalStateException("invalid lifetime");
         };
     }
@@ -465,5 +474,30 @@ public class Unpacker {
         } else {
             return "0x" + "0".repeat(6 - hex.length()) + hex;
         }
+    }
+
+    public static String formatWearPos(int slot) {
+        return switch (slot) {
+            case 0 -> "hat";
+            case 1 -> "back";
+            case 2 -> "front";
+            case 3 -> "righthand";
+            case 4 -> "torso";
+            case 5 -> "lefthand";
+            case 6 -> "arms";
+            case 7 -> "legs";
+            case 8 -> "head";
+            case 9 -> "hands";
+            case 10 -> "feet";
+            case 11 -> "jaw";
+            case 12 -> "ring";
+            case 13 -> "quiver";
+            case 14 -> "aura";
+            case 15 -> "wearpos_15";
+            case 16 -> "wearpos_16";
+            case 17 -> "pocket";
+            case 18 -> "wings";
+            default -> throw new IllegalArgumentException("wearpos " + slot);
+        };
     }
 }

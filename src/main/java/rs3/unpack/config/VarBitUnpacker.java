@@ -1,5 +1,6 @@
 package rs3.unpack.config;
 
+import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.unpack.VarDomain;
 import rs3.util.Packet;
@@ -19,7 +20,7 @@ public class VarBitUnpacker {
                         throw new IllegalStateException("end of file not reached");
                     }
 
-                    lines.addFirst("[" + Unpacker.formatVarBit(id) + "]");
+                    lines.addFirst("[" + Unpacker.format(Type.VARBIT, id) + "]");
                     return lines;
                 }
 

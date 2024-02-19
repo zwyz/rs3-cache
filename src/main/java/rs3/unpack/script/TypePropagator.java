@@ -1,7 +1,6 @@
 package rs3.unpack.script;
 
 import rs3.unpack.Type;
-import rs3.unpack.Unpacker;
 
 import java.util.*;
 import java.util.stream.IntStream;
@@ -179,13 +178,6 @@ public class TypePropagator {
             }
         }
 
-        // set everything not yet inferred to
-        for (var value : sets.values()) {
-            if (value.type == Type.UNKNOWN_INT) value.setType(Type.INT);
-            if (value.type == Type.UNKNOWN_LONG) value.setType(Type.LONG);
-            if (value.type == Type.UNKNOWN_OBJECT) value.setType(Type.STRING);
-        }
-
         // output script signatures
         for (var script : scripts) {
             ScriptUnpacker.SCRIPT_PARAMETERS.put(script, IntStream.range(0, ScriptUnpacker.getParameterCount(script)).mapToObj(i -> find(parameter(script, i)).type).toList());
@@ -331,9 +323,9 @@ public class TypePropagator {
         }
     }
 
-    private record LocalNode(int script, LocalDomain stack, int index) implements Node {
+    private record LocalNode(int script, LocalDomain domain, int index) implements Node {
         public String toString() {
-            return "script" + script + "." + stack.name().toLowerCase(Locale.ROOT) + index;
+            return "script" + script + "." + domain.name().toLowerCase(Locale.ROOT) + index;
         }
     }
 

@@ -33,15 +33,15 @@ public class ObjUnpacker {
             case 9 -> lines.add("unknown9=" + packet.gjstr()); // todo: unused
             case 11 -> lines.add("stackable=always");
             case 12 -> lines.add("cost=" + packet.g4s());
-            case 13 -> lines.add("wearpos=" + packet.g1());
-            case 14 -> lines.add("wearpos2=" + packet.g1());
+            case 13 -> lines.add("wearpos=" + Unpacker.formatWearPos(packet.g1()));
+            case 14 -> lines.add("wearpos2=" + Unpacker.formatWearPos(packet.g1()));
             case 15 -> lines.add("tradeable=no");
             case 16 -> lines.add("members=yes");
             case 23 -> lines.add("manwear=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
             case 24 -> lines.add("manwear2=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
             case 25 -> lines.add("womanwear=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
             case 26 -> lines.add("womanwear2=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
-            case 27 -> lines.add("wearpos3=" + packet.g1());
+            case 27 -> lines.add("wearpos3=" + Unpacker.formatWearPos(packet.g1()));
             case 30 -> lines.add("op1=" + packet.gjstr());
             case 31 -> lines.add("op2=" + packet.gjstr());
             case 32 -> lines.add("op3=" + packet.gjstr());
@@ -57,7 +57,8 @@ public class ObjUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; ++i) {
-                    lines.add("recol=" + packet.g2() + "," + packet.g2());
+                    lines.add("recol" + (i + 1) + "s=" + packet.g2());
+                    lines.add("recol" + (i + 1) + "d=" + packet.g2());
                 }
             }
 
@@ -65,7 +66,8 @@ public class ObjUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; ++i) {
-                    lines.add("retex=" + packet.g2() + "," + packet.g2());
+                    lines.add("retex" + (i + 1) + "s=" + Unpacker.format(Type.MATERIAL, packet.g2()));
+                    lines.add("retex" + (i + 1) + "d=" + Unpacker.format(Type.MATERIAL, packet.g2()));
                 }
             }
 

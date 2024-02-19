@@ -24,10 +24,13 @@ public class SeqGroupUnpacker {
 
             case 2 -> {
                 var count = packet.gSmart1or2();
+                var result = new ArrayList<String>();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("unknown2=" + packet.gSmart1or2());
+                    result.add("label_" + packet.gSmart1or2());
                 }
+
+                lines.add("walkmerge=" + String.join(",", result));
             }
 
             case 3 -> {

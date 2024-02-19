@@ -11,7 +11,7 @@ public enum VarDomain {
     CLAN_SETTING(7),
     CONTROLLER(8),
     PLAYER_GROUP(9),
-    SHARED(10),
+    GLOBAL(10),
     ;
 
     public final int id;

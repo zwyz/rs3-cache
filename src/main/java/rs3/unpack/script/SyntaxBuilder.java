@@ -765,6 +765,14 @@ public class SyntaxBuilder {
             }
         }
 
+        if (!started) { // special case where the last label is target of a switch
+            cases = new ArrayList<>(branches.stream().filter(branch -> branch.target() == (int) end1.operand).map(SwitchCase::value).toList());
+
+            if (!cases.isEmpty()) {
+                started = true;
+            }
+        }
+
         if (started) { // last case doesn't have a branch, just flows into end
             blocks.add(new SwitchBranch(cases, block(bodyStart, stack.size() - 1)));
         }

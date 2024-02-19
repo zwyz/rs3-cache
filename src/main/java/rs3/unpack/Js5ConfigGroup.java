@@ -1,0 +1,65 @@
+package rs3.unpack;
+
+public enum Js5ConfigGroup {
+    FLUTYPE(1),
+    HUNTTYPE(2),
+    IDKTYPE(3),
+    FLOTYPE(4),
+    INVTYPE(5),
+    LOCTYPE(6),
+    MESANIMTYPE(7),
+    ENUMTYPE(8),
+    NPCTYPE(9),
+    OBJTYPE(10),
+    PARAMTYPE(11),
+    SEQTYPE(12),
+    SPOTTYPE(13),
+    UNKNOWN_17(17),
+    AREATYPE(18),
+    STRUCTTYPE(26),
+    CHATPHRASETYPE(27),
+    CHATCATTYPE(28),
+    SKYBOXTYPE(29),
+    SKYDECORTYPE(30),
+    LIGHTTYPE(31),
+    BASTYPE(32),
+    CURSORTYPE(33),
+    MSITYPE(34),
+    QUESTTYPE(35),
+    MELTYPE(36),
+    DBTABLETYPE(40),
+    DBROWTYPE(41),
+    CONTROLLERTYPE(42),
+    HITMARKTYPE(46),
+    VARCLAN(47),
+    ITEMCODETYPE(48),
+    CATEGORYTYPE(49),
+    UNKNOWN_52(52),
+    UNKNOWN_54(54),
+    VAR_PLAYER(60),
+    VAR_NPC(61),
+    VAR_CLIENT(62),
+    VAR_WORLD(63),
+    VAR_REGION(64),
+    VAR_OBJECT(65),
+    VAR_CLAN(66),
+    VAR_CLAN_SETTING(67),
+    VAR_CONTROLLER(68),
+    VAR_BIT(69),
+    GAMELOGEVENT(70),
+    HEADBARTYPE(72),
+    UNKNOWN_73(73), // todo: null in client
+    VAR_GLOBAL(75),
+    WATERTYPE(76),
+    SEQGROUPTYPE(77),
+    VAR_PLAYER_GROUP(80),
+    WORLDAREATYPE(83),
+    ACHIEVEMENTTYPE(85)
+    ;
+
+    public final int id;
+
+    Js5ConfigGroup(int id) {
+        this.id = id;
+    }
+}

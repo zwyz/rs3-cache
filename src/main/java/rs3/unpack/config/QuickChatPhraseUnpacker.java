@@ -2,7 +2,6 @@ package rs3.unpack.config;
 
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
-import rs3.unpack.VarDomain;
 import rs3.util.Packet;
 
 import java.util.ArrayList;
@@ -44,17 +43,17 @@ public class QuickChatPhraseUnpacker {
                         case 1 -> "objdialog"; // nxt name
                         case 2 -> "countdialog";
                         case 4 -> "stat_base," + Unpacker.format(Type.STAT, packet.g2());
-                        case 6 -> "enum_string," + Unpacker.format(Type.ENUM, packet.g2()) + "," + Unpacker.formatVar(VarDomain.PLAYER, packet.g2()); // nxt name
+                        case 6 -> "enum_string," + Unpacker.format(Type.ENUM, packet.g2()) + "," + Unpacker.format(Type.VAR_PLAYER, packet.g2()); // nxt name
                         case 7 -> "enum_string_clan," + Unpacker.format(Type.ENUM, packet.g2()); // nxt name
-                        case 8 -> "var_player_int," + Unpacker.formatVar(VarDomain.PLAYER, packet.g2());
-                        case 9 -> "var_player_bit," + Unpacker.formatVarBit(packet.g2());
+                        case 8 -> "var_player_int," + Unpacker.format(Type.VAR_PLAYER, packet.g2());
+                        case 9 -> "var_player_bit," + Unpacker.format(Type.VARBIT, packet.g2());
                         case 10 -> "objtradedialog"; // nxt name
                         case 11 -> "enum_string_statbase," + Unpacker.format(Type.ENUM, packet.g2()) + "," + Unpacker.format(Type.STAT, packet.g2()); // nxt name
                         case 12 -> "unknown_12";
                         case 13 -> "unknown_13";
-                        case 14 -> "var_world_int," + Unpacker.formatVar(VarDomain.WORLD, packet.g2());
+                        case 14 -> "var_world_int," + Unpacker.format(Type.VAR_WORLD, packet.g2());
                         case 15 -> "combat_level";
-                        case 16 -> "enum_string_var_player_bit," + Unpacker.format(Type.ENUM, packet.g2()) + "," + Unpacker.formatVarBit(packet.g2());
+                        case 16 -> "enum_string_var_player_bit," + Unpacker.format(Type.ENUM, packet.g2()) + "," + Unpacker.format(Type.VARBIT, packet.g2());
                         default -> throw new IllegalStateException("invalid dynamiccommand " + command);
                     });
                 }

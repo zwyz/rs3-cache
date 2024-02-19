@@ -55,8 +55,7 @@ public class MaterialUnpacker {
         }
 
         var unknown = packet.g1();
-        lines.add("unknown2=" + (unknown & 7));
-        lines.add("unknown3=" + (unknown >> 3 & 7));
+        lines.add("repeat=" + (unknown & 7) + "," + (unknown >> 3 & 7));
         var flagsB = packet.g4s();
         var flagb0 = (flagsB & 1) != 0;
         var flagb1 = (flagsB & 2) != 0;
@@ -107,7 +106,7 @@ public class MaterialUnpacker {
         }
 
         lines.add("bloom=" + (packet.g1() == 1 ? "yes" : "no"));
-        lines.add("unknown8=" + packet.g1());
+        lines.add("facetmode=" + packet.g1());
         var alphamode = packet.g1();
 
         lines.add("alphamode=" + switch (alphamode) {
@@ -126,22 +125,22 @@ public class MaterialUnpacker {
         var flagc2 = (flagsC & 2) != 0;
 
         if (flagc1) {
-            lines.add("unknown10=" + packet.g2s());
+            lines.add("speedu=" + packet.g2s());
         }
 
         if (flagc2) {
-            lines.add("unknown11=" + packet.g2s());
+            lines.add("speedv=" + packet.g2s());
         }
 
         if (packet.g1() == 1) {
-            lines.add("unknown12=" + packet.g1());
-            lines.add("specular=" + packet.g1());
-            lines.add("unknown13=" + packet.g4s());
-            lines.add("unknown14=" + packet.g1());
+            lines.add("effect=" + packet.g1());
+            lines.add("effectarg1=" + packet.g1());
+            lines.add("effectarg2=" + packet.g4s());
+            lines.add("effectcombiner=" + packet.g1());
             lines.add("unknown15=" + (packet.g1() == 1 ? "yes" : "no"));
-            lines.add("unknown16=" + packet.g1());
-            lines.add("unknown17=" + (packet.g1() == 1 ? "yes" : "no"));
-            lines.add("unknown18=" + (packet.g1() == 1 ? "yes" : "no"));
+            lines.add("mipmapping=" + packet.g1());
+            lines.add("lowdetail=" + (packet.g1() == 1 ? "yes" : "no"));
+            lines.add("highdetail=" + (packet.g1() == 1 ? "yes" : "no"));
             lines.add("lightness=" + packet.g1());
             lines.add("saturation=" + packet.g1());
             lines.add("averagecolour=" + packet.g2());
@@ -181,11 +180,11 @@ public class MaterialUnpacker {
         if (flagb0) lines.add("flagsb0=yes");
         if (flagb1) lines.add("flagsb1=yes");
         if (flagb2) lines.add("flagsb2=yes");
-        if (flagb3) lines.add("flagsb2=yes");
-        if (flagb4) lines.add("flagsb2=yes");
-        if (flagb10) lines.add("flagsb2=yes");
-        if (flagb21) lines.add("flagsb2=yes");
-        if (flagb20) lines.add("flagsb2=yes");
+        if (flagb3) lines.add("flagsb3=yes");
+        if (flagb4) lines.add("flagsb4=yes");
+        if (flagb10) lines.add("flagsb10=yes");
+        if (flagb21) lines.add("flagsb21=yes");
+        if (flagb20) lines.add("flagsb20=yes");
 
         if (flagb5) {
             lines.add("unknown19=" + packet.g1() + "," + Unpacker.format(Type.TEXTURE, packet.g4s()));
@@ -240,18 +239,17 @@ public class MaterialUnpacker {
         }
 
         if (flagb8) {
-            lines.add("unknown10=" + packet.g2s());
+            lines.add("speedu=" + packet.g2s());
         }
 
         if (flagb9) {
-            lines.add("unknown11=" + packet.g2s());
+            lines.add("speedv=" + packet.g2s());
         }
 
         var unknown = packet.g1();
-        lines.add("unknown2=" + (unknown & 7));
-        lines.add("unknown3=" + (unknown >> 3 & 7));
-        lines.add("unknown8=" + packet.g1());
-        lines.add("unknown27=" + packet.g1());
+        lines.add("repeat=" + (unknown & 7) + "," + (unknown >> 3 & 7));
+        lines.add("facetmode=" + packet.g1());
+        lines.add("qualitymode=" + packet.g1());
 
         var alphamode = packet.g1();
 
@@ -263,6 +261,6 @@ public class MaterialUnpacker {
         });
 
         lines.add("averagecolour=" + packet.g2());
-        lines.add("unknown28=" + packet.g1());
+        lines.add("size=" + packet.g1());
     }
 }

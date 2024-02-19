@@ -89,11 +89,13 @@ public class CodeFormatter {
                     yield expression.arguments.stream().map(CodeFormatter::format).collect(Collectors.joining(", "));
                 } else {
                     var left = new ArrayList<String>();
+                    var types = expression.arguments.stream().flatMap(a -> a.type.stream()).toList();
+                    var typeIndex = 0;
 
                     for (var target : targets) {
                         switch (target) {
                             case LocalReference local -> {
-                                var type = expression.arguments.get(0).type.get(0);
+                                var type = types.get(typeIndex);
 
                                 if (declaredLocals != null && declaredLocals.add(local)) {
                                     left.add("def_" + formatType(type) + " " + formatLocal(local, type));
@@ -107,6 +109,8 @@ public class CodeFormatter {
                             case null -> left.add("$_");
                             default -> throw new IllegalStateException("invalid assign target type");
                         }
+
+                        typeIndex++;
                     }
 
                     yield String.join(", ", left) + " = " + expression.arguments.stream().map(CodeFormatter::format).collect(Collectors.joining(", "));
@@ -176,7 +180,7 @@ public class CodeFormatter {
 
                 for (var arg : expression.arguments) {
                     if (arg.command == PUSH_CONSTANT_STRING && arg.operand instanceof String s) {
-                        result += s;
+                        result += escape(s);
                     } else {
                         result += "<" + format(arg) + ">";
                     }
@@ -199,7 +203,7 @@ public class CodeFormatter {
             }
 
             // control flow
-            case "flow_ne" -> formatBinary(prec, 40, " != ", expression.arguments.get(0), expression.arguments.get(1));
+            case "flow_ne" -> formatBinary(prec, 40, " ! ", expression.arguments.get(0), expression.arguments.get(1));
             case "flow_eq" -> formatBinary(prec, 40, " = ", expression.arguments.get(0), expression.arguments.get(1));
             case "flow_lt" -> formatBinary(prec, 40, " < ", expression.arguments.get(0), expression.arguments.get(1));
             case "flow_gt" -> formatBinary(prec, 40, " > ", expression.arguments.get(0), expression.arguments.get(1));
@@ -276,6 +280,10 @@ public class CodeFormatter {
                         var hookStart = 0;
                         var hookEnd = expression.arguments.size() - (expression.command.arguments.size() - 1);
                         arguments = formatHook(expression.arguments.subList(hookStart, hookEnd));
+
+                        if (expression.arguments.size() != hookEnd) {
+                            arguments += ", " + expression.arguments.subList(hookEnd, expression.arguments.size()).stream().map(CodeFormatter::format).collect(Collectors.joining(", "));
+                        }
                     }
 
                     yield (dot ? "." : "") + expression.command.name + operand + "(" + arguments + ")";
@@ -297,6 +305,10 @@ public class CodeFormatter {
         var script = arguments.get(0);
         var signature = (String) arguments.get(arguments.size() - 1).operand;
 
+        if ((int) script.operand == -1) {
+            return "null";
+        }
+
         if (!signature.endsWith("Y")) {
             var args = arguments.subList(1, arguments.size() - 1);
             var result = format(script);
@@ -305,7 +317,7 @@ public class CodeFormatter {
                 result += "(" + args.stream().map(CodeFormatter::formatHookArgument).collect(Collectors.joining(", ")) + ")";
             }
 
-            return "\"" + result + "\"";
+            return "\"" + escape(result) + "\"";
         } else {
             var transmitListCount = (int) arguments.get(arguments.size() - 2).operand;
             var args = arguments.subList(1, arguments.size() - 2 - transmitListCount);
@@ -320,7 +332,7 @@ public class CodeFormatter {
                 result += "{" + transmits.stream().map(CodeFormatter::format).collect(Collectors.joining(", ")) + "}";
             }
 
-            return "\"" + result + "\"";
+            return "\"" + escape(result) + "\"";
         }
     }
 
@@ -366,7 +378,7 @@ public class CodeFormatter {
                 return null;
             }
 
-            return "\"" + s + "\"";
+            return "\"" + escape(s) + "\"";
         }
 
         if (value instanceof Integer i) return Unpacker.format(type, i);
@@ -400,5 +412,10 @@ public class CodeFormatter {
         var var = ((VarBitReference) operand).var();
         var secondary = ((VarBitReference) operand).secondary();
         return (secondary ? "." : "") + "%" + Unpacker.formatVarBit(var);
+    }
+
+    private static String escape(String s) {
+        return s.replace("\\", "\\\\")
+                .replace("\"", "\\\"");
     }
 }

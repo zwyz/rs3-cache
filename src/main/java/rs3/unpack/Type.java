@@ -133,7 +133,7 @@ public enum Type {
     // === 915 end ===
     ACHIEVEMENT(131, '˜', BaseVarType.INTEGER),
     // === 916 end ===
-    STYLESHEET(133, '˝', BaseVarType.INTEGER),
+    STYLESHEET(133, '™', BaseVarType.INTEGER),
     // === 927 end ===
     TYPE_135(135, '„', BaseVarType.INTEGER), // 928
     TYPE_136(136, '–', BaseVarType.INTEGER), // 928
@@ -248,8 +248,18 @@ public enum Type {
     CLIENTSCRIPT(-1, 0, BaseVarType.INTEGER),
     DBCOLUMN(-1, 0, BaseVarType.INTEGER),
     VARBIT(-1, 0, BaseVarType.INTEGER),
+
     VAR_PLAYER(-1, 0, BaseVarType.INTEGER),
+    VAR_NPC(-1, 0, BaseVarType.INTEGER),
     VAR_CLIENT(-1, 0, BaseVarType.INTEGER),
+    VAR_WORLD(-1, 0, BaseVarType.INTEGER),
+    VAR_REGION(-1, 0, BaseVarType.INTEGER),
+    VAR_OBJECT(-1, 0, BaseVarType.INTEGER),
+    VAR_CLAN(-1, 0, BaseVarType.INTEGER),
+    VAR_CLAN_SETTING(-1, 0, BaseVarType.INTEGER),
+    VAR_CONTROLLER(-1, 0, BaseVarType.INTEGER),
+    VAR_PLAYER_GROUP(-1, 0, BaseVarType.INTEGER),
+    VAR_GLOBAL(-1, 0, BaseVarType.INTEGER),
 
     // for decompiler
     HOOK,
