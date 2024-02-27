@@ -19,6 +19,7 @@ public class ObjUnpacker {
                     throw new IllegalStateException("end of file not reached");
                 }
 
+                lines = Unpacker.transformRecolRetexIndices(lines);
                 return lines;
             }
 
@@ -80,8 +81,8 @@ public class ObjUnpacker {
             }
 
             case 43 -> lines.add("minimenucolour=" + packet.g4s());
-            case 44 -> lines.add("unknown44=" + packet.g2());
-            case 45 -> lines.add("unknown45=" + packet.g2());
+            case 44 -> lines.add("recolindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
+            case 45 -> lines.add("retexindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
             case 65 -> lines.add("stockmarket=yes");
             case 69 -> lines.add("stockmarketlimit=" + packet.g4s());
             case 78 -> lines.add("manwear3=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
@@ -115,11 +116,11 @@ public class ObjUnpacker {
             case 122 -> lines.add("lenttemplate=" + Unpacker.format(Type.OBJ, packet.g2()));
             case 125 -> lines.add("manwearoff=" + packet.g1s() + "," + packet.g1s() + "," + packet.g1s());
             case 126 -> lines.add("womanwearoff=" + packet.g1s() + "," + packet.g1s() + "," + packet.g1s());
-            case 127 -> lines.add("unknown127=" + packet.g1() + "," + packet.g2());
-            case 128 -> lines.add("unknown128=" + packet.g1() + "," + packet.g2());
-            case 129 -> lines.add("unknown129=" + packet.g1() + "," + packet.g2());
-            case 130 -> lines.add("unknown130=" + packet.g1() + "," + packet.g2());
-            case 131 -> lines.add("memberdesc=" + packet.gjstr()); // todo
+//            case 127 -> lines.add("unknown127=" + packet.g1() + "," + packet.g2()); // gone in nxt
+//            case 128 -> lines.add("unknown128=" + packet.g1() + "," + packet.g2()); // gone in nxt
+//            case 129 -> lines.add("unknown129=" + packet.g1() + "," + packet.g2()); // gone in nxt
+//            case 130 -> lines.add("unknown130=" + packet.g1() + "," + packet.g2()); // gone in nxt
+            case 131 -> lines.add("unknown131=" + packet.gjstr());
 
             case 132 -> {
                 var count = packet.g1();
@@ -153,7 +154,7 @@ public class ObjUnpacker {
             case 164 -> lines.add("shardname=" + packet.gjstr());
             case 165 -> lines.add("stackable=never");
             case 167 -> lines.add("unknown167=yes");
-            case 168 -> lines.add("allowsplaceholder=no");
+            case 168 -> lines.add("placeholder=no");
             case 178 -> lines.add("stackable=sometimes");
             case 181 -> lines.add("cost=" + packet.g8s());
 

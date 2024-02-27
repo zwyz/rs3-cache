@@ -11,7 +11,7 @@ public class MSIUnpacker {
     public static List<String> unpack(int id, byte[] data) {
         var lines = new ArrayList<String>();
         var packet = new Packet(data);
-        lines.add("[" + Unpacker.format(Type.CURSOR, id) + "]");
+        lines.add("[" + Unpacker.format(Type.MAPSCENEICON, id) + "]");
 
         while (true) switch (packet.g1()) {
             case 0 -> {

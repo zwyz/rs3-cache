@@ -19,6 +19,7 @@ public class EffectAnimUnpacker {
                     throw new IllegalStateException("end of file not reached");
                 }
 
+                lines = Unpacker.transformRecolRetexIndices(lines);
                 return lines;
             }
 
@@ -31,9 +32,9 @@ public class EffectAnimUnpacker {
             case 8 -> lines.add("contrast=" + packet.g1());
             case 10 -> lines.add("unknown10=yes");
 
-            case 9 -> lines.add("unknown9=8224");
-            case 15 -> lines.add("unknown9=" + packet.g2());
-            case 16 -> lines.add("unknown9=" + packet.g4s());
+            case 9 -> lines.add("hillchange=rotate");
+            case 15 -> lines.add("hillchange=rotate," + packet.g2());
+            case 16 -> lines.add("hillchange=rotate," + packet.g4s());
 
             case 40 -> {
                 var count = packet.g1();
@@ -53,12 +54,13 @@ public class EffectAnimUnpacker {
                 }
             }
 
-            case 44 -> lines.add("unknown44=" + packet.g2());
-            case 45 -> lines.add("unknown45=" + packet.g2());
+            case 44 -> lines.add("recolindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
+            case 45 -> lines.add("retexindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
 
             case 46 -> lines.add("unknown46=yes");
 
             default -> throw new IllegalStateException("unknown opcode");
         }
     }
+
 }

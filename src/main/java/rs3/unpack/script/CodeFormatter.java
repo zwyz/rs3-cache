@@ -234,9 +234,9 @@ public class CodeFormatter {
 
                 for (var branch : (List<SwitchBranch>) expression.operand) {
                     if (branch.values() == null) {
-                        result += " ".repeat(indent + 4) + "case default:\n";
+                        result += " ".repeat(indent + 4) + "case default :\n";
                     } else {
-                        result += " ".repeat(indent + 4) + "case " + String.join(", ", branch.values().stream().map(value -> formatConstant(type, value)).toList()) + ":\n";
+                        result += " ".repeat(indent + 4) + "case " + String.join(", ", branch.values().stream().map(value -> formatConstant(type, value)).toList()) + " :\n";
                     }
 
                     result += formatBlock(branch.branch(), indent + 8, declaredLocals);

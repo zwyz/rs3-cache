@@ -19,6 +19,7 @@ public class IDKUnpacker {
                     throw new IllegalStateException("end of file not reached");
                 }
 
+                lines = Unpacker.transformRecolRetexIndices(lines);
                 return lines;
             }
 
@@ -52,8 +53,8 @@ public class IDKUnpacker {
                 }
             }
 
-            case 44 -> lines.add("unknown44=" + packet.g2());
-            case 45 -> lines.add("unknown45=" + packet.g2());
+            case 44 -> lines.add("recolindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
+            case 45 -> lines.add("retexindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
             case 60 -> lines.add("head1=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
             case 61 -> lines.add("head2=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
             case 62 -> lines.add("head3=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));

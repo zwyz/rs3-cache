@@ -281,6 +281,21 @@ public class Packet {
         return var1;
     }
 
+    public int g2sLE() {
+        pos += 2;
+        var var1 = ((arr[pos - 1] & 255) << 8) + (arr[pos - 2] & 255);
+        if (var1 > 32767) {
+            var1 -= 65536;
+        }
+
+        return var1;
+    }
+
+    public int g2LE() {
+        pos += 2;
+        return ((arr[pos - 1] & 255) << 8) + (arr[pos - 2] & 255);
+    }
+
     public int g3() {
         pos += 3;
         return (arr[pos - 1] & 255) + ((arr[pos - 3] & 255) << 16) + ((arr[pos - 2] & 255) << 8);
@@ -309,6 +324,15 @@ public class Packet {
 
     public float gFloat() {
         return Float.intBitsToFloat(g4s());
+    }
+
+    public int g4sLE() {
+        pos += 4;
+        return (arr[pos - 4] & 255) + ((arr[pos - 3] & 255) << 8) + ((arr[pos - 1] & 255) << 24) + ((arr[pos - 2] & 255) << 16);
+    }
+
+    public float gFloatLE() {
+        return Float.intBitsToFloat(g4sLE());
     }
 
     public boolean gBoolean() {

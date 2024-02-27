@@ -19,6 +19,7 @@ public class LocUnpacker {
                     throw new IllegalStateException("end of file not reached");
                 }
 
+                lines = Unpacker.transformRecolRetexIndices(lines);
                 return lines;
             }
 
@@ -81,24 +82,23 @@ public class LocUnpacker {
                 }
             }
 
-            case 44 -> lines.add("unknown44=" + packet.g2());
-            case 45 -> lines.add("unknown45=" + packet.g2());
+            case 44 -> lines.add("recolindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
+            case 45 -> lines.add("retexindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
             case 61 -> lines.add("category=" + Unpacker.format(Type.CATEGORY, packet.g2()));
             case 62 -> lines.add("mirror=yes");
             case 64 -> lines.add("shadow=no"); // https://www.youtube.com/watch?v=vZ7oG1IDz1w 2:09:30
             case 65 -> lines.add("resizex=" + packet.g2());
             case 66 -> lines.add("resizey=" + packet.g2());
             case 67 -> lines.add("resizez=" + packet.g2());
-            case 68 -> lines.add("mapscene=" + packet.g2());
 
             case 69 -> { // https://twitter.com/JagexAsh/status/1641051532010434560
                 int blocked = packet.g1s();
                 var result = new ArrayList<String>();
 
-                if ((blocked & 1) == 0) result.add("side_1");
-                if ((blocked & 2) == 0) result.add("side_2");
-                if ((blocked & 4) == 0) result.add("side_3");
-                if ((blocked & 8) == 0) result.add("side_4");
+                if ((blocked & 1) == 0) result.add("north");
+                if ((blocked & 2) == 0) result.add("east");
+                if ((blocked & 4) == 0) result.add("south");
+                if ((blocked & 8) == 0) result.add("west");
 
                 if (blocked >>> 4 != 0) {
                     throw new IllegalStateException("invalid blocked: " + blocked);
@@ -192,12 +192,12 @@ public class LocUnpacker {
             case 95 -> lines.add("hillchange=skew_to_fit," + packet.g2());
             case 97 -> lines.add("mapsceneiconrotate=yes");
             case 98 -> lines.add("unknown98=yes");
-            case 99 -> lines.add("unknown99=" + packet.g1() + "," + packet.g2());
-            case 100 -> lines.add("unknown100=" + packet.g1() + "," + packet.g2());
+//            case 99 -> lines.add("unknown99=" + packet.g1() + "," + packet.g2()); // gone in nxt
+//            case 100 -> lines.add("unknown100=" + packet.g1() + "," + packet.g2()); // gone in nxt
             case 101 -> lines.add("mapsceneiconrotateextra=" + packet.g1());
             case 102 -> lines.add("mapsceneicon=" + Unpacker.format(Type.MAPSCENEICON, packet.g2()));
             case 103 -> lines.add("occlude=no");
-            case 104 -> lines.add("unknown104=" + packet.g1());
+            case 104 -> lines.add("bgsoundvolume=" + packet.g1());
             case 105 -> lines.add("mapsceneiconmirror=yes");
 
             case 106 -> {
@@ -233,12 +233,13 @@ public class LocUnpacker {
             case 169 -> lines.add("unknown169=yes");
             case 170 -> lines.add("unknown170=" + packet.gSmart1or2());
             case 171 -> lines.add("unknown171=" + packet.gSmart1or2());
-            case 173 -> lines.add("unknown173=" + packet.g2() + "," + packet.g2());
+            case 173 -> lines.add("bgsoundrate=" + packet.g2() + "," + packet.g2());
             case 177 -> lines.add("unknown177=yes");
-            case 178 -> lines.add("unknown178=" + packet.g1());
+            case 178 -> lines.add("bgsoundsize=" + packet.g1());
+            case 179 -> lines.add("unknown179=yes"); // todo: bgsound
             case 186 -> lines.add("unknown186=" + packet.g1());
             case 188 -> lines.add("unknown188=yes");
-            case 189 -> lines.add("unknown189=yes");
+            case 189 -> lines.add("antimacro=yes");
             case 190 -> lines.add("cursor1=" + Unpacker.format(Type.CURSOR, packet.g2()));
             case 191 -> lines.add("cursor2=" + Unpacker.format(Type.CURSOR, packet.g2()));
             case 192 -> lines.add("cursor3=" + Unpacker.format(Type.CURSOR, packet.g2()));
@@ -259,9 +260,10 @@ public class LocUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("unknown204=" + packet.g2() + "," + packet.g1() + "," + packet.g4s() + "," + packet.g4s() + "," + packet.g4s() + "," + packet.g4s() + "," + packet.g4s() + "," + packet.g4s());
+                    lines.add("unknown204=" + packet.g2() + "," + packet.g1() + "," + packet.gFloat() + "," + packet.gFloat() + "," + packet.gFloat() + "," + packet.gFloat() + "," + packet.gFloat() + "," + packet.gFloat());
                 }
             }
+
 
             case 249 -> {
                 var count = packet.g1();
@@ -275,6 +277,14 @@ public class LocUnpacker {
                     }
                 }
             }
+
+            case 250 -> lines.add("unknown250=" + packet.g1()); // todo: sound
+            case 251 -> lines.add("unknown251=" + Unpacker.formatBoolean(packet.g1())); // todo: sound
+            case 252 -> lines.add("unknown252=" + packet.g2() + "," + packet.g2() + "," + packet.g2()); // todo sound
+
+            case 253 -> lines.add("unknown253=" + packet.g1()); // todo sound
+            case 254 -> lines.add("unknown254=" + Unpacker.formatBoolean(packet.g1())); // todo: sound
+            case 255 -> lines.add("unknown255=" + packet.g2() + "," + packet.g2() + "," + packet.g2()); // todo: sound
 
             default -> throw new IllegalStateException("unknown opcode");
         }

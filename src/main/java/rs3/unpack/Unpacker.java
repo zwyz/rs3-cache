@@ -7,6 +7,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Unpacker {
     public static final Map<Integer, Type> PARAM_TYPE = new HashMap<>();
@@ -499,5 +500,58 @@ public class Unpacker {
             case 18 -> "wings";
             default -> throw new IllegalArgumentException("wearpos " + slot);
         };
+    }
+
+    public static String formatRecolRetexIndexList(int value) {
+        var list = new ArrayList<Integer>();
+
+        for (var i = 0; i < 16; i++) {
+            if ((value & (1 << i)) != 0) {
+                list.add(i + 1);
+            }
+        }
+
+        return list.stream().map(Object::toString).collect(Collectors.joining(","));
+    }
+
+    public static ArrayList<String> transformRecolRetexIndices(ArrayList<String> lines) {
+        var recolIndices = (String[]) null;
+        var retexIndices = (String[]) null;
+
+        for (var line : lines) {
+            if (line.startsWith("recolIndices=")) {
+                recolIndices = line.split("=")[1].split(",");
+            }
+
+            if (line.startsWith("retexindices=")) {
+                retexIndices = line.split("=")[1].split(",");
+            }
+        }
+
+        if (recolIndices != null || retexIndices != null) {
+            var newLines = new ArrayList<String>();
+
+            for (var line : lines) {
+                if (line.startsWith("recolindices")) {
+                    continue;
+                } else if (line.startsWith("retexindices")) {
+                    continue;
+                } else if (recolIndices != null && line.startsWith("recol")) {
+                    var equal = line.indexOf('=');
+                    var newIndex = recolIndices[Integer.parseInt(line.substring(5, equal - 1)) - 1];
+                    line = line.substring(0, 5) + newIndex + line.substring(equal - 1);
+                } else if (retexIndices != null && line.startsWith("retex")) {
+                    var equal = line.indexOf('=');
+                    var newIndex = retexIndices[Integer.parseInt(line.substring(5, equal - 1)) - 1];
+                    line = line.substring(0, 5) + newIndex + line.substring(equal - 1);
+                }
+
+                newLines.add(line);
+            }
+
+            lines = newLines;
+        }
+
+        return lines;
     }
 }

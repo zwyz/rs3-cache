@@ -22,7 +22,7 @@
 [command,oc_category](obj $x1)(category)
 [command,oc_hasvarobj](obj $x1)(boolean)
 [command,oc_tradeable](obj $x1)(boolean)
-[command,oc_allowsplaceholder](obj $x1)(boolean)
+[command,oc_placeholder](obj $x1)(boolean)
 [command,oc_id](obj $x1)(int)
 [command,oc_desc](obj $x1)(string)
 [command,oc_stockmarketlimit](obj $x1)(int)

@@ -86,7 +86,7 @@ public class MapElementUnpacker {
                     var multi = packet.g2null();
 
                     if (multi != -1) {
-                        lines.add("multimapelement=" + i + "," + Unpacker.format(Type.MAPELEMENT, multi));
+                        lines.add("multimel=" + i + "," + Unpacker.format(Type.MAPELEMENT, multi));
                     }
                 }
             }

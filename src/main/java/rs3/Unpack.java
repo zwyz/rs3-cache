@@ -2,20 +2,21 @@ package rs3;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import rs3.js5.Js5ArchiveIndex;
+import rs3.js5.Js5Util;
 import rs3.unpack.InterfaceUnpacker;
 import rs3.unpack.MaterialUnpacker;
 import rs3.unpack.StylesheetUnpacker;
 import rs3.unpack.VarDomain;
 import rs3.unpack.config.*;
+import rs3.unpack.cutscene2d.Cutscene2D;
 import rs3.unpack.map.MapSquare;
+import rs3.unpack.model.Model;
 import rs3.unpack.script.ScriptUnpacker;
 import rs3.unpack.uianim.Anim;
 import rs3.unpack.uianim.AnimCurve;
-import rs3.js5.Js5Util;
-import rs3.js5.Js5ArchiveIndex;
-import rs3.unpack.cutscene2d.*;
 import rs3.unpack.unknown62.AnimatorController;
-import rs3.unpack.vfx.*;
+import rs3.unpack.vfx.VFXUnpacker;
 import rs3.unpack.worldmap.MapAreaUnpacker;
 import rs3.util.Packet;
 
@@ -37,7 +38,8 @@ import java.util.function.Function;
 // todo: clean this up
 public class Unpack {
     private static final Path BASE_PATH = Path.of(System.getProperty("user.home") + "/.rscache/rs3");
-    public static final Gson GSON = new GsonBuilder().serializeSpecialFloatingPointValues().setPrettyPrinting().create();
+    public static final Gson GSON = new GsonBuilder().serializeSpecialFloatingPointValues().create();
+    public static final Gson GSON_PRETTY = new GsonBuilder().serializeSpecialFloatingPointValues().setPrettyPrinting().create();
 
     public static void main(String[] args) throws IOException {
         var root = Path.of("unpacked");
@@ -50,14 +52,15 @@ public class Unpack {
         unpackConfigArchive(60, 0, StylesheetUnpacker::unpack, root.resolve("scripts/dump.stylesheet"));
         unpackConfigArchive(26, 0, MaterialUnpacker::unpack, root.resolve("scripts/dump.material"));
 //        iterateArchive(8, SpriteUnpacker::unpack);
+//        unpackArchiveTransformed(47, b -> GSON.toJson(new Model(new Packet(b))), root.resolve("model"), ".json");
 //        iterateArchive(54, TextureUnpacker::unpack);
         unpackArchive(10, root.resolve("binary"), ".dat");
         unpackArchive(59, root.resolve("ttf"), ".ttf");
         unpackArchiveTransformed(61, VFXUnpacker::unpack, root.resolve("vfx"), ".json");
-        unpackArchiveTransformed(62, b -> GSON.toJson(AnimatorController.decode(new Packet(b))), root.resolve("animators"), ".json");
-        unpackGroupTransformed(65, 0, b -> GSON.toJson(new AnimCurve(new Packet(b))), root.resolve("uianimcurve"), ".json");
-        unpackGroupTransformed(65, 1, b -> GSON.toJson(new Anim(new Packet(b))), root.resolve("uianim"), ".json");
-        unpackArchiveTransformed(66, b -> GSON.toJson(new Cutscene2D(new Packet(b))), root.resolve("cutscene2d"), ".json");
+        unpackArchiveTransformed(62, b -> GSON_PRETTY.toJson(AnimatorController.decode(new Packet(b))), root.resolve("animators"), ".json");
+        unpackGroupTransformed(65, 0, b -> GSON_PRETTY.toJson(new AnimCurve(new Packet(b))), root.resolve("uianimcurve"), ".json");
+        unpackGroupTransformed(65, 1, b -> GSON_PRETTY.toJson(new Anim(new Packet(b))), root.resolve("uianim"), ".json");
+        unpackArchiveTransformed(66, b -> GSON_PRETTY.toJson(new Cutscene2D(new Packet(b))), root.resolve("cutscene2d"), ".json");
         unpackMaps(root);
         unpackWorldAreaMap(root);
     }

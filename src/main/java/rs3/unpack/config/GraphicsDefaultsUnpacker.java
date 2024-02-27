@@ -70,7 +70,7 @@ public class GraphicsDefaultsUnpacker {
             case 17 -> lines.add("objnumcolour=0x" + Integer.toHexString(packet.g4s()));
             case 18 -> lines.add("objnumcolourk=0x" + Integer.toHexString(packet.g4s()));
             case 19 -> lines.add("objnumcolourm=0x" + Integer.toHexString(packet.g4s()));
-            case 20 -> lines.add("entityshadow=" + packet.g2() + "," + packet.g1());
+            case 20 -> lines.add("spotshadowtexture=" + Unpacker.format(Type.MATERIAL, packet.g2()) + "," + packet.g1());
             case 21 -> lines.add("minimapscale=" + packet.g1());
 
             case 22 -> {

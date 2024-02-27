@@ -19,6 +19,7 @@ public class NPCUnpacker {
                     throw new IllegalStateException("end of file not reached");
                 }
 
+                lines = Unpacker.transformRecolRetexIndices(lines);
                 return lines;
             }
 
@@ -72,8 +73,8 @@ public class NPCUnpacker {
                 }
             }
 
-            case 44 -> lines.add("unknown44=" + packet.g2());
-            case 45 -> lines.add("unknown45=" + packet.g2());
+            case 44 -> lines.add("recolindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
+            case 45 -> lines.add("retexindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
 
             case 60 -> {
                 var length = packet.g1();
@@ -87,7 +88,7 @@ public class NPCUnpacker {
             case 95 -> lines.add("vislevel=" + packet.g2());
             case 97 -> lines.add("resizeh=" + packet.g2());
             case 98 -> lines.add("resizev=" + packet.g2());
-            case 99 -> lines.add("drawpriority=yes");
+            case 99 -> lines.add("drawabove=yes");
             case 100 -> lines.add("ambient=" + packet.g1s());
             case 101 -> lines.add("contrast=" + packet.g1s());
 
@@ -96,7 +97,7 @@ public class NPCUnpacker {
 
                 for (var i = 0; i < 8; ++i) {
                     if ((filter & 1 << i) != 0) {
-                        lines.add("headicon=" + packet.gSmart2or4null() + "," + packet.gSmart1or2null());
+                        lines.add("icon=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()) + "," + packet.gSmart1or2null());
                     }
                 }
             }
@@ -129,9 +130,9 @@ public class NPCUnpacker {
 
             case 107 -> lines.add("active=no");
             case 109 -> lines.add("walksmoothing=no");
-            case 111 -> lines.add("unknown111=no");
-            case 113 -> lines.add("unknown113=" + packet.g2() + "," + packet.g2());
-            case 114 -> lines.add("unknown114=" + packet.g1s() + "," + packet.g1s());
+            case 111 -> lines.add("spotshadow=no");
+            case 113 -> lines.add("spotshadowcolour=" + packet.g2() + "," + packet.g2());
+            case 114 -> lines.add("spotshadowtrans=" + packet.g1s() + "," + packet.g1s());
 
             case 118 -> {
                 var multivarbit = packet.g2null();
@@ -149,7 +150,7 @@ public class NPCUnpacker {
                 var multidefault = packet.g2null();
 
                 if (multidefault != -1) {
-                    lines.add("multinpc=default," + Unpacker.format(Type.LOC, multidefault));
+                    lines.add("multinpc=default," + Unpacker.format(Type.NPC, multidefault));
                 }
 
                 var count = packet.gSmart1or2();
@@ -158,7 +159,7 @@ public class NPCUnpacker {
                     var multi = packet.g2null();
 
                     if (multi != -1) {
-                        lines.add("multinpc=" + i + "," + Unpacker.format(Type.LOC, multi));
+                        lines.add("multinpc=" + i + "," + Unpacker.format(Type.NPC, multi));
                     }
                 }
             }
@@ -169,32 +170,32 @@ public class NPCUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; ++i) {
-                    lines.add("unknown121=" + packet.g1() + "," + packet.g1s() + "," + packet.g1s() + "," + packet.g1s());
+                    lines.add("modeloffset" + packet.g1() + "=" + packet.g1s() + "," + packet.g1s() + "," + packet.g1s());
                 }
             }
 
-            case 123 -> lines.add("unknown123=" + packet.g2());
-            case 125 -> lines.add("unknown125=" + packet.g1s());
-            case 127 -> lines.add("bas=" + packet.g2());
-            case 128 -> lines.add("unknown128=" + packet.g1());
-            case 134 -> lines.add("unknown134=" + packet.g2null() + "," + packet.g2null() + "," + packet.g2null() + "," + packet.g2null() + "," + packet.g1());
-            case 135 -> lines.add("unknown135=" + packet.g1() + "," + packet.g2());
-            case 136 -> lines.add("unknown135=" + packet.g1() + "," + packet.g2());
-            case 137 -> lines.add("unknown137=" + packet.g2());
-            case 138 -> lines.add("covermarker=" + packet.gSmart2or4null());
+            case 123 -> lines.add("overlayheight=" + packet.g2());
+            case 125 -> lines.add("respawndir=" + packet.g1s());
+            case 127 -> lines.add("bas=" + Unpacker.format(Type.BAS, packet.g2()));
+            case 128 -> lines.add("movespeed=" + Unpacker.format(Type.MOVESPEED, packet.g1()));
+            case 134 -> lines.add("bgsound=" + Unpacker.format(Type.SYNTH, packet.g2null()) + "," + Unpacker.format(Type.SYNTH, packet.g2null()) + "," + Unpacker.format(Type.SYNTH, packet.g2null()) + "," + Unpacker.format(Type.SYNTH, packet.g2null()) + "," + packet.g1());
+//            case 135 -> lines.add("unknown135=" + packet.g1() + "," + packet.g2()); // gone in nxt
+//            case 136 -> lines.add("unknown136=" + packet.g1() + "," + packet.g2()); // gone in nxt
+            case 137 -> lines.add("cursorattack=" + Unpacker.format(Type.CURSOR, packet.g2()));
+            case 138 -> lines.add("covermarker=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
             case 139 -> lines.add("unknown139=" + packet.gSmart2or4null());
-            case 140 -> lines.add("unknown140=" + packet.g1());
-            case 141 -> lines.add("unknown141=yes");
-            case 142 -> lines.add("unknown142=" + packet.g2());
-            case 143 -> lines.add("unknown143=yes");
+            case 140 -> lines.add("bgsoundvolume=" + packet.g1());
+            case 141 -> lines.add("follower=yes");
+            case 142 -> lines.add("mapelement=" + Unpacker.format(Type.MAPELEMENT, packet.g2()));
+            case 143 -> lines.add("drawbelow=yes");
             case 150 -> lines.add("membersop1=" + packet.gjstr());
             case 151 -> lines.add("membersop2=" + packet.gjstr());
             case 152 -> lines.add("membersop3=" + packet.gjstr());
             case 153 -> lines.add("membersop4=" + packet.gjstr());
             case 154 -> lines.add("membersop5=" + packet.gjstr());
             case 155 -> lines.add("tint=" + packet.g1s() + "," + packet.g1s() + "," + packet.g1s() + "," + packet.g1s());
-            case 158 -> lines.add("unknown158=yes");
-            case 159 -> lines.add("unknown158=no");
+            case 158 -> lines.add("oppriority=yes");
+            case 159 -> lines.add("oppriority=no");
 
             case 160 -> {
                 var count = packet.g1();
@@ -205,24 +206,24 @@ public class NPCUnpacker {
             }
 
             case 162 -> lines.add("unknown162=yes");
-            case 163 -> lines.add("unknown163=" + packet.g1());
-            case 164 -> lines.add("unknown164=" + packet.g2() + "," + packet.g2());
+            case 163 -> lines.add("picksize=" + packet.g1());
+            case 164 -> lines.add("bgsoundrate=" + packet.g2() + "," + packet.g2());
             case 165 -> lines.add("picksizeshift=" + packet.g1());
-            case 168 -> lines.add("unknown168=" + packet.g1());
+            case 168 -> lines.add("bgsoundsize=" + packet.g1());
             case 169 -> lines.add("antimacro=no");
-            case 170 -> lines.add("unknown170=" + packet.g2null());
-            case 171 -> lines.add("unknown171=" + packet.g2null());
-            case 172 -> lines.add("unknown172=" + packet.g2null());
-            case 173 -> lines.add("unknown173=" + packet.g2null());
-            case 174 -> lines.add("unknown174=" + packet.g2null());
-            case 175 -> lines.add("unknown175=" + packet.g2null());
-            case 178 -> lines.add("unknown178=yes");
+            case 170 -> lines.add("cursor1=" + Unpacker.format(Type.CURSOR, packet.g2null()));
+            case 171 -> lines.add("cursor2=" + Unpacker.format(Type.CURSOR, packet.g2null()));
+            case 172 -> lines.add("cursor3=" + Unpacker.format(Type.CURSOR, packet.g2null()));
+            case 173 -> lines.add("cursor4=" + Unpacker.format(Type.CURSOR, packet.g2null()));
+            case 174 -> lines.add("cursor5=" + Unpacker.format(Type.CURSOR, packet.g2null()));
+            case 175 -> lines.add("cursor6=" + Unpacker.format(Type.CURSOR, packet.g2null()));
+            case 178 -> lines.add("unknown178=no");
             case 179 -> lines.add("clickbox=" + packet.gSmart1or2() + "," + packet.gSmart1or2() + "," + packet.gSmart1or2() + "," + packet.gSmart1or2() + "," + packet.gSmart1or2() + "," + packet.gSmart1or2());
             case 180 -> lines.add("unknown180=" + packet.g1());
-            case 181 -> lines.add("unknown181=" + packet.g2() + "," + packet.g1());
-            case 182 -> lines.add("unknown182=yes");
-            case 184 -> lines.add("unknown182=" + packet.g1());
-            case 185 -> lines.add("unknown185=yes");
+            case 181 -> lines.add("spotshadowtexture=" + Unpacker.format(Type.MATERIAL, packet.g2()) + "," + packet.g1());
+            case 182 -> lines.add("transmogfakenpc=yes");
+            case 184 -> lines.add("unknown184=" + packet.g1());
+            case 185 -> lines.add("unknown185=no");
 
             case 249 -> {
                 var count = packet.g1();
