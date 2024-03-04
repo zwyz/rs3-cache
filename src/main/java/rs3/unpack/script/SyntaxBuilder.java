@@ -81,7 +81,7 @@ public class SyntaxBuilder {
             for (var pop : pops.reversed()) {
                 switch (pop) {
                     case VarReference var -> argumentTypes.add(Unpacker.getVarType(var.domain(), var.var()));
-                    case VarBitReference _ -> argumentTypes.add(Type.INT);
+                    case VarBitReference _ -> argumentTypes.add(Type.INT_INT);
 
                     case LocalReference local -> argumentTypes.add(switch (local.domain()) {
                         case INTEGER -> Type.UNKNOWN_INT;
@@ -128,7 +128,7 @@ public class SyntaxBuilder {
 
         if (command == PUSH_VARBIT) {
             var var = (VarBitReference) operand;
-            buildCommand(code, index, FLOW_LOAD, var, List.of(), List.of(Type.INT));
+            buildCommand(code, index, FLOW_LOAD, var, List.of(), List.of(Type.INT_INT));
             return;
         }
 
@@ -193,7 +193,7 @@ public class SyntaxBuilder {
         if (command == ENUM_GETREVERSECOUNT) {
             var type = Type.byID((int) stack.get(stack.size() - 3).operand);
             var argumentTypes = List.of(Type.TYPE, Type.ENUM, type);
-            var returnTypes = List.of(Type.INT);
+            var returnTypes = List.of(Type.INT_INT);
             buildCommand(code, index, command, operand, argumentTypes, returnTypes);
             return;
         }
@@ -201,7 +201,7 @@ public class SyntaxBuilder {
         if (command == ENUM_GETREVERSEINDEX) {
             var outputType = Type.byID((int) stack.get(stack.size() - 5).operand);
             var inputType = Type.byID((int) stack.get(stack.size() - 4).operand);
-            var argumentTypes = List.of(Type.TYPE, Type.TYPE, Type.ENUM, outputType, Type.INT);
+            var argumentTypes = List.of(Type.TYPE, Type.TYPE, Type.ENUM, outputType, Type.INT_INT);
             var returnTypes = List.of(inputType);
             buildCommand(code, index, command, operand, argumentTypes, returnTypes);
             return;
@@ -282,15 +282,15 @@ public class SyntaxBuilder {
         if (command == PLAYER_GROUP_MEMBER_GET_SAME_WORLD_VAR) {
             var kind = (int) stack.get(stack.size() - 2).operand == 1;
             var id = (int) stack.get(stack.size() - 1).operand;
-            var argumentTypes = List.of(Type.INT, Type.BOOLEAN, kind ? Type.VAR_PLAYER : Type.VARBIT);
-            var returnTypes = List.of(kind ? Unpacker.getVarType(VarDomain.PLAYER, id) : Type.INT);
+            var argumentTypes = List.of(Type.INT_INT, Type.BOOLEAN, kind ? Type.VAR_PLAYER : Type.VARBIT);
+            var returnTypes = List.of(kind ? Unpacker.getVarType(VarDomain.PLAYER, id) : Type.INT_INT);
             buildCommand(code, index, command, operand, argumentTypes, returnTypes);
             return;
         }
 
         if (command == DB_GETFIELD) {
             var column = (int) stack.get(stack.size() - 2).operand;
-            var argumentTypes = List.of(Type.DBROW, Type.DBCOLUMN, Type.INT);
+            var argumentTypes = List.of(Type.DBROW, Type.DBCOLUMN, Type.INT_INT);
             var returnTypes = Unpacker.getDBColumnTypeTuple(column >>> 12, (column >>> 4) & 255, (column & 15) - 1);
             buildCommand(code, index, command, operand, argumentTypes, returnTypes);
             return;
@@ -307,7 +307,7 @@ public class SyntaxBuilder {
         if (command == DB_FIND_WITH_COUNT) {
             var column = (int) stack.get(stack.size() - 3).operand;
             var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column >>> 12, (column >>> 4) & 255, (column & 15) - 1), Type.BASEVARTYPE);
-            var returnTypes = List.of(Type.INT);
+            var returnTypes = List.of(Type.INT_INT);
             buildCommand(code, index, command, operand, argumentTypes, returnTypes);
             return;
         }
@@ -315,7 +315,7 @@ public class SyntaxBuilder {
         if (command == DB_FIND_REFINE) {
             var column = (int) stack.get(stack.size() - 3).operand;
             var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column >>> 12, (column >>> 4) & 255, (column & 15) - 1), Type.BASEVARTYPE);
-            var returnTypes = List.of(Type.INT);
+            var returnTypes = List.of(Type.INT_INT);
             buildCommand(code, index, command, operand, argumentTypes, returnTypes);
             return;
         }
@@ -356,7 +356,7 @@ public class SyntaxBuilder {
                     default -> throw new IllegalStateException("unexpected transmit list for command " + command);
                 }));
 
-                result.add(Type.INT); // transmit list size
+                result.add(Type.INT_INT); // transmit list size
             }
 
             result.add(Type.STRING);
@@ -442,7 +442,7 @@ public class SyntaxBuilder {
         if (!Objects.equals(command1.arguments.get(0).arguments.get(0).operand, command2.operand)) return false;
         if (!Objects.equals(command1.operand, List.of(command2.operand))) return false;
         stack.subList(stack.size() - 2, stack.size()).clear();
-        stack.add(new Expression(FLOW_PREINC, command2.operand, List.of(Type.INT), List.of()));
+        stack.add(new Expression(FLOW_PREINC, command2.operand, List.of(Type.INT_INT), List.of()));
         return true;
     }
 
@@ -460,7 +460,7 @@ public class SyntaxBuilder {
         if (!Objects.equals(command1.arguments.get(0).arguments.get(0).operand, command2.operand)) return false;
         if (!Objects.equals(command1.operand, List.of(command2.operand))) return false;
         stack.subList(stack.size() - 2, stack.size()).clear();
-        stack.add(new Expression(FLOW_PREDEC, command2.operand, List.of(Type.INT), List.of()));
+        stack.add(new Expression(FLOW_PREDEC, command2.operand, List.of(Type.INT_INT), List.of()));
         return true;
     }
 
@@ -478,7 +478,7 @@ public class SyntaxBuilder {
         if (!Objects.equals(command2.arguments.get(0).arguments.get(0).operand, command1.operand)) return false;
         if (!Objects.equals(command2.operand, List.of(command1.operand))) return false;
         stack.subList(stack.size() - 2, stack.size()).clear();
-        stack.add(new Expression(FLOW_POSTINC, command1.operand, List.of(Type.INT), List.of()));
+        stack.add(new Expression(FLOW_POSTINC, command1.operand, List.of(Type.INT_INT), List.of()));
         return true;
     }
 
@@ -496,7 +496,7 @@ public class SyntaxBuilder {
         if (!Objects.equals(command2.arguments.get(0).arguments.get(0).operand, command1.operand)) return false;
         if (!Objects.equals(command2.operand, List.of(command1.operand))) return false;
         stack.subList(stack.size() - 2, stack.size()).clear();
-        stack.add(new Expression(FLOW_POSTDEC, command1.operand, List.of(Type.INT), List.of()));
+        stack.add(new Expression(FLOW_POSTDEC, command1.operand, List.of(Type.INT_INT), List.of()));
         return true;
     }
 

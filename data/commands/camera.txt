@@ -6,14 +6,14 @@
 [command,cam_getangle_ya]()(int)
 [command,cam_reset]
 [command,cam2_legacycam_ready](boolean $x1)
-[command,cam_moveto](coordgrid $x1,int $x2,int $x3,int $x4)
-[command,cam_lookat](coordgrid $x1,int $x2,int $x3,int $x4)
-[command,cam_followcoord](coordgrid $x1)
-[command,movecoord](coordgrid $x1,int $x2,int $x3,int $x4)(coordgrid)
+[command,cam_moveto](coord $x1,int $x2,int $x3,int $x4)
+[command,cam_lookat](coord $x1,int $x2,int $x3,int $x4)
+[command,cam_followcoord](coord $x1)
+[command,movecoord](coord $x1,int $x2,int $x3,int $x4)(coord)
 [command,cam_smoothreset]
-[command,cam_removeroof](coordgrid $x1)
+[command,cam_removeroof](coord $x1)
 [command,spline_new](int $x1,int $x2)
-[command,spline_addpoint](int $x1,int $x2,coordgrid $x3,int $x4,coordgrid $x5,int $x6,int $x7)
+[command,spline_addpoint](int $x1,int $x2,coord $x3,int $x4,coord $x5,int $x6,int $x7)
 [command,spline_length](int $x1)(int)
 [command,cam_movealong](int $x1,int $x2,int $x3,int $x4,int $x5,int $x6)
 [command,cam_inc_x]

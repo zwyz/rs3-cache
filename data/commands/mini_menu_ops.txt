@@ -5,7 +5,7 @@
 [command,minimenuopen](component $x1,int $x2)(boolean)
 [command,npc_find_active_minimenu_entry]()(boolean)
 [command,player_find_active_minimenu_entry]()(boolean)
-[command,formatminimenu](int $x1,int $x2,int $x3,int $x4,graphic $x5,graphic $x6,graphic $x7,graphic $x8,graphic $x9,int $x10,int $x11,fontmetrics $x12)()
+[command,formatminimenu](rgb $x1,int $x2,rgb $x3,int $x4,graphic $x5,graphic $x6,graphic $x7,graphic $x8,graphic $x9,int $x10,int $x11,fontmetrics $x12)()
 [command,defaultminimenu]
 [command,setsubmenuminlength](int $x1)
 [command,opplayer](int $x1,string $x2)

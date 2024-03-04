@@ -12,9 +12,9 @@ public class ScriptUnpacker {
     public static final boolean PROPAGATE_TYPES = true;
     public static final boolean KEEP_LABELS = false;
     public static final boolean ASSUME_UNKNOWN_TYPES_ARE_BASE = true;
+    public static final boolean OUTPUT_TYPE_ALIASES = false;
     public static final boolean ASSUME_UNUSED_IS_CLIENTSCRIPT = true;
     public static final boolean FORMAT_HOOKS = true;
-    public static final boolean IGNORE_ERRORS = true;
     public static final boolean CHECK_NONEMPTY_STACK = true;
     public static final boolean CHECK_EMPTY_ARGUMENT = true;
     private static final Map<Integer, CompiledScript> SCRIPTS = new HashMap<>();

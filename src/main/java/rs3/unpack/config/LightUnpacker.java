@@ -22,10 +22,10 @@ public class LightUnpacker {
                 return lines;
             }
 
-            case 1 -> lines.add("flickerfunction=" + packet.g1());
-            case 2 -> lines.add("flickerfrequency=" + packet.g2());
-            case 3 -> lines.add("flickeramplitude=" + packet.g2());
-            case 4 -> lines.add("flickerbase=" + packet.g2s());
+            case 1 -> lines.add("function=" + packet.g1());
+            case 2 -> lines.add("frequency=" + packet.g2());
+            case 3 -> lines.add("amplitude=" + packet.g2());
+            case 4 -> lines.add("offset=" + packet.g2s()); // html5 linked to loctype offset
 
             case 5 -> lines.add("unknown5=" + packet.g4s());
             case 6 -> lines.add("unknown6=" + packet.g4s());

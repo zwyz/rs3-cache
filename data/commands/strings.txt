@@ -28,7 +28,7 @@
 [command,tostring_localised_long](long $x1,boolean $x2)(string)
 [command,stringwidth](string $x1,fontmetrics $x2)(int)
 [command,string_distance](string $x1,string $x2)(int)
-[command,get_col_tag](int $x1)(string)
+[command,get_col_tag](rgb $x1)(string)
 [command,lowercase](string $x1)(string)
 [command,urlencode](string $x1)(string)
 [command,unknown_command_37](fontmetrics $x1)(int,int,int,int,int)

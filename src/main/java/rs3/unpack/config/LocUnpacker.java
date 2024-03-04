@@ -87,9 +87,9 @@ public class LocUnpacker {
             case 61 -> lines.add("category=" + Unpacker.format(Type.CATEGORY, packet.g2()));
             case 62 -> lines.add("mirror=yes");
             case 64 -> lines.add("shadow=no"); // https://www.youtube.com/watch?v=vZ7oG1IDz1w 2:09:30
-            case 65 -> lines.add("resizex=" + packet.g2());
-            case 66 -> lines.add("resizey=" + packet.g2());
-            case 67 -> lines.add("resizez=" + packet.g2());
+            case 65 -> lines.add("resizex=" + packet.g2()); // html5 (only resize)
+            case 66 -> lines.add("resizey=" + packet.g2()); // html5 (only resize)
+            case 67 -> lines.add("resizez=" + packet.g2()); // html5 (only resize)
 
             case 69 -> { // https://twitter.com/JagexAsh/status/1641051532010434560
                 int blocked = packet.g1s();
@@ -107,9 +107,9 @@ public class LocUnpacker {
                 lines.add("forceapproach=" + String.join(",", result));
             }
 
-            case 70 -> lines.add("translatex=" + packet.g2s());
-            case 71 -> lines.add("translatey=" + packet.g2s());
-            case 72 -> lines.add("translatez=" + packet.g2s());
+            case 70 -> lines.add("offsetx=" + packet.g2s()); // html5 (only offset)
+            case 71 -> lines.add("offsety=" + packet.g2s()); // html5 (only offset)
+            case 72 -> lines.add("offsetz=" + packet.g2s()); // html5 (only offset)
             case 73 -> lines.add("forcedecor=yes");
             case 74 -> lines.add("breakroutefinding=yes"); // https://twitter.com/JagexAsh/status/1443150721734660096
             case 75 -> lines.add("raiseobject=" + Unpacker.formatBoolean(packet.g1())); // https://twitter.com/JagexAsh/status/1641051532010434560
@@ -190,15 +190,15 @@ public class LocUnpacker {
             case 93 -> lines.add("hillchange=rotate," + packet.g2());
             case 94 -> lines.add("hillchange=ceiling_skew");
             case 95 -> lines.add("hillchange=skew_to_fit," + packet.g2());
-            case 97 -> lines.add("mapsceneiconrotate=yes");
+            case 97 -> lines.add("msirotate=yes");
             case 98 -> lines.add("unknown98=yes");
 //            case 99 -> lines.add("unknown99=" + packet.g1() + "," + packet.g2()); // gone in nxt
 //            case 100 -> lines.add("unknown100=" + packet.g1() + "," + packet.g2()); // gone in nxt
-            case 101 -> lines.add("mapsceneiconrotateextra=" + packet.g1());
-            case 102 -> lines.add("mapsceneicon=" + Unpacker.format(Type.MAPSCENEICON, packet.g2()));
+            case 101 -> lines.add("msiangle=" + packet.g1());
+            case 102 -> lines.add("msi=" + Unpacker.format(Type.MAPSCENEICON, packet.g2()));
             case 103 -> lines.add("occlude=no");
             case 104 -> lines.add("bgsoundvolume=" + packet.g1());
-            case 105 -> lines.add("mapsceneiconmirror=yes");
+            case 105 -> lines.add("msimirror=yes");
 
             case 106 -> {
                 var count = packet.g1();
@@ -278,13 +278,16 @@ public class LocUnpacker {
                 }
             }
 
-            case 250 -> lines.add("unknown250=" + packet.g1()); // todo: sound
-            case 251 -> lines.add("unknown251=" + Unpacker.formatBoolean(packet.g1())); // todo: sound
-            case 252 -> lines.add("unknown252=" + packet.g2() + "," + packet.g2() + "," + packet.g2()); // todo sound
+            // _thy/_thz/_tia/_tie
+            // 2 7 pjm
+            // bgsound _vmc/_vyj _tbh/_tcv
+            case 250 -> lines.add("bgsoundshape=" + packet.g1()); // todo: sound _vmd/_vyl
+            case 251 -> lines.add("unknown251=" + Unpacker.formatBoolean(packet.g1())); // todo: sound _vme/_vym
+            case 252 -> lines.add("unknown252=" + packet.g2() + "," + packet.g2() + "," + packet.g2()); // todo sound _vmg/_vyo _vmi/_vyp _vmk/_vyr
 
-            case 253 -> lines.add("unknown253=" + packet.g1()); // todo sound
-            case 254 -> lines.add("unknown254=" + Unpacker.formatBoolean(packet.g1())); // todo: sound
-            case 255 -> lines.add("unknown255=" + packet.g2() + "," + packet.g2() + "," + packet.g2()); // todo: sound
+            case 253 -> lines.add("randomsoundshape=" + packet.g1()); // todo sound _vml/_vyy
+            case 254 -> lines.add("unknown254=" + Unpacker.formatBoolean(packet.g1())); // todo: sound _vmm/_vza
+            case 255 -> lines.add("unknown255=" + packet.g2() + "," + packet.g2() + "," + packet.g2()); // todo: sound _vmn/_vzc _vmp/_vzd _vmq/_vzf
 
             default -> throw new IllegalStateException("unknown opcode");
         }

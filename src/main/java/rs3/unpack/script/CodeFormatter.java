@@ -21,20 +21,20 @@ public class CodeFormatter {
         for (var type : parameterTypes) {
             if (Type.subtype(type, Type.UNKNOWN_INT)) {
                 declaredLocals.add(new LocalReference(LocalDomain.INTEGER, indexInt));
-                parameters.add(formatType(type) + " " + formatLocal(new LocalReference(LocalDomain.INTEGER, indexInt++), type));
+                parameters.add(formatType(type, true) + " " + formatLocal(new LocalReference(LocalDomain.INTEGER, indexInt++), type));
             } else if (Type.subtype(type, Type.UNKNOWN_LONG)) {
                 declaredLocals.add(new LocalReference(LocalDomain.LONG, indexLong));
-                parameters.add(formatType(type) + " " + formatLocal(new LocalReference(LocalDomain.LONG, indexLong++), type));
+                parameters.add(formatType(type, true) + " " + formatLocal(new LocalReference(LocalDomain.LONG, indexLong++), type));
             } else if (Type.subtype(type, Type.UNKNOWN_OBJECT)) {
                 declaredLocals.add(new LocalReference(LocalDomain.OBJECT, indexObject));
-                parameters.add(formatType(type) + " " + formatLocal(new LocalReference(LocalDomain.OBJECT, indexObject++), type));
+                parameters.add(formatType(type, true) + " " + formatLocal(new LocalReference(LocalDomain.OBJECT, indexObject++), type));
             } else {
                 throw new IllegalStateException("unknown parameter local");
             }
         }
 
         for (var type : returnTypes) {
-            returns.add(formatType(type));
+            returns.add(formatType(type, true));
         }
 
         var header = name;
@@ -98,7 +98,7 @@ public class CodeFormatter {
                                 var type = types.get(typeIndex);
 
                                 if (declaredLocals != null && declaredLocals.add(local)) {
-                                    left.add("def_" + formatType(type) + " " + formatLocal(local, type));
+                                    left.add("def_" + formatType(type, true) + " " + formatLocal(local, type));
                                 } else {
                                     left.add(formatLocal(local, type));
                                 }
@@ -119,10 +119,10 @@ public class CodeFormatter {
 
             case "flow_load" -> formatLoadTarget(expression.operand, expression.type.get(0));
 
-            case "flow_preinc" -> "++" + formatLoadTarget(expression.operand, Type.INT);
-            case "flow_predec" -> "--" + formatLoadTarget(expression.operand, Type.INT);
-            case "flow_postinc" -> formatLoadTarget(expression.operand, Type.INT) + "++";
-            case "flow_postdec" -> formatLoadTarget(expression.operand, Type.INT) + "--";
+            case "flow_preinc" -> "++" + formatLoadTarget(expression.operand, Type.INT_INT);
+            case "flow_predec" -> "--" + formatLoadTarget(expression.operand, Type.INT_INT);
+            case "flow_postinc" -> formatLoadTarget(expression.operand, Type.INT_INT) + "++";
+            case "flow_postdec" -> formatLoadTarget(expression.operand, Type.INT_INT) + "--";
 
             case "gosub_with_params" -> {
                 var script = formatConstant(Type.CLIENTSCRIPT, expression.operand);
@@ -136,18 +136,18 @@ public class CodeFormatter {
 
             case "define_array" -> {
                 var index = (int) expression.operand >> 16;
-                var type = formatType(Type.byID((int) expression.operand & 0xffff));
-                yield "def_" + type + " $" + type + "array" + index + "(" + format(expression.arguments.get(0)) + ")";
+                var type = Type.byID((int) expression.operand & 0xffff);
+                yield "def_" + formatType(type, true) + " $" + formatType(type, false) + "array" + index + "(" + format(expression.arguments.get(0)) + ")";
             }
 
             case "push_array_int" -> {
                 var index = (int) expression.operand;
-                yield "$" + formatType(expression.type.get(0)) + "array" + index + "(" + format(expression.arguments.get(0)) + ")";
+                yield "$" + formatType(expression.type.get(0), false) + "array" + index + "(" + format(expression.arguments.get(0)) + ")";
             }
 
             case "pop_array_int" -> {
                 var index = (int) expression.operand;
-                yield "$" + formatType(expression.arguments.get(1).type.get(0)) + "array" + index + "(" + format(expression.arguments.get(0)) + ") = " + format(expression.arguments.get(1));
+                yield "$" + formatType(expression.arguments.get(1).type.get(0), false) + "array" + index + "(" + format(expression.arguments.get(0)) + ") = " + format(expression.arguments.get(1));
             }
 
             case "add", "long_add" -> {
@@ -230,7 +230,7 @@ public class CodeFormatter {
 
             case "flow_switch" -> {
                 var type = expression.arguments.get(0).type.get(0);
-                var result = "switch_" + formatType(type) + " (" + expression.arguments.get(0) + ") {\n";
+                var result = "switch_" + formatType(type, true) + " (" + expression.arguments.get(0) + ") {\n";
 
                 for (var branch : (List<SwitchBranch>) expression.operand) {
                     if (branch.values() == null) {
@@ -368,7 +368,7 @@ public class CodeFormatter {
 
     private static String formatConstant(Type type, Object value) {
         if (ScriptUnpacker.ASSUME_UNKNOWN_TYPES_ARE_BASE) {
-            if (type == Type.UNKNOWN_INT) type = Type.INT;
+            if (type == Type.UNKNOWN_INT) type = Type.INT_INT;
             if (type == Type.UNKNOWN_LONG) type = Type.LONG;
             if (type == Type.UNKNOWN_OBJECT) type = Type.STRING;
         }
@@ -387,18 +387,22 @@ public class CodeFormatter {
         throw new IllegalStateException("invalid constant");
     }
 
-    private static String formatType(Type type) {
+    private static String formatType(Type type, boolean real) {
         if (ScriptUnpacker.ASSUME_UNKNOWN_TYPES_ARE_BASE) {
-            if (type == Type.UNKNOWN_INT) type = Type.INT;
+            if (type == Type.UNKNOWN_INT) type = Type.INT_INT;
             if (type == Type.UNKNOWN_LONG) type = Type.LONG;
             if (type == Type.UNKNOWN_OBJECT) type = Type.STRING;
         }
 
-        return type.name().toLowerCase(Locale.ROOT);
+        if (type.alias != null && real && !ScriptUnpacker.OUTPUT_TYPE_ALIASES) {
+            type = type.alias;
+        }
+
+        return type.name;
     }
 
     private static String formatLocal(LocalReference local, Type type) {
-        return "$" + formatType(type) + local.local();
+        return "$" + formatType(type, false) + local.local();
     }
 
     private static String formatVar(Object operand) {

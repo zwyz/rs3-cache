@@ -15,7 +15,7 @@
 [command,oc_param]todo
 [command,oc_icursor](obj $x1,int $x2)(cursor)
 [command,oc_minimenu_colour_overridden](obj $x1)(boolean)
-[command,oc_minimenu_colour](obj $x1)(int)
+[command,oc_minimenu_colour](obj $x1)(rgb)
 [command,oc_find](string $x1,boolean $x2)(int)
 [command,oc_findnext]()(obj)
 [command,oc_findrestart]

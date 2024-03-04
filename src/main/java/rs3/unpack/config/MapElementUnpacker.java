@@ -24,13 +24,26 @@ public class MapElementUnpacker {
 
             case 1 -> lines.add("graphic=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
             case 2 -> lines.add("unknown2=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
-            case 3 -> lines.add("text=" + packet.gjstr());
+            case 3 -> lines.add("text=" + packet.gjstr()); // html5 unobfuscated
             case 4 -> lines.add("colour=" + packet.g3());
             case 5 -> lines.add("unknown5=" + packet.g3());
             case 6 -> lines.add("size=" + packet.g1());
             case 7 -> lines.add("vis=" + packet.g1());
             case 8 -> lines.add("unknown8=" + packet.g1());
-            case 9 -> lines.add("unknown9=" + packet.g2null() + "," + packet.g2null() + "," + packet.g4s() + "," + packet.g4s());
+
+            case 9 -> {
+                var multivarbit = packet.g2null();
+                var multivar = packet.g2null();
+
+                if (multivar != -1 && multivarbit != -1) {
+                    throw new IllegalStateException("can't have both var and varbit");
+                } else if (multivar != -1) {
+                    lines.add("condition=" + Unpacker.format(Type.VAR_PLAYER, multivar) + "," + packet.g4s() + "," + packet.g4s());
+                } else if (multivarbit != -1) {
+                    lines.add("condition=" + Unpacker.format(Type.VARBIT, multivarbit) + "," + packet.g4s() + "," + packet.g4s());
+                }
+            }
+
             case 10 -> lines.add("op1=" + packet.gjstr());
             case 11 -> lines.add("op2=" + packet.gjstr());
             case 12 -> lines.add("op3=" + packet.gjstr());

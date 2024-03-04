@@ -245,7 +245,7 @@ public class InterfaceUnpacker {
 
     private static String formatHookArgument(Object value, Type type) {
         if (ScriptUnpacker.ASSUME_UNKNOWN_TYPES_ARE_BASE) {
-            if (type == Type.UNKNOWN_INT) type = Type.INT;
+            if (type == Type.UNKNOWN_INT) type = Type.INT_INT;
             if (type == Type.UNKNOWN_LONG) type = Type.LONG;
             if (type == Type.UNKNOWN_OBJECT) type = Type.STRING;
         }

@@ -14,7 +14,7 @@ public enum Js5ConfigGroup {
     PARAMTYPE(11),
     SEQTYPE(12),
     SPOTTYPE(13),
-    UNKNOWN_17(17),
+    CATEGORY(17),
     AREATYPE(18),
     STRUCTTYPE(26),
     CHATPHRASETYPE(27),

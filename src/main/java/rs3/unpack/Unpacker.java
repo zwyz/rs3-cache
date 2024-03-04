@@ -60,7 +60,7 @@ public class Unpacker {
                 yield level + "_" + (x / 64) + "_" + (z / 64) + "_" + (x % 64) + "_" + (z % 64);
             }
 
-            case TYPE -> Type.byID(value).name().toLowerCase(Locale.ROOT);
+            case TYPE -> Type.byID(value).name;
 
             case COMPONENT -> {
                 if (value == -1) {
@@ -131,11 +131,11 @@ public class Unpacker {
             case VAR_GLOBAL -> formatVar(VarDomain.GLOBAL, value);
 
             case MOVESPEED -> switch (value) {
-                case 0 -> "stationary";
-                case 1 -> "crawl";
-                case 2 -> "walk";
-                case 3 -> "run";
-                case 4 -> "instant";
+                case -1 -> "stationary";
+                case 0 -> "crawl";
+                case 1 -> "walk";
+                case 2 -> "run";
+                case 3 -> "instant";
                 default -> throw new IllegalArgumentException("invalid movespeed");
             };
 
@@ -249,12 +249,323 @@ public class Unpacker {
                 yield name;
             }
 
+            case INT_INT -> String.valueOf(value);
+
+            case INT_BOOLEAN -> switch (value) {
+                case -1 -> "null";
+                case 0 -> "^false";
+                case 1 -> "^true";
+                default -> "" + value;
+            };
+
+            case INT_CHATFILTER -> switch (value) {
+                case -1 -> "null";
+                case 0 -> "^chatfilter_on";
+                case 1 -> "^chatfilter_friends";
+                case 2 -> "^chatfilter_off";
+                case 3 -> "^chatfilter_hide";
+                case 4 -> "^chatfilter_autochat";
+                default -> "^chatfilter_" + value;
+            };
+
+            case INT_CHATTYPE -> switch (value) { // https://twitter.com/TheCrazy0neTv/status/1100567742602756096
+                case -1 -> "null";
+                case 0 -> "^chattype_gamemessage";
+                case 1 -> "^chattype_modchat";
+                case 2 -> "^chattype_publicchat";
+                case 3 -> "^chattype_privatechat";
+                case 4 -> "^chattype_engine";
+                case 5 -> "^chattype_loginlogoutnotification";
+                case 6 -> "^chattype_privatechatout";
+                case 7 -> "^chattype_modprivatechat";
+                case 9 -> "^chattype_friendschat";
+                case 11 -> "^chattype_friendschatnotification";
+                case 14 -> "^chattype_broadcast";
+                case 26 -> "^chattype_snapshotfeedback";
+                case 27 -> "^chattype_obj_examine";
+                case 28 -> "^chattype_npc_examine";
+                case 29 -> "^chattype_loc_examine";
+                case 30 -> "^chattype_friendnotification";
+                case 31 -> "^chattype_ignorenotification";
+                case 41 -> "^chattype_clanchat";
+                case 43 -> "^chattype_clanmessage";
+                case 44 -> "^chattype_clanguestchat";
+                case 46 -> "^chattype_clanguestmessage";
+                case 90 -> "^chattype_autotyper";
+                case 91 -> "^chattype_modautotyper";
+                case 99 -> "^chattype_console";
+                case 101 -> "^chattype_tradereq";
+                case 102 -> "^chattype_trade";
+                case 103 -> "^chattype_chalreq_trade";
+                case 104 -> "^chattype_chalreq_friendschat";
+                case 105 -> "^chattype_spam";
+                case 106 -> "^chattype_playerrelated";
+                case 107 -> "^chattype_10sectimeout";
+                case 109 -> "^chattype_clancreationinvitation";
+                case 110 -> "^chattype_chalreq_clanchat";
+                case 114 -> "^chattype_dialogue";
+                case 115 -> "^chattype_mesbox";
+                default -> "^chattype_" + value;
+            };
+
+            case INT_PLATFORMTYPE -> switch (value) {
+                case -1 -> "null";
+                case 0 -> "^platformtype_default";
+                case 1 -> "^platformtype_steam";
+                case 2 -> "^platformtype_android";
+                case 3 -> "^platformtype_apple";
+                case 5 -> "^platformtype_jagex";
+                default -> "^platformtype_" + value;
+            };
+
+            case INT_IFTYPE -> switch (value) {
+                case -1 -> "null";
+                case 0 -> "^iftype_layer";
+                case 3 -> "^iftype_rectangle";
+                case 4 -> "^iftype_text";
+                case 5 -> "^iftype_graphic";
+                case 6 -> "^iftype_model";
+                case 9 -> "^iftype_line";
+                case 10 -> "^iftype_button";
+                case 11 -> "^iftype_panel";
+                case 12 -> "^iftype_check";
+                case 13 -> "^iftype_input";
+                case 14 -> "^iftype_slider";
+                case 15 -> "^iftype_grid";
+                case 16 -> "^iftype_list";
+                case 17 -> "^iftype_combo";
+                case 18 -> "^iftype_pagedlayer";
+                case 19 -> "^iftype_pagedlayerheader";
+                case 20 -> "^iftype_carousel";
+                case 21 -> "^iftype_pagedcarousel";
+                case 22 -> "^iftype_radiogroup";
+                case 23 -> "^iftype_groupbox";
+                case 24 -> "^iftype_radialprogressoverlay";
+                case 26 -> "^iftype_crmview";
+                case 27 -> "^iftype_cutscenelayer";
+                case 28 -> "^iftype_modelgroup";
+                default -> "^iftype_" + value;
+            };
+
+            case INT_KEY -> switch (value) {
+                case -1 -> "null";
+                case 0 -> "0";
+                case 1 -> "^key_f1";
+                case 2 -> "^key_f2";
+                case 3 -> "^key_f3";
+                case 4 -> "^key_f4";
+                case 5 -> "^key_f5";
+                case 6 -> "^key_f6";
+                case 7 -> "^key_f7";
+                case 8 -> "^key_f8";
+                case 9 -> "^key_f9";
+                case 10 -> "^key_f10";
+                case 11 -> "^key_f11";
+                case 12 -> "^key_f12";
+                case 13 -> "^key_escape";
+                case 16 -> "^key_1";
+                case 17 -> "^key_2";
+                case 18 -> "^key_3";
+                case 19 -> "^key_4";
+                case 20 -> "^key_5";
+                case 21 -> "^key_6";
+                case 22 -> "^key_7";
+                case 23 -> "^key_8";
+                case 24 -> "^key_9";
+                case 25 -> "^key_0";
+                case 26 -> "^key_minus";
+                case 27 -> "^key_equals";
+                case 28 -> "^key_console";
+                case 32 -> "^key_q";
+                case 33 -> "^key_w";
+                case 34 -> "^key_e";
+                case 35 -> "^key_r";
+                case 36 -> "^key_t";
+                case 37 -> "^key_y";
+                case 38 -> "^key_u";
+                case 39 -> "^key_i";
+                case 40 -> "^key_o";
+                case 41 -> "^key_p";
+                case 42 -> "^key_left_bracket";
+                case 43 -> "^key_right_bracket";
+                case 48 -> "^key_a";
+                case 49 -> "^key_s";
+                case 50 -> "^key_d";
+                case 51 -> "^key_f";
+                case 52 -> "^key_g";
+                case 53 -> "^key_h";
+                case 54 -> "^key_j";
+                case 55 -> "^key_k";
+                case 56 -> "^key_l";
+                case 57 -> "^key_semicolon";
+                case 58 -> "^key_apostrophe";
+                case 59 -> "^key_win_left";
+                case 64 -> "^key_z";
+                case 65 -> "^key_x";
+                case 66 -> "^key_c";
+                case 67 -> "^key_v";
+                case 68 -> "^key_b";
+                case 69 -> "^key_n";
+                case 70 -> "^key_m";
+                case 71 -> "^key_comma";
+                case 72 -> "^key_period";
+                case 73 -> "^key_slash";
+                case 74 -> "^key_backslash";
+                case 80 -> "^key_tab";
+                case 81 -> "^key_shift_left";
+                case 82 -> "^key_control_left";
+                case 83 -> "^key_space";
+                case 84 -> "^key_return";
+                case 85 -> "^key_backspace";
+                case 86 -> "^key_alt_left";
+                case 87 -> "^key_numpad_add";
+                case 88 -> "^key_numpad_subtract";
+                case 89 -> "^key_numpad_multiply";
+                case 90 -> "^key_numpad_divide";
+                case 91 -> "^key_clear";
+                case 96 -> "^key_left";
+                case 97 -> "^key_right";
+                case 98 -> "^key_up";
+                case 99 -> "^key_down";
+                case 100 -> "^key_insert";
+                case 101 -> "^key_del";
+                case 102 -> "^key_home";
+                case 103 -> "^key_end";
+                case 104 -> "^key_page_up";
+                case 105 -> "^key_page_down";
+                default -> "^key_" + value;
+            };
+
+            case INT_SETPOSH -> switch (value) {
+                case -1 -> "null";
+                case 0 -> "^setposh_abs_left";
+                case 1 -> "^setposh_abs_centre";
+                case 2 -> "^setposh_abs_right";
+                case 3 -> "^setposh_proportion_left";
+                case 4 -> "^setposh_proportion_centre";
+                case 5 -> "^setposh_proportion_right";
+                default -> "^setposh_" + value;
+            };
+
+            case INT_SETPOSV -> switch (value) {
+                case -1 -> "null";
+                case 0 -> "^setposv_abs_top";
+                case 1 -> "^setposv_abs_centre";
+                case 2 -> "^setposv_abs_bottom";
+                case 3 -> "^setposv_proportion_top";
+                case 4 -> "^setposv_proportion_centre";
+                case 5 -> "^setposv_proportion_bottom";
+                default -> "^setposv_" + value;
+            };
+
+            case INT_SETSIZE -> switch (value) {
+                case -1 -> "null";
+                case 0 -> "^setsize_abs";
+                case 1 -> "^setsize_minus";
+                case 2 -> "^setsize_proportion";
+                case 3 -> "^setsize_3"; // todo
+                case 4 -> "^setsize_aspect";
+                default -> "^setsize_" + value;
+            };
+
+            case INT_SETTEXTALIGNH -> switch (value) {
+                case -1 -> "null";
+                case 0 -> "^settextalignh_left";
+                case 1 -> "^settextalignh_centre";
+                case 2 -> "^settextalignh_right";
+                default -> "^settextalignh_" + value;
+            };
+
+            case INT_SETTEXTALIGNV -> switch (value) {
+                case -1 -> "null";
+                case 0 -> "^settextalignv_top";
+                case 1 -> "^settextalignv_centre";
+                case 2 -> "^settextalignv_bottom";
+                default -> "^settextalignv_" + value;
+            };
+
+            case INT_WINDOWMODE -> switch (value) {
+                case -1 -> "null";
+                case 0 -> "0";
+                case 1 -> "^windowmode_fixed";
+                case 2 -> "^windowmode_resizable";
+                case 3 -> "^windowmode_fullscreen";
+                default -> "^windowmode_" + value;
+            };
+
+            case INT_RGB -> switch (value) {
+                case -1 -> "null";
+                case 0xff0000 -> "^red";
+                case 0x00ff00 -> "^green";
+                case 0x0000ff -> "^blue";
+                case 0xffff00 -> "^yellow";
+                case 0xff00ff -> "^magenta";
+                case 0x00ffff -> "^cyan";
+                case 0xffffff -> "^white";
+                case 0x000000 -> "^black";
+                default -> "0x" + Integer.toHexString(value);
+            };
+
+            case INT_CLIENTOPTION -> switch (value) {
+                case -1->"null";
+                case 0 -> "^clientoption_ambient_occlusion";
+                case 1 -> "^clientoption_anisotropic_filtering";
+                case 2 -> "^clientoption_antialiasing_mode";
+                case 3 -> "^clientoption_antialiasing_quality";
+                case 4 -> "^clientoption_bloom";
+                case 5 -> "^clientoption_brightness";
+                case 6 -> "^clientoption_custom_cursors";
+                case 7 -> "^clientoption_dof";
+                case 8 -> "^clientoption_draw_distance";
+                case 9 -> "^clientoption_ground_blending";
+                case 10 -> "^clientoption_ground_decor";
+                case 11 -> "^clientoption_interface_scale";
+                case 12 -> "^clientoption_lighting_quality";
+                case 13 -> "^clientoption_max_foreground_fps";
+                case 14 -> "^clientoption_max_background_fps";
+                case 15 -> "^clientoption_reflections";
+                case 16 -> "^clientoption_remove_roof";
+                case 17 -> "^clientoption_remove_roof_override";
+                case 22 -> "^clientoption_volume_main_effects";
+                case 18 -> "^clientoption_game_render_scale";
+                case 23 -> "^clientoption_volume_main_music";
+                case 19 -> "^clientoption_shadows";
+                case 20 -> "^clientoption_shadow_quality";
+                case 21 -> "^clientoption_texturing";
+                case 24 -> "^clientoption_volume_background_effects";
+                case 25 -> "^clientoption_volume_speech";
+                case 26 -> "^clientoption_volume_login_music";
+                case 27 -> "^clientoption_volumetric_lighting";
+                case 28 -> "^clientoption_v_sync";
+                case 30 -> "^clientoption_smooth_clip_fade";
+                case 31 -> "^clientoption_canopy_cutout";
+                case 36 -> "^clientoption_particle_quality";
+                case 29 -> "^clientoption_entity_highlights";
+                case 32 -> "^clientoption_diagnostics";
+                case 33 -> "^clientoption_rich_presence";
+                case 34 -> "^clientoption_language";
+                case 35 -> "^clientoption_haptic_feedback";
+                case 37 -> "^clientoption_custom_player_model_count";
+                case 38 -> "^clientoption_volume_master";
+                default -> "^clientoption_" + value;
+            };
+
+            case INT_FILTEROP -> switch (value) {
+                case -1 -> "null";
+                case 1 -> "^filterop_lt";
+                case 2 -> "^filterop_lte";
+                case 3 -> "^filterop_eq";
+                case 4 -> "^filterop_gte";
+                case 5 -> "^filterop_gt";
+                default -> "^windowmode_" + value;
+            };
+
             default -> {
                 if (value == -1) {
                     yield "null";
                 }
 
-                yield type.name().toLowerCase(Locale.ROOT) + "_" + value;
+                yield type.name + "_" + value;
             }
         };
     }
@@ -268,17 +579,13 @@ public class Unpacker {
                     yield "null";
                 }
 
-                yield type.name().toLowerCase(Locale.ROOT) + "_" + value;
+                yield type.name + "_" + value;
             }
         };
     }
 
     public static String format(Type type, String value) {
         return value;
-    }
-
-    public static String formatTypeChar(int value) {
-        return Type.byChar(value).name().toLowerCase(Locale.ROOT);
     }
 
     public static String formatVar(VarDomain domain, int value) {
@@ -387,12 +694,6 @@ public class Unpacker {
         if (table == 267 && column == 0) return List.of(Type.INT); // todo
         if (table == 268 && column == 0) return List.of(Type.INT); // todo
         if (table == 268 && column == 2) return List.of(Type.INT); // todo
-
-//        if (table == 268 && column == 2) return List.of(Type.STRING); // todo beta
-//        if (table == 267 && column == 0) return List.of(Type.STRING); // todo beta
-//        if (table == 269 && column == 0) return List.of(Type.INT); // todo beta
-//        if (table == 270 && column == 0) return List.of(Type.INT); // todo beta
-//        if (table == 270 && column == 2) return List.of(Type.INT); // todo beta
 
         return Objects.requireNonNull(DBCOLUMN_TYPE.get(new Tuple2<>(table, column)));
     }
@@ -519,7 +820,7 @@ public class Unpacker {
         var retexIndices = (String[]) null;
 
         for (var line : lines) {
-            if (line.startsWith("recolIndices=")) {
+            if (line.startsWith("recolindices=")) {
                 recolIndices = line.split("=")[1].split(",");
             }
 

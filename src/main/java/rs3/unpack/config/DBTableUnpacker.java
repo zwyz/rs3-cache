@@ -37,7 +37,7 @@ public class DBTableUnpacker {
                     }
 
                     Unpacker.setDBColumnType(id, column, types);
-                    lines.add("column=dbcolumn_" + column + "," + types.stream().map(t -> t.name().toLowerCase()).collect(Collectors.joining(",")));
+                    lines.add("column=dbcolumn_" + column + "," + types.stream().map(t -> t.name).collect(Collectors.joining(",")));
 
                     if (hasdefault) {
                         var defaultCount = packet.gSmart1or2();

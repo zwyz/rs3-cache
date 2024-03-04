@@ -1,5 +1,7 @@
 package rs3.unpack;
 
+import java.util.Locale;
+
 public enum Type {
     INT(0, 'i', BaseVarType.INTEGER),
     BOOLEAN(1, '1', BaseVarType.INTEGER),
@@ -9,7 +11,7 @@ public enum Type {
     CURSOR(5, '@', BaseVarType.INTEGER),
     SEQ(6, 'A', BaseVarType.INTEGER),
     COLOUR(7, 'C', BaseVarType.INTEGER),
-    LOC_SHAPE(8, 'H', BaseVarType.INTEGER), // locshape
+    LOC_SHAPE(8, 'H', BaseVarType.INTEGER, "locshape"),
     COMPONENT(9, 'I', BaseVarType.INTEGER),
     IDKIT(10, 'K', BaseVarType.INTEGER),
     MIDI(11, 'M', BaseVarType.INTEGER),
@@ -22,8 +24,8 @@ public enum Type {
     NPC_STAT(18, 'T', BaseVarType.INTEGER),
     WRITEINV(19, 'V', BaseVarType.INTEGER),
     MESH(20, '^', BaseVarType.INTEGER),
-    MAPAREA(21, '`', BaseVarType.INTEGER), // wma
-    COORDGRID(22, 'c', BaseVarType.INTEGER), // coord
+    MAPAREA(21, '`', BaseVarType.INTEGER, "wma"),
+    COORDGRID(22, 'c', BaseVarType.INTEGER, "coord"),
     GRAPHIC(23, 'd', BaseVarType.INTEGER),
     CHATPHRASE(24, 'e', BaseVarType.INTEGER),
     FONTMETRICS(25, 'f', BaseVarType.INTEGER),
@@ -55,19 +57,19 @@ public enum Type {
     CUTSCENE(51, 'š', BaseVarType.INTEGER),
     ITEMCODE(53, '¡', BaseVarType.INTEGER),
     TYPE_54(54, '¢', BaseVarType.INTEGER),
-    MAPSCENEICON(55, '£', BaseVarType.INTEGER), // msi
+    MAPSCENEICON(55, '£', BaseVarType.INTEGER, "msi"),
     CLANFORUMQFC(56, '§', BaseVarType.LONG),
     VORBIS(57, '«', BaseVarType.INTEGER),
-    VERIFY_OBJECT(58, '®', BaseVarType.INTEGER), // verifyobj
+    VERIFY_OBJECT(58, '®', BaseVarType.INTEGER, "verifyobj"),
     MAPELEMENT(59, 'µ', BaseVarType.INTEGER),
     CATEGORYTYPE(60, '¶', BaseVarType.INTEGER),
-    SOCIAL_NETWORK(61, 'Æ', BaseVarType.INTEGER), // socialnetwork
+    SOCIAL_NETWORK(61, 'Æ', BaseVarType.INTEGER, "socialnetwork"),
     HITMARK(62, '×', BaseVarType.INTEGER),
     PACKAGE(63, 'Þ', BaseVarType.INTEGER),
-    PARTICLE_EFFECTOR(64, 'á', BaseVarType.INTEGER), // pef
+    PARTICLE_EFFECTOR(64, 'á', BaseVarType.INTEGER, "pef"),
     TYPE_65(65, 'æ', BaseVarType.INTEGER),
-    PARTICLE_EMITTER(66, 'é', BaseVarType.INTEGER), // pem
-    PLOGTYPE(67, 'í', BaseVarType.INTEGER), // plog
+    PARTICLE_EMITTER(66, 'é', BaseVarType.INTEGER, "pem"),
+    PLOGTYPE(67, 'í', BaseVarType.INTEGER, "plog"),
     UNSIGNED_INT(68, 'î', BaseVarType.INTEGER),
     SKYBOX(69, 'ó', BaseVarType.INTEGER),
     SKYDECOR(70, 'ú', BaseVarType.INTEGER),
@@ -80,7 +82,7 @@ public enum Type {
     TYPE_77(77, 'è', BaseVarType.INTEGER),
     TYPE_78(78, '¹', BaseVarType.INTEGER),
     TYPE_79(79, '°', BaseVarType.INTEGER),
-    TYPE_80(80, 'ì', BaseVarType.INTEGER), // region_visibility
+    TYPE_80(80, 'ì', BaseVarType.INTEGER, "region_visibility"),
     TYPE_81(81, 'ë', BaseVarType.INTEGER),
     TYPE_83(83, 'þ', BaseVarType.INTEGER),
     TYPE_84(84, 'ý', BaseVarType.INTEGER),
@@ -88,14 +90,14 @@ public enum Type {
     TYPE_86(86, 'õ', BaseVarType.INTEGER),
     TYPE_87(87, 'ô', BaseVarType.INTEGER),
     TYPE_88(88, 'ö', BaseVarType.INTEGER),
-    GWC_PLATFORM(89, 'ò', BaseVarType.INTEGER), // gwc_platform
+    GWC_PLATFORM(89, 'ò', BaseVarType.INTEGER, "gwc_platform"),
     TYPE_90(90, 'Ü', BaseVarType.INTEGER),
     TYPE_91(91, 'ù', BaseVarType.INTEGER),
     TYPE_92(92, 'ï', BaseVarType.INTEGER),
     TYPE_93(93, '¯', BaseVarType.INTEGER),
-    BUG_TEMPLATE(94, 'ê', BaseVarType.INTEGER), // bugtemplate
-    BILLING_AUTH_FLAG(95, 'ð', BaseVarType.INTEGER), // billingauthflag
-    ACCOUNT_FEATURE_FLAG(96, 'å', BaseVarType.INTEGER), // accountfeatureflag
+    BUG_TEMPLATE(94, 'ê', BaseVarType.INTEGER, "bugtemplate"),
+    BILLING_AUTH_FLAG(95, 'ð', BaseVarType.INTEGER, "billingauthflag"),
+    ACCOUNT_FEATURE_FLAG(96, 'å', BaseVarType.INTEGER, "accountfeatureflag"),
     INTERFACE(97, 'a', BaseVarType.INTEGER),
     TOPLEVELINTERFACE(98, 'F', BaseVarType.INTEGER),
     OVERLAYINTERFACE(99, 'L', BaseVarType.INTEGER),
@@ -103,16 +105,16 @@ public enum Type {
     MOVESPEED(101, 'Ý', BaseVarType.INTEGER),
     MATERIAL(102, '¬', BaseVarType.INTEGER),
     SEQGROUP(103, 'ø', BaseVarType.INTEGER),
-    TEMP_HISCORE(104, 'ä', BaseVarType.INTEGER), // temphiscore
-    TEMP_HISCORE_LENGTH_TYPE(105, 'ã', BaseVarType.INTEGER), // temphiscorelengthtype
-    TEMP_HISCORE_DISPLAY_TYPE(106, 'â', BaseVarType.INTEGER), // temphiscoretype
-    TEMP_HISCORE_CONTRIBUTE_RESULT(107, 'à', BaseVarType.INTEGER), // temphiscorecontributeresult
+    TEMP_HISCORE(104, 'ä', BaseVarType.INTEGER, "temphiscore"),
+    TEMP_HISCORE_LENGTH_TYPE(105, 'ã', BaseVarType.INTEGER, "temphiscorelengthtype"),
+    TEMP_HISCORE_DISPLAY_TYPE(106, 'â', BaseVarType.INTEGER, "temphiscoretype"),
+    TEMP_HISCORE_CONTRIBUTE_RESULT(107, 'à', BaseVarType.INTEGER, "temphiscorecontributeresult"),
     AUDIOGROUP(108, 'À', BaseVarType.INTEGER),
-    AUDIOMIXBUSS(109, 'Ò', BaseVarType.INTEGER), // audiobuss
+    AUDIOMIXBUSS(109, 'Ò', BaseVarType.INTEGER, "audiobuss"),
     LONG(110, 'Ï', BaseVarType.LONG),
     CRM_CHANNEL(111, 'Ì', BaseVarType.INTEGER),
     HTTP_IMAGE(112, 'É', BaseVarType.INTEGER),
-    POP_UP_DISPLAY_BEHAVIOUR(113, 'Ê', BaseVarType.INTEGER), // popupdisplaybehaviour
+    POP_UP_DISPLAY_BEHAVIOUR(113, 'Ê', BaseVarType.INTEGER, "popupdisplaybehaviour"),
     POLL(114, '÷', BaseVarType.INTEGER),
     TYPE_115(115, '¼', BaseVarType.LONG),
     TYPE_116(116, '½', BaseVarType.LONG),
@@ -127,7 +129,7 @@ public enum Type {
     CLIENT_TYPE(125, 'ª', BaseVarType.INTEGER),
     TELEMETRY_INTERVAL(126, 0, BaseVarType.INTEGER),
     // === 865 end ===
-    WORLD_AREA(127, 0, BaseVarType.INTEGER), // worldarea
+    WORLD_AREA(127, 0, BaseVarType.INTEGER, "worldarea"),
     DBTABLE(129, 'Ø', BaseVarType.INTEGER),
     // === 910 end ===
     // === 915 end ===
@@ -248,6 +250,7 @@ public enum Type {
     CLIENTSCRIPT(-1, 0, BaseVarType.INTEGER),
     DBCOLUMN(-1, 0, BaseVarType.INTEGER),
     VARBIT(-1, 0, BaseVarType.INTEGER),
+    DBFILTER(-1, 0, BaseVarType.INTEGER),
 
     VAR_PLAYER(-1, 0, BaseVarType.INTEGER),
     VAR_NPC(-1, 0, BaseVarType.INTEGER),
@@ -261,6 +264,24 @@ public enum Type {
     VAR_PLAYER_GROUP(-1, 0, BaseVarType.INTEGER),
     VAR_GLOBAL(-1, 0, BaseVarType.INTEGER),
 
+    // split the int type into fake subtypes
+    INT_INT(-1, 0, BaseVarType.INTEGER, Type.INT, "int"),
+    INT_BOOLEAN(-1, 0, BaseVarType.INTEGER, Type.INT, "intbool"),
+    INT_CHATFILTER(-1, 0, BaseVarType.INTEGER, Type.INT, "chatfilter"),
+    INT_CHATTYPE(-1, 0, BaseVarType.INTEGER, Type.INT, "chattype"),
+    INT_PLATFORMTYPE(-1, 0, BaseVarType.INTEGER, Type.INT, "platformtype"),
+    INT_IFTYPE(-1, 0, BaseVarType.INTEGER, Type.INT, "iftype"),
+    INT_KEY(-1, 0, BaseVarType.INTEGER, Type.INT, "key"),
+    INT_SETPOSH(-1, 0, BaseVarType.INTEGER, Type.INT, "setposh"),
+    INT_SETPOSV(-1, 0, BaseVarType.INTEGER, Type.INT, "setposv"),
+    INT_SETSIZE(-1, 0, BaseVarType.INTEGER, Type.INT, "setsize"),
+    INT_SETTEXTALIGNH(-1, 0, BaseVarType.INTEGER, Type.INT, "settextalignh"),
+    INT_SETTEXTALIGNV(-1, 0, BaseVarType.INTEGER, Type.INT, "settextalignv"),
+    INT_WINDOWMODE(-1, 0, BaseVarType.INTEGER, Type.INT, "windowmode"),
+    INT_RGB(-1, 0, BaseVarType.INTEGER, Type.INT, "rgb"),
+    INT_CLIENTOPTION(-1, 0, BaseVarType.INTEGER, Type.INT, "clientoption"),
+    INT_FILTEROP(-1, 0, BaseVarType.INTEGER, Type.INT, "filterop"),
+
     // for decompiler
     HOOK,
     UNKNOWN,
@@ -270,16 +291,38 @@ public enum Type {
     CONDITION,
     ;
 
+    public final String name;
     public final int id;
     public final int ch;
     public final BaseVarType baseType;
     public final Object defaultValue;
+    public final Type alias;
 
     Type(int id, int ch, BaseVarType baseType) {
         this.id = id;
         this.ch = ch;
         this.baseType = baseType;
         defaultValue = null;
+        this.name = name().toLowerCase(Locale.ROOT);
+        alias = null;
+    }
+
+    Type(int id, int ch, BaseVarType baseType, String name) {
+        this.id = id;
+        this.ch = ch;
+        this.baseType = baseType;
+        defaultValue = null;
+        this.name = name;
+        alias = null;
+    }
+
+    Type(int id, int ch, BaseVarType baseType, Type alias, String name) {
+        this.id = id;
+        this.ch = ch;
+        this.baseType = baseType;
+        defaultValue = null;
+        this.alias = alias;
+        this.name = name;
     }
 
     Type() {
@@ -287,6 +330,8 @@ public enum Type {
         ch = 0;
         baseType = null;
         defaultValue = null;
+        this.name = name().toLowerCase(Locale.ROOT);
+        alias = null;
     }
 
     public static Type byID(int id) {
@@ -330,6 +375,14 @@ public enum Type {
             return a.baseType == BaseVarType.STRING || a.baseType == BaseVarType.COORDFINE;
         }
 
+        if (a.alias == b) {
+            return true;
+        }
+
+        if (a == INT_INT && b.alias == INT) {
+            return true;
+        }
+
         return false;
     }
 
@@ -340,6 +393,10 @@ public enum Type {
 
         if (subtype(typeB, typeA)) {
             return typeB;
+        }
+
+        if (typeA.alias == INT && typeB.alias == INT) {
+            return INT_INT;
         }
 
         return null;

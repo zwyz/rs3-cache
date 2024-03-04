@@ -59,17 +59,17 @@ public class TypePropagator {
                     if (arg.command == PUSH_CONSTANT_STRING) {
                         if (Objects.equals(arg.operand, "event_opbase")) bound(type(arg, 0), Type.STRING); // event_opbase
                         if (Objects.equals(arg.operand, "event_text")) bound(type(arg, 0), Type.STRING); // event_text
-                        if (Objects.equals(arg.operand, Integer.MIN_VALUE + 1)) bound(type(arg, 0), Type.INT); // event_mousex
-                        if (Objects.equals(arg.operand, Integer.MIN_VALUE + 2)) bound(type(arg, 0), Type.INT); // event_mousey
+                        if (Objects.equals(arg.operand, Integer.MIN_VALUE + 1)) bound(type(arg, 0), Type.INT_INT); // event_mousex
+                        if (Objects.equals(arg.operand, Integer.MIN_VALUE + 2)) bound(type(arg, 0), Type.INT_INT); // event_mousey
                         if (Objects.equals(arg.operand, Integer.MIN_VALUE + 3)) bound(type(arg, 0), Type.COMPONENT); // event_com
-                        if (Objects.equals(arg.operand, Integer.MIN_VALUE + 4)) bound(type(arg, 0), Type.INT); // event_opindex
-                        if (Objects.equals(arg.operand, Integer.MIN_VALUE + 5)) bound(type(arg, 0), Type.INT); // event_comsubid
+                        if (Objects.equals(arg.operand, Integer.MIN_VALUE + 4)) bound(type(arg, 0), Type.INT_INT); // event_opindex
+                        if (Objects.equals(arg.operand, Integer.MIN_VALUE + 5)) bound(type(arg, 0), Type.INT_INT); // event_comsubid
                         if (Objects.equals(arg.operand, Integer.MIN_VALUE + 6)) bound(type(arg, 0), Type.COMPONENT); // event_com2
-                        if (Objects.equals(arg.operand, Integer.MIN_VALUE + 7)) bound(type(arg, 0), Type.INT); // event_comsubid2
-                        if (Objects.equals(arg.operand, Integer.MIN_VALUE + 8)) bound(type(arg, 0), Type.INT); // event_key
+                        if (Objects.equals(arg.operand, Integer.MIN_VALUE + 7)) bound(type(arg, 0), Type.INT_INT); // event_comsubid2
+                        if (Objects.equals(arg.operand, Integer.MIN_VALUE + 8)) bound(type(arg, 0), Type.INT_KEY); // event_key
                         if (Objects.equals(arg.operand, Integer.MIN_VALUE + 9)) bound(type(arg, 0), Type.CHAR); // event_keychar
-                        if (Objects.equals(arg.operand, Integer.MIN_VALUE + 10)) bound(type(arg, 0), Type.INT); // event_gamepadvalue
-                        if (Objects.equals(arg.operand, Integer.MIN_VALUE + 11)) bound(type(arg, 0), Type.INT); // event_gamepadbutton
+                        if (Objects.equals(arg.operand, Integer.MIN_VALUE + 10)) bound(type(arg, 0), Type.INT_INT); // event_gamepadvalue
+                        if (Objects.equals(arg.operand, Integer.MIN_VALUE + 11)) bound(type(arg, 0), Type.INT_INT); // event_gamepadbutton
                     }
 
                     for (var j = 0; j < arg.type.size(); j++) {

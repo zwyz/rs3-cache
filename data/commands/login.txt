@@ -37,8 +37,8 @@
 [command,login_inprogress]()(boolean)
 [command,login_queue_position]()(int)
 [command,login_request_social_network](int $x1,string $x2,int $x3)
-[command,lobby_enterlobby_social_network](social_network $x1,string $x2,boolean $x3,int $x4)
-[command,federated_login](social_network $x1,int $x2)
+[command,lobby_enterlobby_social_network](socialnetwork $x1,string $x2,boolean $x3,int $x4)
+[command,federated_login](socialnetwork $x1,int $x2)
 [command,federated_login_status]()(int)
 [command,openstore](int $x1,string $x2)
 [command,resend_uid_passport_request]

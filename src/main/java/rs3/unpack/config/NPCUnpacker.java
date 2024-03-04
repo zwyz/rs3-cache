@@ -23,7 +23,7 @@ public class NPCUnpacker {
                 return lines;
             }
 
-            case 1 -> {
+            case 1 -> { // https://discord.com/channels/@me/698790755363323904/1203639168836833340
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
@@ -31,19 +31,19 @@ public class NPCUnpacker {
                 }
             }
 
-            case 2 -> lines.add("name=" + packet.gjstr());
-            case 12 -> lines.add("size=" + packet.g1());
+            case 2 -> lines.add("name=" + packet.gjstr()); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
+            case 12 -> lines.add("size=" + packet.g1()); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
             case 13 -> lines.add("readyanim=" + Unpacker.format(Type.SEQ, packet.g2()));
             case 14 -> lines.add("walkanim=" + Unpacker.format(Type.SEQ, packet.g2()));
             case 15 -> lines.add("turnleftanim=" + Unpacker.format(Type.SEQ, packet.g2()));
             case 16 -> lines.add("turnrightanim=" + Unpacker.format(Type.SEQ, packet.g2()));
             case 17 -> lines.add("walkanim=" + Unpacker.format(Type.SEQ, packet.g2()) + "," + Unpacker.format(Type.SEQ, packet.g2()) + "," + Unpacker.format(Type.SEQ, packet.g2()) + "," + Unpacker.format(Type.SEQ, packet.g2()));
-            case 18 -> lines.add("category=" + Unpacker.format(Type.CATEGORY, packet.g2()));
-            case 30 -> lines.add("op1=" + packet.gjstr());
-            case 31 -> lines.add("op2=" + packet.gjstr());
-            case 32 -> lines.add("op3=" + packet.gjstr());
-            case 33 -> lines.add("op4=" + packet.gjstr());
-            case 34 -> lines.add("op5=" + packet.gjstr());
+            case 18 -> lines.add("category=" + Unpacker.format(Type.CATEGORY, packet.g2())); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
+            case 30 -> lines.add("op1=" + packet.gjstr()); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
+            case 31 -> lines.add("op2=" + packet.gjstr()); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
+            case 32 -> lines.add("op3=" + packet.gjstr()); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
+            case 33 -> lines.add("op4=" + packet.gjstr()); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
+            case 34 -> lines.add("op5=" + packet.gjstr()); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
 
             case 39 -> lines.add("unknown39=" + packet.g1());
 
@@ -84,10 +84,10 @@ public class NPCUnpacker {
                 }
             }
 
-            case 93 -> lines.add("visonmap=no");
+            case 93 -> lines.add("minimap=no"); // https://twitter.com/JagexAsh/status/1763550956443111935
             case 95 -> lines.add("vislevel=" + packet.g2());
-            case 97 -> lines.add("resizeh=" + packet.g2());
-            case 98 -> lines.add("resizev=" + packet.g2());
+            case 97 -> lines.add("resizeh=" + packet.g2()); // html5 (only resize)
+            case 98 -> lines.add("resizev=" + packet.g2()); // html5 (only resize)
             case 99 -> lines.add("drawabove=yes");
             case 100 -> lines.add("ambient=" + packet.g1s());
             case 101 -> lines.add("contrast=" + packet.g1s());
@@ -97,7 +97,7 @@ public class NPCUnpacker {
 
                 for (var i = 0; i < 8; ++i) {
                     if ((filter & 1 << i) != 0) {
-                        lines.add("icon=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()) + "," + packet.gSmart1or2null());
+                        lines.add("headicon" + (i + 1) + "=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()) + "," + packet.gSmart1or2null());
                     }
                 }
             }
@@ -129,7 +129,7 @@ public class NPCUnpacker {
             }
 
             case 107 -> lines.add("active=no");
-            case 109 -> lines.add("walksmoothing=no");
+            case 109 -> lines.add("walksmoothing=no"); // nxt
             case 111 -> lines.add("spotshadow=no");
             case 113 -> lines.add("spotshadowcolour=" + packet.g2() + "," + packet.g2());
             case 114 -> lines.add("spotshadowtrans=" + packet.g1s() + "," + packet.g1s());
@@ -164,7 +164,7 @@ public class NPCUnpacker {
                 }
             }
 
-            case 119 -> lines.add("walkflags=" + packet.g1s());
+            case 119 -> lines.add("unknown119=" + packet.g1s());
 
             case 121 -> {
                 var count = packet.g1();
@@ -176,8 +176,8 @@ public class NPCUnpacker {
 
             case 123 -> lines.add("overlayheight=" + packet.g2());
             case 125 -> lines.add("respawndir=" + packet.g1s());
-            case 127 -> lines.add("bas=" + Unpacker.format(Type.BAS, packet.g2()));
-            case 128 -> lines.add("movespeed=" + Unpacker.format(Type.MOVESPEED, packet.g1()));
+            case 127 -> lines.add("bas=" + Unpacker.format(Type.BAS, packet.g2())); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
+            case 128 -> lines.add("defaultmovemode=" + Unpacker.format(Type.MOVESPEED, packet.g1())); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
             case 134 -> lines.add("bgsound=" + Unpacker.format(Type.SYNTH, packet.g2null()) + "," + Unpacker.format(Type.SYNTH, packet.g2null()) + "," + Unpacker.format(Type.SYNTH, packet.g2null()) + "," + Unpacker.format(Type.SYNTH, packet.g2null()) + "," + packet.g1());
 //            case 135 -> lines.add("unknown135=" + packet.g1() + "," + packet.g2()); // gone in nxt
 //            case 136 -> lines.add("unknown136=" + packet.g1() + "," + packet.g2()); // gone in nxt
@@ -194,8 +194,8 @@ public class NPCUnpacker {
             case 153 -> lines.add("membersop4=" + packet.gjstr());
             case 154 -> lines.add("membersop5=" + packet.gjstr());
             case 155 -> lines.add("tint=" + packet.g1s() + "," + packet.g1s() + "," + packet.g1s() + "," + packet.g1s());
-            case 158 -> lines.add("oppriority=yes");
-            case 159 -> lines.add("oppriority=no");
+            case 158 -> lines.add("reprioritiseattackop=yes"); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
+            case 159 -> lines.add("reprioritiseattackop=no"); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
 
             case 160 -> {
                 var count = packet.g1();

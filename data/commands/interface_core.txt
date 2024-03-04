@@ -1,5 +1,5 @@
-[command,cc_create](component $x1,int $x2,int $x3)
-[command,if_createnested](int $x1,int $x2,int $x3,int $x4,int $x5,component $x6)(int)
+[command,cc_create](component $x1,iftype $x2,int $x3)
+[command,if_createnested](iftype $x1,int $x2,int $x3,int $x4,int $x5,component $x6)(int)
 [command,cc_delete]
 [command,cc_deleteall](component $x1)
 [command,cc_deleteallnested]
@@ -12,14 +12,14 @@
 [command,cc_getstaticlayer]()(boolean)
 [command,ui_getdynid](int $x1)(int)
 [command,ui_getcategory](int $x1)(int)
-[command,cc_find](component $x1,int $x2)(int)
+[command,cc_find](component $x1,int $x2)(intbool)
 [command,if_exists](int $x1,int $x2,component $x3)(int)
 [command,cc_findbycategory](component $x1,int $x2,int $x3)(int)
-[command,if_find](component $x1)(boolean)
+[command,if_find](component $x1)(intbool)
 [command,if_getlayer](component $x1)(component)
 [command,cc_getlayer]()(component)
-[command,if_createchild](int $x1,int $x2,int $x3,component $x4)
-[command,cc_createchild](int $x1,int $x2,int $x3)
+[command,if_createchild](iftype $x1,int $x2,int $x3,component $x4)
+[command,cc_createchild](iftype $x1,int $x2,int $x3)
 [command,if_sendtofront](component $x1)
 [command,cc_sendtofront]
 [command,if_sendtoback](component $x1)

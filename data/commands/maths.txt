@@ -9,7 +9,7 @@
 [command,addpercent](int $x1,int $x2)(int)
 [command,setbit](int $x1,int $x2)(int)
 [command,clearbit](int $x1,int $x2)(int)
-[command,testbit](int $x1,int $x2)(int)
+[command,testbit](int $x1,int $x2)(intbool)
 [command,modulo](int $x1,int $x2)(int)
 [command,pow](int $x1,int $x2)(int)
 [command,invpow](int $x1,int $x2)(int)

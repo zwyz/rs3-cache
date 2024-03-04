@@ -25,13 +25,13 @@ public class EnumUnpacker {
             case 1 -> {
                 var type = packet.g1();
                 Unpacker.setEnumInputType(id, Type.byChar(type));
-                lines.add("inputtype=" + Unpacker.formatTypeChar(type));
+                lines.add("inputtype=" + Type.byChar(type).name);
             }
 
             case 2 -> {
                 var type = packet.g1();
                 Unpacker.setEnumOutputType(id, Type.byChar(type));
-                lines.add("outputtype=" + Unpacker.formatTypeChar(type));
+                lines.add("outputtype=" + Type.byChar(type).name);
             }
 
             case 3 -> lines.add("default=" + packet.gjstr());

@@ -6,7 +6,7 @@
 [command,if_hassuboverlay](component $x1,overlayinterface $x2)(boolean)
 [command,if_get_gamescreen]()(component)
 [command,if_set_gamescreen_enabled](boolean $x1)
-[command,setup_messagebox](int $x1,int $x2,int $x3,int $x4,int $x5,int $x6,graphic $x7,graphic $x8,graphic $x9,int $x10,fontmetrics $x11)
+[command,setup_messagebox](int $x1,int $x2,int $x3,int $x4,int $x5,int $x6,graphic $x7,graphic $x8,graphic $x9,rgb $x10,fontmetrics $x11)
 [command,get_currentcursor]()(cursor)
 [command,force_interface_drag]
 [command,cancel_interface_drag]

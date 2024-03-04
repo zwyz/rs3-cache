@@ -3,7 +3,7 @@
 [command,has_html5]()(boolean)
 [command,has_nxt]()(boolean)
 [command,clienttype]()(client_type)
-[command,platformtype]()(int)
+[command,platformtype]()(platformtype)
 [command,unknown_command_1]
 [command,unknown_command_2]
 [command,hsvtorgb](int $x1)(int)
