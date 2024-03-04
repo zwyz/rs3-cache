@@ -1,5 +1,6 @@
 package rs3.unpack.config;
 
+import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.util.Packet;
@@ -127,7 +128,7 @@ public class LocUnpacker {
                     lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, multivarp));
                 }
 
-                var count = packet.gSmart1or2();
+                var count = Unpack.VERSION >= 900 ? packet.gSmart1or2() : packet.g1();
 
                 for (var i = 0; i <= count; ++i) {
                     var multi = packet.gSmart2or4null();
@@ -176,7 +177,7 @@ public class LocUnpacker {
                     lines.add("multiloc=default," + Unpacker.format(Type.LOC, multidefault));
                 }
 
-                var count = packet.gSmart1or2();
+                var count = Unpack.VERSION >= 900 ? packet.gSmart1or2() : packet.g1();
 
                 for (var i = 0; i <= count; ++i) {
                     var multi = packet.gSmart2or4null();

@@ -4,14 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import rs3.js5.Js5ArchiveIndex;
 import rs3.js5.Js5Util;
-import rs3.unpack.InterfaceUnpacker;
-import rs3.unpack.MaterialUnpacker;
-import rs3.unpack.StylesheetUnpacker;
-import rs3.unpack.VarDomain;
+import rs3.unpack.*;
 import rs3.unpack.config.*;
 import rs3.unpack.cutscene2d.Cutscene2D;
 import rs3.unpack.map.MapSquare;
-import rs3.unpack.model.Model;
 import rs3.unpack.script.ScriptUnpacker;
 import rs3.unpack.uianim.Anim;
 import rs3.unpack.uianim.AnimCurve;
@@ -37,7 +33,8 @@ import java.util.function.Function;
 
 // todo: clean this up
 public class Unpack {
-    private static final Path BASE_PATH = Path.of(System.getProperty("user.home") + "/.rscache/rs3");
+    public static final int VERSION = 10000;
+    private static final Path BASE_PATH = Path.of(System.getProperty("user.home") + "/.rscache/" + (VERSION == 10000 ? "rs3" : VERSION));
     public static final Gson GSON = new GsonBuilder().serializeSpecialFloatingPointValues().create();
     public static final Gson GSON_PRETTY = new GsonBuilder().serializeSpecialFloatingPointValues().setPrettyPrinting().create();
 

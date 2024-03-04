@@ -1,5 +1,6 @@
 package rs3.unpack.config;
 
+import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.util.Packet;
@@ -22,7 +23,14 @@ public class AudioDefaultsUnpacker {
                 return lines;
             }
 
-            case 1 -> lines.add("titlescreensong=" + Unpacker.format(Type.MIDI, packet.g4s()));
+            case 1 -> {
+                if (Unpack.VERSION >= 900) {
+                    lines.add("titlescreensong=" + Unpacker.format(Type.MIDI, packet.g4s()));
+                } else {
+                    lines.add("titlescreensong=" + Unpacker.format(Type.MIDI, packet.g2()));
+                }
+            }
+
             default -> throw new IllegalStateException("unknown opcode");
         }
     }

@@ -1,5 +1,6 @@
 package rs3.unpack.config;
 
+import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.util.Packet;
@@ -72,11 +73,14 @@ public class BASUnpacker {
                 for (var i = 0; i < count; i++) {
                     var anim = packet.gSmart2or4null();
                     var weight = packet.g1();
-                    var unknownCount = packet.g1();
                     var line = "randomreadyanim=" + Unpacker.format(Type.SEQ, anim) + "," + weight;
 
-                    for (var j = 0; j < unknownCount; j++) {
-                        line += "," + packet.g1();
+                    if (Unpack.VERSION >= 900) {
+                        var unknownCount = packet.g1();
+
+                        for (var j = 0; j < unknownCount; j++) {
+                            line += "," + packet.g1();
+                        }
                     }
 
                     lines.add(line);
