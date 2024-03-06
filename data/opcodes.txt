@@ -1508,7 +1508,7 @@ detailcanset_orthographic,1086
 detailcanset_toolkit_default,750
 detailcanset_skydetail,199
 detailcanset_animdetail,20
-unknown_command_3,964
+detail_shadows,964
 detail_lightingquality,438
 detail_antialiasingmode,1102
 detail_ambientocclusion,124
@@ -1521,7 +1521,7 @@ detail_maxbackgroundfps,638
 detail_gamerenderscale,1275
 detail_interfacescale,997
 detail_dof,1996
-unknown_command_4,722
+detailget_shadows,722
 detailget_lightingquality,927
 detailget_antialiasingmode,128
 detailget_ambientocclusion,133
@@ -1534,7 +1534,7 @@ detailget_maxbackgroundfps,303
 detailget_gamerenderscale,734
 detailget_interfacescale,1822
 detailget_dof,1860
-unknown_command_5,975
+detailcanmod_shadows,975
 detailcanmod_lightingquality,958
 detailcanmod_antialiasingmode,1308
 detailcanmod_ambientocclusion,1071
@@ -1547,7 +1547,7 @@ detailcanmod_maxbackgroundfps,686
 detailcanmod_gamerenderscale,1662
 detailcanmod_interfacescale,2038
 detailcanmod_dof,2063
-unknown_command_6,150
+detailcanset_shadows,150
 detailcanset_lightingquality,1036
 detailcanset_antialiasingmode,19
 detailcanset_ambientocclusion,1705

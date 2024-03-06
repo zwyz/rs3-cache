@@ -473,6 +473,7 @@ public class Unpacker {
                 case 0 -> "^settextalignh_left";
                 case 1 -> "^settextalignh_centre";
                 case 2 -> "^settextalignh_right";
+                case 3 -> "^settextalignh_justified";
                 default -> "^settextalignh_" + value;
             };
 

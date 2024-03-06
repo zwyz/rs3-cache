@@ -22,7 +22,7 @@ public class HitmarkUnpacker {
                 return lines;
             }
 
-            case 1 -> lines.add("damagefont=" + packet.gSmart2or4null());
+            case 1 -> lines.add("damagefont=" + Unpacker.format(Type.FONTMETRICS, packet.gSmart2or4null()));
             case 2 -> lines.add("damagecolour=" + packet.g3());
             case 3 -> lines.add("classgraphic=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
             case 4 -> lines.add("leftgraphic=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
