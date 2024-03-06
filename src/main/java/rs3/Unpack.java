@@ -24,9 +24,7 @@ import java.awt.image.Raster;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -41,6 +39,12 @@ public class Unpack {
     public static void main(String[] args) throws IOException {
         var root = Path.of("unpacked");
 
+        // load names
+        loadGroupNamesScriptTrigger(12, Unpacker.SCRIPT_NAMES);
+        loadGroupNames(Path.of("data/names/scripts.txt"), 12, Unpacker.SCRIPT_NAMES);
+        loadGroupNames(Path.of("data/names/graphics.txt"), 8, Unpacker.GRAPHIC_NAMES);
+
+        // unpack
         unpackConfig(root.resolve("scripts"));
         unpackConfigGroup(23, 0, MapAreaUnpacker::unpack, root.resolve("scripts/dump.wma")); // worldmapdata details
         unpackDefaults(root.resolve("defaults"));
@@ -60,6 +64,88 @@ public class Unpack {
         unpackArchiveTransformed(66, b -> GSON_PRETTY.toJson(new Cutscene2D(new Packet(b))), root.resolve("cutscene2d"), ".json");
         unpackMaps(root);
         unpackWorldAreaMap(root);
+    }
+
+    private static void loadGroupNames(Path path, int archive, Map<Integer, String> names) throws IOException {
+        var unhash = new HashMap<Integer, String>();
+        generateNames(path, unhash);
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
+
+        for (var group : archiveIndex.groupId) {
+            var hash = archiveIndex.groupNameHash[group];
+
+            if (unhash.containsKey(hash)) {
+                names.put(group, unhash.get(hash));
+            }
+        }
+    }
+
+    private static void loadGroupNamesScriptTrigger(int archive, Map<Integer, String> names) throws IOException {
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
+        var archiveIndexConfig = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + 2 + ".dat"))));
+        var archiveIndexCutscene = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + 35 + ".dat"))));
+        var archiveIndexInterface = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + 3 + ".dat"))));
+        var maxMapElement = archiveIndexConfig.groupMaxFileId[36];
+        var maxCutscene = archiveIndexCutscene.groupArraySize;
+        var maxInterface = archiveIndexInterface.groupArraySize;
+        var maxCategory = 6000;
+
+        for (var group : archiveIndex.groupId) {
+            var hash = archiveIndex.groupNameHash[group];
+
+            if (ScriptTrigger.isValidID(hash & 0x3ff)) {
+                var trigger = ScriptTrigger.byID(hash & 0x3ff);
+                var subject = hash >>> 10;
+
+                if (trigger == ScriptTrigger.PROC || trigger == ScriptTrigger.CLIENTSCRIPT) {
+                    continue;
+                }
+
+                if (subject == 0xffff) {
+                    names.put(group, "[" + trigger.name().toLowerCase(Locale.ROOT) + ",_]");
+                } else if (trigger.type != null) {
+                    if (subject > 0x10000 && trigger.type == Type.MAPELEMENT) {
+                        var category = subject - 0x10000;
+
+                        if (category < maxCategory) {
+                            names.put(group, "[" + trigger.name().toLowerCase(Locale.ROOT) + "," + Unpacker.format(Type.CATEGORY, category) + "]");
+                        }
+                    } else {
+                        if (trigger.type == Type.MAPELEMENT && subject < maxMapElement) {
+                            names.put(group, "[" + trigger.name().toLowerCase(Locale.ROOT) + "," + Unpacker.format(trigger.type, subject) + "]");
+                        } else if (trigger.type == Type.CUTSCENE && subject < maxCutscene) {
+                            names.put(group, "[" + trigger.name().toLowerCase(Locale.ROOT) + "," + Unpacker.format(trigger.type, subject) + "]");
+                        } else if (trigger.type == Type.INTERFACE && subject < maxInterface) {
+                            names.put(group, "[" + trigger.name().toLowerCase(Locale.ROOT) + "," + Unpacker.format(trigger.type, subject) + "]");
+                        } else if (trigger == ScriptTrigger.TWITCH_EVENT && subject < 4) {
+                            names.put(group, "[" + trigger.name().toLowerCase(Locale.ROOT) + "," + Unpacker.format(trigger.type, subject) + "]");
+                        } else if (trigger == ScriptTrigger.MINIMENU_EVENT && subject < 4) {
+                            names.put(group, "[" + trigger.name().toLowerCase(Locale.ROOT) + "," + Unpacker.format(trigger.type, subject) + "]");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static void generateNames(Path path, HashMap<Integer, String> names) throws IOException {
+        for (var name : Files.readAllLines(path)) {
+            generateNames(name, names);
+        }
+    }
+
+    private static void generateNames(String name, Map<Integer, String> map) {
+        if (name.indexOf('#') != -1) {
+            var index = name.indexOf('#');
+            var a = name.substring(0, index);
+            var b = name.substring(index + 1);
+
+            for (var i = 0; i < 500; i++) {
+                generateNames(a + i + b, map);
+            }
+        } else {
+            map.put(name.hashCode(), name);
+        }
     }
 
     private static void unpackWorldAreaMap(Path root) throws IOException {

@@ -5,7 +5,8 @@ import rs3.unpack.Unpacker;
 
 import java.util.*;
 
-import static rs3.unpack.script.Command.*;
+import static rs3.unpack.script.Command.LocalDomain;
+import static rs3.unpack.script.Command.PUSH_CONSTANT_STRING;
 
 public class ScriptUnpacker {
     public static final boolean DISASSEMBLE_ONLY = false;
@@ -98,12 +99,6 @@ public class ScriptUnpacker {
             return List.of();
         }
 
-        var name = "[" + (CLIENTSCRIPT.contains(id) ? "clientscript" : "proc") + ",script" + id + "]";
-
-        if (Unpacker.SCRIPT_NAMES.containsKey(id)) {
-            name = Unpacker.SCRIPT_NAMES.get(id);
-        }
-
-        return CodeFormatter.formatScript(name, SCRIPT_PARAMETERS.get(id), SCRIPT_RETURNS.get(id), script).lines().toList();
+        return CodeFormatter.formatScript(Unpacker.getScriptName(id), SCRIPT_PARAMETERS.get(id), SCRIPT_RETURNS.get(id), script).lines().toList();
     }
 }

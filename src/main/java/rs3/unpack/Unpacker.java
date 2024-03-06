@@ -1,5 +1,6 @@
 package rs3.unpack;
 
+import rs3.unpack.script.ScriptUnpacker;
 import rs3.util.Tuple2;
 
 import java.io.IOException;
@@ -20,23 +21,6 @@ public class Unpacker {
     public static final Map<Integer, String> GRAPHIC_NAMES = new HashMap<>();
     public static final Map<Integer, String> WMA_NAMES = new HashMap<>();
     public static final Map<Integer, String> STYLESHEET_NAMES = new HashMap<>();
-
-    static {
-        readNamesTSV(Path.of("data/names/clientscript.tsv"), SCRIPT_NAMES);
-        readNamesTSV(Path.of("data/names/graphic.tsv"), GRAPHIC_NAMES);
-        readNamesTSV(Path.of("data/names/stylesheet.tsv"), STYLESHEET_NAMES);
-    }
-
-    private static void readNamesTSV(Path path, Map<Integer, String> result) {
-        try {
-            for (var line : Files.readAllLines(path)) {
-                var parts = line.split("\t");
-                result.put(Integer.parseInt(parts[0]), parts[1]);
-            }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
 
     public static String format(Type type, int value) {
         return switch (type) {
@@ -238,12 +222,7 @@ public class Unpacker {
                     yield "null";
                 }
 
-                var name = SCRIPT_NAMES.get(value);
-
-                if (name == null) {
-                    yield "script" + value;
-                }
-
+                var name = getScriptName(value);
                 name = name.substring(1, name.length() - 1);
                 name = name.split(",")[1];
                 yield name;
@@ -508,7 +487,7 @@ public class Unpacker {
             };
 
             case INT_CLIENTOPTION -> switch (value) {
-                case -1->"null";
+                case -1 -> "null";
                 case 0 -> "^clientoption_ambient_occlusion";
                 case 1 -> "^clientoption_anisotropic_filtering";
                 case 2 -> "^clientoption_antialiasing_mode";
@@ -855,5 +834,15 @@ public class Unpacker {
         }
 
         return lines;
+    }
+
+    public static String getScriptName(int id) {
+        var name = "[" + (ScriptUnpacker.CLIENTSCRIPT.contains(id) ? "clientscript" : "proc") + ",script" + id + "]";
+
+        if (SCRIPT_NAMES.containsKey(id)) {
+            name = SCRIPT_NAMES.get(id);
+        }
+
+        return name;
     }
 }
