@@ -1,5 +1,6 @@
 package rs3.unpack.config;
 
+import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.util.Packet;
@@ -24,39 +25,53 @@ public class SeqUnpacker {
             }
 
             case 1 -> {
-                var count = packet.g2();
-                var delay = new int[count];
-                var frame = new int[count];
-                var anim = new int[count];
+                if (Unpack.VERSION < 400) {
+                    var count = packet.g1();
 
-                for (var i = 0; i < count; i++) {
-                    delay[i] = packet.g2();
-                }
+                    for (var i = 0; i < count; i++) {
+                        lines.add("frame" + i + "=f" + packet.g2());
+                        lines.add("iframe" + i + "=" + packet.g2());
+                        lines.add("delay" + i + "=" + packet.g2());
+                    }
+                } else {
+                    var count = packet.g2();
+                    var delay = new int[count];
+                    var frame = new int[count];
+                    var anim = new int[count];
 
-                for (var i = 0; i < count; i++) {
-                    frame[i] = packet.g2();
-                }
+                    for (var i = 0; i < count; i++) {
+                        delay[i] = packet.g2();
+                    }
 
-                for (var i = 0; i < count; i++) {
-                    anim[i] = packet.g2();
-                }
+                    for (var i = 0; i < count; i++) {
+                        frame[i] = packet.g2();
+                    }
 
-                for (var i = 0; i < count; i++) {
-                    lines.add("frame" + (i + 1) + "=anim_" + anim[i] + "_f" + (frame[i] + 1));
-                    lines.add("delay" + (i + 1) + "=" + delay[i]);
+                    for (var i = 0; i < count; i++) {
+                        anim[i] = packet.g2();
+                    }
+
+                    for (var i = 0; i < count; i++) {
+                        lines.add("frame" + (i + 1) + "=anim_" + anim[i] + "_f" + (frame[i] + 1));
+                        lines.add("delay" + (i + 1) + "=" + delay[i]);
+                    }
                 }
             }
 
             case 2 -> lines.add("loopframes=" + packet.g2());
 
             case 3 -> {
-                var count = packet.gSmart1or2();
+                var count = Unpack.VERSION < 600 ? packet.g1() : packet.gSmart1or2();
+                var result = new ArrayList<String>();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("unknown3=" + packet.gSmart1or2());
+                    result.add("label_" + (Unpack.VERSION < 600 ? packet.g1() : packet.gSmart1or2()));
                 }
+
+                lines.add("walkmerge=" + String.join(",", result));
             }
 
+            case 4 -> lines.add("stretches=yes");
             case 5 -> lines.add("priority=" + packet.g1());
             case 6 -> lines.add("lefthand=" + packet.g2null());
             case 7 -> lines.add("righthand=" + packet.g2null());
@@ -102,19 +117,38 @@ public class SeqUnpacker {
             }
 
             case 13 -> {
-                var count = packet.g2();
+                if (Unpack.VERSION < 500) {
+                    var count = packet.g1();
 
-                for (var i = 0; i < count; i++) {
-                    var count2 = packet.g1();
+                    for (var i = 0; i < count; i++) {
+                        var value = packet.g3();
 
-                    if (count2 > 0) {
-                        var line = "sound" + i + "=" + packet.g3();
-
-                        for (var j = 1; j < count2; ++j) {
-                            line += "," + packet.g2();
+                        if (value != 0) {
+                            var type = value >> 8;
+                            var loops = value >> 4 & 7;
+                            var range = value & 15;
+                            lines.add("sound" + i + "=" + Unpacker.format(Type.SYNTH, type) + "," + loops + "," + range);
                         }
+                    }
+                } else {
+                    var count = packet.g2();
 
-                        lines.add(line);
+                    for (var i = 0; i < count; i++) {
+                        var count2 = packet.g1();
+
+                        if (count2 > 0) {
+                            var value = packet.g3();
+                            var type = value >> 8;
+                            var loops = value >> 4 & 7;
+                            var range = value & 15;
+                            var line = "sound" + i + "=" + Unpacker.format(Type.SYNTH, type) + "," + loops + "," + range;
+
+                            for (var j = 1; j < count2; ++j) {
+                                line += "," + packet.g2();
+                            }
+
+                            lines.add(line);
+                        }
                     }
                 }
             }

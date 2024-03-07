@@ -1,1 +1,47 @@
 [command,unknown_command_45]
+[command,push_varc_int]
+[command,pop_varc_int]
+[command,push_varc_string]
+[command,pop_varc_string]
+[command,unknown_command_1121](int $x1,int $x2)
+[command,unknown_command_2121](int $x1,int $x2,component $x3)
+[command,unknown_command_3333]()(int)
+[command,unknown_command_5018](int $x1)(chattype)
+[command,unknown_command_5019](int $x1)(string)
+[command,unknown_command_5210](wma $x1)(int, int)
+[command,unknown_command_5401](int $x1,int $x2)
+[command,unknown_command_5420]()(boolean)
+[command,unknown_command_5422](int $x1,string $x2,string $x3)
+[command,unknown_command_5603](int $x1,int $x2,int $x3,int $x4)
+[command,unknown_command_5604](string $x1)
+[command,unknown_command_5605](string $x1,string $x2,int $x3,int $x4,int $x5,int $x6,string $x7,int $x8,int $x9,int $x10)
+[command,unknown_command_5606]
+[command,unknown_command_5610]()(string,string,string,string,string)
+[command,unknown_command_6002](boolean $x1)
+[command,unknown_command_6006](boolean $x1)
+[command,unknown_command_6009](boolean $x1)
+[command,unknown_command_6010](boolean $x1)
+[command,unknown_command_6011](int $x1)
+[command,unknown_command_6025](int $x1)
+[command,unknown_command_6102]()(boolean)
+[command,unknown_command_6106]()(boolean)
+[command,unknown_command_6109]()(boolean)
+[command,unknown_command_6110]()(boolean)
+[command,unknown_command_6111]()(int)
+[command,unknown_command_6121]()(boolean)
+[command,unknown_command_6126]()(boolean)
+[command,unknown_command_6133]()(boolean)
+[command,unknown_command_6504](int $x1)()
+[command,unknown_command_6505]()(int)
+[command,activechatphrase_sendclan]
+[command,activechatphrase_sendpublic]
+[command,anim](seq $x1,int $x2)
+[command,cc_setdraggablebehavior](int $x1)
+[command,if_setdraggablebehavior](int $x1,component $x2)
+[command,oc_findreset]
+[command,stat_xp](stat $x1)(int)
+[command,chat_gethistoryclan](int $x1)(string)
+[command,chat_gethistorymessage](int $x1)(string)
+[command,chat_gethistoryname](int $x1)(string)
+[command,chat_gethistoryphrase](int $x1)(chatphrase)
+[command,chat_gethistorytype](int $x1)(chattype)

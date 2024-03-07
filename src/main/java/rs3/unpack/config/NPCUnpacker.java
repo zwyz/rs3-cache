@@ -28,16 +28,25 @@ public class NPCUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("model=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
+                    lines.add("model=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()));
                 }
             }
 
             case 2 -> lines.add("name=" + packet.gjstr()); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
+            case 3 -> lines.add("desc=" + packet.gjstr());
             case 12 -> lines.add("size=" + packet.g1()); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
             case 13 -> lines.add("readyanim=" + Unpacker.format(Type.SEQ, packet.g2()));
             case 14 -> lines.add("walkanim=" + Unpacker.format(Type.SEQ, packet.g2()));
             case 15 -> lines.add("turnleftanim=" + Unpacker.format(Type.SEQ, packet.g2()));
-            case 16 -> lines.add("turnrightanim=" + Unpacker.format(Type.SEQ, packet.g2()));
+
+            case 16 -> {
+                if (Unpack.VERSION < 300) {
+                    lines.add("hasanim=yes"); // todo
+                } else {
+                    lines.add("turnrightanim=" + Unpacker.format(Type.SEQ, packet.g2()));
+                }
+            }
+
             case 17 -> lines.add("walkanim=" + Unpacker.format(Type.SEQ, packet.g2()) + "," + Unpacker.format(Type.SEQ, packet.g2()) + "," + Unpacker.format(Type.SEQ, packet.g2()) + "," + Unpacker.format(Type.SEQ, packet.g2()));
             case 18 -> lines.add("category=" + Unpacker.format(Type.CATEGORY, packet.g2())); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
             case 30 -> lines.add("op1=" + packet.gjstr()); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
@@ -81,7 +90,7 @@ public class NPCUnpacker {
                 var length = packet.g1();
 
                 for (var i = 0; i < length; i++) {
-                    lines.add("headmodel=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
+                    lines.add("headmodel=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()));
                 }
             }
 
@@ -94,11 +103,15 @@ public class NPCUnpacker {
             case 101 -> lines.add("contrast=" + packet.g1s());
 
             case 102 -> {
-                var filter = packet.g1();
+                if (Unpack.VERSION < 600) {
+                    lines.add("headicon=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
+                } else {
+                    var filter = packet.g1();
 
-                for (var i = 0; i < 8; ++i) {
-                    if ((filter & 1 << i) != 0) {
-                        lines.add("headicon" + (i + 1) + "=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()) + "," + packet.gSmart1or2null());
+                    for (var i = 0; i < 8; ++i) {
+                        if ((filter & 1 << i) != 0) {
+                            lines.add("headicon" + (i + 1) + "=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()) + "," + packet.gSmart1or2null());
+                        }
                     }
                 }
             }
@@ -175,13 +188,14 @@ public class NPCUnpacker {
                 }
             }
 
+            case 122 -> lines.add("unknown122=" + packet.g2()); // todo: removed
             case 123 -> lines.add("overlayheight=" + packet.g2());
             case 125 -> lines.add("respawndir=" + packet.g1s());
             case 127 -> lines.add("bas=" + Unpacker.format(Type.BAS, packet.g2())); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
             case 128 -> lines.add("defaultmovemode=" + Unpacker.format(Type.MOVESPEED, packet.g1())); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
             case 134 -> lines.add("bgsound=" + Unpacker.format(Type.SYNTH, packet.g2null()) + "," + Unpacker.format(Type.SYNTH, packet.g2null()) + "," + Unpacker.format(Type.SYNTH, packet.g2null()) + "," + Unpacker.format(Type.SYNTH, packet.g2null()) + "," + packet.g1());
-//            case 135 -> lines.add("unknown135=" + packet.g1() + "," + packet.g2()); // gone in nxt
-//            case 136 -> lines.add("unknown136=" + packet.g1() + "," + packet.g2()); // gone in nxt
+            case 135 -> lines.add("unknown135=" + packet.g1() + "," + packet.g2()); // gone in nxt
+            case 136 -> lines.add("unknown136=" + packet.g1() + "," + packet.g2()); // gone in nxt
             case 137 -> lines.add("cursorattack=" + Unpacker.format(Type.CURSOR, packet.g2()));
             case 138 -> lines.add("covermarker=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
             case 139 -> lines.add("unknown139=" + packet.gSmart2or4null());

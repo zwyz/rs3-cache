@@ -351,7 +351,10 @@ public class Packet {
     public String gjstr() {
         var var1 = pos;
 
-        while (arr[++pos - 1] != 0) {
+        while (true) {
+            var p = ++pos - 1;
+            if (arr[p] == 0) break;
+            if (arr[p] == 10) break; // todo: old format
         }
 
         var var2 = pos - var1 - 1;

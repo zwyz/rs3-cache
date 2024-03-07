@@ -1,5 +1,6 @@
 package rs3.unpack;
 
+import rs3.Unpack;
 import rs3.unpack.script.ScriptUnpacker;
 import rs3.util.Packet;
 
@@ -12,6 +13,10 @@ public class InterfaceUnpacker {
         var lines = new ArrayList<String>();
         var packet = new Packet(data);
         lines.add("[" + Unpacker.format(Type.COMPONENT, id) + "]");
+
+        if (Unpack.VERSION < 500 && data[0] != 0xff) {
+            return lines; // todo if1
+        }
 
         var version = packet.g1();
 
@@ -29,6 +34,11 @@ public class InterfaceUnpacker {
 
         line(lines, "contenttype=", packet.g2(), 0);
         decode(lines, packet, version, type);
+
+        if (packet.pos != packet.arr.length) {
+            throw new IllegalStateException("end of file not reached");
+        }
+
         return lines;
     }
 
@@ -37,12 +47,17 @@ public class InterfaceUnpacker {
         line(lines, "y=", packet.g2s(), 0); // if_gety
         line(lines, "width=", packet.g2(), 0); // if_getwidth
         line(lines, "height=", packet.g2(), 0); // if_getheight
-        var widthmode = packet.g1s();
-        var heightmode = packet.g1s();
-        line(lines, "widthmode=", decodeSizeMode(widthmode), "abs");
-        line(lines, "heightmode=", decodeSizeMode(heightmode), "abs");
-        line(lines, "xmode=", decodeXMode(packet.g1s()), "abs_left");
-        line(lines, "ymode=", decodeYMode(packet.g1s()), "abs_top");
+        var widthmode = 0;
+        var heightmode = 0;
+
+        if (Unpack.VERSION >= 500) {
+            widthmode = packet.g1s();
+            heightmode = packet.g1s();
+            line(lines, "widthmode=", decodeSizeMode(widthmode), "abs");
+            line(lines, "heightmode=", decodeSizeMode(heightmode), "abs");
+            line(lines, "xmode=", decodeXMode(packet.g1s()), "abs_left");
+            line(lines, "ymode=", decodeYMode(packet.g1s()), "abs_top");
+        }
 
         if (widthmode == 4 || heightmode == 4) {
             line(lines, "aspectwidth=", packet.g2(), 1); // if_setaspect
@@ -296,7 +311,9 @@ public class InterfaceUnpacker {
         line(lines, "scrollheight=", packet.g2(), 0); // if_getscrollheight
 
         if (version == -1) {
-            line(lines, "noclickthrough=", ((packet.g1() == 1) ? "yes" : "no"), "no"); // if_setnoclickthrough
+            if (Unpack.VERSION >= 500) {
+                line(lines, "noclickthrough=", ((packet.g1() == 1) ? "yes" : "no"), "no"); // if_setnoclickthrough
+            }
         } else if (version >= 9) {
             line(lines, "margin=", packet.g1() + "," + packet.g1() + "," + packet.g1() + "," + packet.g1(), "0,0,0,0"); // if_margin_set
         } else if (version >= 6) {
@@ -308,36 +325,51 @@ public class InterfaceUnpacker {
         decodeSpritePart("", lines, packet, version, "0xffffffff", "yes");
     }
 
-    private static void decodeModel(ArrayList<String> lines, Packet packet, int version, byte widthmode, byte heightmode) {
-        line(lines, "model=", Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
-        var flags = packet.g1();
-        var flag1 = (flags & 1) == 1;
-        var flag2 = (flags & 2) != 0;
-        var flag4 = (flags & 4) != 0;
-        var flag8 = (flags & 8) != 0;
+    private static void decodeModel(ArrayList<String> lines, Packet packet, int version, int widthmode, int heightmode) {
+        line(lines, "model=", Unpacker.format(Type.MODEL, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()));
 
-        line(lines, "modelprecisezoom=", (flag2 ? "yes" : "no"), "no"); // todo
-        line(lines, "modelorthog=", (flag4 ? "yes" : "no"), "no"); // if_setmodelorthog
-        line(lines, "modelnodepth=", (flag8 ? "yes" : "no"), "no"); // todo
-
-        if (flag1) {
+        if (Unpack.VERSION < 600) {
             line(lines, "modelorigin_x=", packet.g2s()); // if_setmodelorigin
             line(lines, "modelorigin_y=", packet.g2s()); // if_setmodelorigin
             line(lines, "modelangle_x=", packet.g2()); // if_getmodelangle_x
             line(lines, "modelangle_y=", packet.g2()); // if_getmodelangle_y
             line(lines, "modelangle_z=", packet.g2()); // if_getmodelangle_z
             line(lines, "modelzoom=", packet.g2()); // if_setmodelzoom
-        } else if (flag2) {
-            line(lines, "modelorigin_x=", packet.g2s()); // if_setmodelorigin
-            line(lines, "modelorigin_y=", packet.g2s()); // if_setmodelorigin
-            line(lines, "modelorigin_z=", packet.g2s()); // if_setmodelorigin
-            line(lines, "modelangle_x=", packet.g2()); // if_getmodelangle_x
-            line(lines, "modelangle_y=", packet.g2()); // if_getmodelangle_y
-            line(lines, "modelangle_z=", packet.g2()); // if_getmodelangle_z
-            line(lines, "modelzoom=", packet.g2()); // if_setmodelzoom
+            line(lines, "modelanim=", Unpacker.format(Type.SEQ, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()), "null"); // if_setmodelanim
+            line(lines, "modelorthog=", Unpacker.formatBoolean(packet.g1()), "no"); // if_setmodelorthog
+            line(lines, "unknown100=", packet.g2());
+            line(lines, "unknown101=", packet.g2());
+            line(lines, "unknown103=", Unpacker.formatBoolean(packet.g1()), "no");
+        } else {
+            var flags = packet.g1();
+            var flag1 = (flags & 1) != 0;
+            var flag2 = (flags & 2) != 0;
+            var flag4 = (flags & 4) != 0;
+            var flag8 = (flags & 8) != 0;
+
+            line(lines, "modelprecisezoom=", (flag2 ? "yes" : "no"), "no"); // todo
+            line(lines, "modelorthog=", (flag4 ? "yes" : "no"), "no"); // if_setmodelorthog
+            line(lines, "modelnodepth=", (flag8 ? "yes" : "no"), "no"); // todo
+
+            if (flag1) {
+                line(lines, "modelorigin_x=", packet.g2s()); // if_setmodelorigin
+                line(lines, "modelorigin_y=", packet.g2s()); // if_setmodelorigin
+                line(lines, "modelangle_x=", packet.g2()); // if_getmodelangle_x
+                line(lines, "modelangle_y=", packet.g2()); // if_getmodelangle_y
+                line(lines, "modelangle_z=", packet.g2()); // if_getmodelangle_z
+                line(lines, "modelzoom=", packet.g2()); // if_setmodelzoom
+            } else if (flag2) {
+                line(lines, "modelorigin_x=", packet.g2s()); // if_setmodelorigin
+                line(lines, "modelorigin_y=", packet.g2s()); // if_setmodelorigin
+                line(lines, "modelorigin_z=", packet.g2s()); // if_setmodelorigin
+                line(lines, "modelangle_x=", packet.g2()); // if_getmodelangle_x
+                line(lines, "modelangle_y=", packet.g2()); // if_getmodelangle_y
+                line(lines, "modelangle_z=", packet.g2()); // if_getmodelangle_z
+                line(lines, "modelzoom=", packet.g2()); // if_setmodelzoom
+            }
+
+            line(lines, "modelanim=", Unpacker.format(Type.SEQ, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()), "null"); // if_setmodelanim
         }
-
-        line(lines, "modelanim=", Unpacker.format(Type.SEQ, packet.gSmart2or4null()), "null"); // if_setmodelanim
 
         if (widthmode != 0) {
             line(lines, "modelobjwidth=", packet.g2()); // todo
@@ -541,7 +573,7 @@ public class InterfaceUnpacker {
 
 
     private static void decodeTextPart(String prefix, ArrayList<String> lines, Packet packet, int version, int defaultAlignH, int defaultAlignV, String defaultTextShadow) {
-        line(lines, prefix + "textfont=", Unpacker.format(Type.FONTMETRICS, packet.gSmart2or4null()), "null"); // if_settextfont
+        line(lines, prefix + "textfont=", Unpacker.format(Type.FONTMETRICS, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()), "null"); // if_settextfont
 
         if (version >= 2) {
             line(lines, prefix + "fontmono=", (packet.g1() == 1 ? "yes" : "no"), "yes"); // if_setfontmono
@@ -553,7 +585,10 @@ public class InterfaceUnpacker {
         line(lines, prefix + "textalignv=", packet.g1(), defaultAlignV); // if_settextalign
         line(lines, prefix + "textshadow=", (packet.g1() == 1 ? "yes" : "no"), defaultTextShadow); // if_settextshadow
         line(lines, prefix + "colour=", Unpacker.formatColour(packet.g4s()), "0xffffff"); // if_setcolour
-        line(lines, prefix + "trans=", packet.g1(), 0); // if_settrans
+
+        if (Unpack.VERSION >= 600) {
+            line(lines, prefix + "trans=", packet.g1(), 0); // if_settrans
+        }
 
         if (version >= 0) {
             line(lines, prefix + "maxlines=", packet.g1(), 0); // if_setmaxlines

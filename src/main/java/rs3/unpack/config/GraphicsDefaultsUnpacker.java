@@ -1,5 +1,6 @@
 package rs3.unpack.config;
 
+import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.util.Packet;
@@ -30,7 +31,7 @@ public class GraphicsDefaultsUnpacker {
                 }
             }
 
-            case 2 -> lines.add("performancemetricsmodel=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
+            case 2 -> lines.add("performancemetricsmodel=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()));
 
             case 3 -> {
                 hitmarkcount = packet.g1();

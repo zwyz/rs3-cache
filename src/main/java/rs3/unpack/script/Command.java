@@ -1,5 +1,6 @@
 package rs3.unpack.script;
 
+import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.VarDomain;
 
@@ -46,7 +47,7 @@ public class Command {
     }
 
     private static Command findCommand(String name) {
-        return Objects.requireNonNull(BY_NAME.get(name));
+        return BY_NAME.get(name);
     }
 
     // define decompiler commands
@@ -72,13 +73,13 @@ public class Command {
     public static final Command FLOW_POSTDEC = defineCommand("flow_postdec"); // $x--
 
     // load normal commands
-    private static final Pattern COMMAND_PATTERN = Pattern.compile("\\[command,(?<name>[a-zA-Z0-9_]+)](?:\\((?<arguments>[a-zA-Z0-9_]+\\s+\\$[a-zA-Z0-9_]+(?:\\s*,\\s*[a-zA-Z0-9_]+\\s+\\$[a-zA-Z0-9_]+)*)?\\))?(?:\\((?<returns>[a-zA-Z0-9_]+(?:\\s*, ?\\s*[a-zA-Z0-9_]+)*)?\\))?");
+    private static final Pattern COMMAND_PATTERN = Pattern.compile("\\[command,(?<name>[a-zA-Z0-9_]+)](?:\\((?<arguments>[a-zA-Z0-9_]+\\s+\\$[a-zA-Z0-9_]+(?:\\s*,\\s*[a-zA-Z0-9_]+\\s+\\$[a-zA-Z0-9_]+)*)?\\))?(?:\\((?<returns>[a-zA-Z0-9_]+(?:\\s*, ?\\s*[a-zA-Z0-9_]+)*)?\\))?(?: (?<version>[0-9]+))?");
 
     static {
         try {
             var opcodes = new HashMap<String, Integer>();
 
-            for (var line : Files.readAllLines(Path.of("data/opcodes.txt"))) {
+            for (var line : Files.readAllLines(Unpack.VERSION == 10000 ? Path.of("data/opcodes.txt") : Path.of("data/opcodes-" + (Unpack.VERSION < 600 ? "unscrambled" : Unpack.VERSION) + ".txt"))) {
                 var parts = line.split(",");
                 opcodes.put(parts[0], Integer.parseInt(parts[1]));
             }
@@ -101,12 +102,20 @@ public class Command {
                         }
                     }
 
+                    if (matcher.group("version") != null) {
+                        var version = Integer.parseInt(matcher.group("version"));
+
+                        if (version > Unpack.VERSION) {
+                            continue; // overrides for higher versions
+                        }
+                    }
+
                     var name = matcher.group("name");
                     var id = opcodes.get(name);
-                    opcodes.remove(name);
 
                     if (id == null) {
-                        throw new IllegalStateException("no opcode for " + name);
+                        System.err.println("no opcode for " + name); // todo: add versions to commands
+                        continue;
                     }
 
                     if (missingTypes) {
@@ -117,10 +126,6 @@ public class Command {
                         defineCommand(name, id, arguments, returns);
                     }
                 }
-            }
-
-            for (var command : opcodes.keySet()) {
-                System.err.println("missing command: " + command);
             }
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -141,6 +146,10 @@ public class Command {
 
     // core commands
     public static final Command PUSH_CONSTANT_INT = findCommand("push_constant_int");
+    public static final Command PUSH_VARC_INT = findCommand("push_varc_int");
+    public static final Command POP_VARC_INT = findCommand("pop_varc_int");
+    public static final Command PUSH_VARC_STRING = findCommand("push_varc_string");
+    public static final Command POP_VARC_STRING = findCommand("pop_varc_string");
     public static final Command PUSH_VAR = findCommand("push_var");
     public static final Command POP_VAR = findCommand("pop_var");
     public static final Command PUSH_CONSTANT_STRING = findCommand("push_constant_string");
@@ -209,6 +218,7 @@ public class Command {
     public static final Command DB_FIND_WITH_COUNT = findCommand("db_find_with_count");
     public static final Command DB_FIND_REFINE = findCommand("db_find_refine");
     public static final Command DB_GETFIELD = findCommand("db_getfield");
+    public static final Command RUNJAVASCRIPT = findCommand("runjavascript");
 
     public boolean hasHook() {
         return arguments != null && arguments.contains(Type.HOOK);
@@ -233,6 +243,16 @@ public class Command {
 
     // push_varbit, pop_varbit
     public record VarBitReference(int var, boolean secondary) {
+
+    }
+
+    // push_varc_int, pop_varc_int
+    public record VarClientReference(int var) {
+
+    }
+
+    // push_varc_string, pop_varc_string
+    public record VarClientStringReference(int var) {
 
     }
 

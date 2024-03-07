@@ -1,5 +1,6 @@
 package rs3.unpack.config;
 
+import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.util.Packet;
@@ -34,7 +35,7 @@ public class SkyBoxUnpacker {
 
             case 3 -> lines.add("unknown3=" + packet.g1());
             case 4 -> lines.add("fillmode=" + packet.g1());
-            case 5 -> lines.add("unknown5=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
+            case 5 -> lines.add("unknown5=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()));
             case 6 -> lines.add("unknown6=" + packet.gSmart2or4null());
 
             default -> throw new IllegalStateException("unknown opcode");

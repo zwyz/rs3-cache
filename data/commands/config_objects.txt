@@ -1,7 +1,8 @@
 [command,oc_name](obj $x1)(string)
 [command,oc_op](obj $x1,int $x2)(string)
 [command,oc_iop](obj $x1,int $x2)(string)
-[command,oc_cost](obj $x1)(long)
+[command,oc_cost](obj $x1)(int)
+[command,oc_cost](obj $x1)(long) 930
 [command,oc_stackable](obj $x1)(boolean)
 [command,oc_cert](obj $x1)(obj)
 [command,oc_uncert](obj $x1)(obj)

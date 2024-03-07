@@ -1,5 +1,6 @@
 package rs3.unpack.config;
 
+import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.util.Packet;
@@ -24,8 +25,17 @@ public class FloorOverlayUnpacker {
 
             case 1 -> lines.add("colour=0x" + Integer.toHexString(packet.g3()));
             case 2 -> lines.add("material=" + Unpacker.format(Type.MATERIAL, packet.g1()));
-            case 3 -> lines.add("material=" + Unpacker.format(Type.MATERIAL, packet.g2null()));
+
+            case 3 -> {
+                if (Unpack.VERSION < 400) {
+                    lines.add("unknown3=yes"); // todo
+                } else {
+                    lines.add("material=" + Unpacker.format(Type.MATERIAL, packet.g2null()));
+                }
+            }
+
             case 5 -> lines.add("occlude=no");
+            case 6 -> lines.add("debugname=" + packet.gjstr());
             case 7 -> lines.add("averagecolour=0x" + Integer.toHexString(packet.g3()));
             case 8 -> lines.add("unknown8=yes");
             case 9 -> lines.add("materialscale=" + packet.g2());
@@ -34,6 +44,7 @@ public class FloorOverlayUnpacker {
             case 12 -> lines.add("blend=yes");
             case 13 -> lines.add("waterfogcolour=0x" + Integer.toHexString(packet.g3()));
             case 14 -> lines.add("waterfogscale=" + packet.g1());
+            case 15 -> lines.add("unknown15=" + packet.g2()); // todo
             case 16 -> lines.add("waterfogoffset=" + packet.g1());
             case 20 -> lines.add("waterfogunknowna=" + packet.g2());
             case 21 -> lines.add("waterfogunknownb=" + packet.g1());

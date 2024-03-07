@@ -44,8 +44,10 @@
 [command,cam2_getpositionentity_lookatangle](int $x1)
 [command,cam2_getpositionentity_lookatdistance]()(int)
 [command,cam2_getpositionentity_angleoffsets]()(int,int)
-[command,cam2_setpositionentity_player](int $x1,int $x2,int $x3,int $x4,int $x5,boolean $x6,int $x7,int $x8)
-[command,cam2_setpositionentity_npc](int $x1,int $x2,int $x3,int $x4,int $x5,boolean $x6,int $x7,int $x8)
+[command,cam2_setpositionentity_player](int $x1,int $x2,int $x3,int $x4,int $x5,boolean $x6,int $x7)
+[command,cam2_setpositionentity_player](int $x1,int $x2,int $x3,int $x4,int $x5,boolean $x6,int $x7,int $x8) 930
+[command,cam2_setpositionentity_npc](int $x1,int $x2,int $x3,int $x4,int $x5,boolean $x6,int $x7)
+[command,cam2_setpositionentity_npc](int $x1,int $x2,int $x3,int $x4,int $x5,boolean $x6,int $x7,int $x8) 930
 [command,cam2_setlookatentity_player](int $x1,int $x2,int $x3,boolean $x4)
 [command,cam2_setlookatentity_npc](int $x1,int $x2,int $x3,boolean $x4)
 [command,cam2_setlinearmovementmode](int $x1)

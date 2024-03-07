@@ -25,19 +25,37 @@ public class LocUnpacker {
             }
 
             case 1 -> {
-                var shapeCount = packet.g1();
+                if (Unpack.VERSION < 600) {
+                    var count = packet.g1();
 
-                for (var i = 0; i < shapeCount; ++i) {
-                    var shape = Unpacker.format(Type.LOC_SHAPE, packet.g1s());
-                    var modelCount = packet.g1();
+                    for (var i = 0; i < count; ++i) {
+                        lines.add("model=" + Unpacker.format(Type.MODEL, packet.g2()) + "," + Unpacker.format(Type.LOC_SHAPE, packet.g1()));
+                    }
+                } else {
+                    var shapeCount = packet.g1();
 
-                    for (var j = 0; j < modelCount; j++) {
-                        lines.add("model=" + shape + "," + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
+                    for (var i = 0; i < shapeCount; ++i) {
+                        var shape = Unpacker.format(Type.LOC_SHAPE, packet.g1s());
+                        var modelCount = packet.g1();
+
+                        for (var j = 0; j < modelCount; j++) {
+                            lines.add("model=" + shape + "," + Unpacker.format(Type.MODEL, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()));
+                        }
                     }
                 }
             }
 
             case 2 -> lines.add("name=" + packet.gjstr()); // https://www.youtube.com/watch?v=ovGBifJR4Fs 4:38:00
+            case 3 -> lines.add("desc=" + packet.gjstr());
+
+            case 5 -> {
+                var count = packet.g1();
+
+                for (var i = 0; i < count; ++i) {
+                    lines.add("model=" + Unpacker.format(Type.MODEL, packet.g2())); // https://www.youtube.com/watch?v=vZ7oG1IDz1w 2:09:30
+                }
+            }
+
             case 14 -> lines.add("width=" + packet.g1()); // https://www.youtube.com/watch?v=vZ7oG1IDz1w
             case 15 -> lines.add("length=" + packet.g1()); // https://www.youtube.com/watch?v=vZ7oG1IDz1w
             case 17 -> lines.add("blockwalk=no"); // https://www.youtube.com/watch?v=ovGBifJR4Fs 4:38:00
@@ -47,6 +65,7 @@ public class LocUnpacker {
             case 22 -> lines.add("sharelight=yes"); // https://www.youtube.com/watch?v=ovGBifJR4Fs 4:38:00
             case 23 -> lines.add("occlude=yes"); // https://www.youtube.com/watch?v=vZ7oG1IDz1w 2:09:30
             case 24 -> lines.add("anim=" + Unpacker.format(Type.SEQ, packet.gSmart2or4null()));
+            case 25 -> lines.add("hasalpha=yes"); // todo
             case 27 -> lines.add("blockwalk=yes"); // https://www.youtube.com/watch?v=ovGBifJR4Fs 4:38:00
             case 28 -> lines.add("wallwidth=" + packet.g1()); // * https://discord.com/channels/@me/698790755363323904/1131401170045374545
             case 29 -> lines.add("ambient=" + packet.g1s()); // https://www.youtube.com/watch?v=ovGBifJR4Fs 4:38:00
@@ -85,12 +104,14 @@ public class LocUnpacker {
 
             case 44 -> lines.add("recolindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
             case 45 -> lines.add("retexindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
+            case 60 -> lines.add("mapfunction=" + packet.g2());
             case 61 -> lines.add("category=" + Unpacker.format(Type.CATEGORY, packet.g2()));
             case 62 -> lines.add("mirror=yes");
             case 64 -> lines.add("shadow=no"); // https://www.youtube.com/watch?v=vZ7oG1IDz1w 2:09:30
             case 65 -> lines.add("resizex=" + packet.g2()); // html5 (only resize)
             case 66 -> lines.add("resizey=" + packet.g2()); // html5 (only resize)
             case 67 -> lines.add("resizez=" + packet.g2()); // html5 (only resize)
+            case 68 -> lines.add("mapscene=" + packet.g2());
 
             case 69 -> { // https://twitter.com/JagexAsh/status/1641051532010434560
                 int blocked = packet.g1s();
@@ -128,10 +149,10 @@ public class LocUnpacker {
                     lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, multivarp));
                 }
 
-                var count = Unpack.VERSION >= 900 ? packet.gSmart1or2() : packet.g1();
+                var count = Unpack.VERSION < 900 ? packet.g1() : packet.gSmart1or2();
 
                 for (var i = 0; i <= count; ++i) {
-                    var multi = packet.gSmart2or4null();
+                    var multi = Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null();
 
                     if (multi != -1) {
                         lines.add("multiloc=" + i + "," + Unpacker.format(Type.LOC, multi));
@@ -156,6 +177,7 @@ public class LocUnpacker {
             case 82 -> lines.add("istexture=yes");
             case 88 -> lines.add("hardshadow=no");
             case 89 -> lines.add("randseq=no");
+            case 90 -> lines.add("unknown90=yes"); // removed
             case 91 -> lines.add("members=yes");
 
             case 92 -> {
@@ -171,7 +193,7 @@ public class LocUnpacker {
                     lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, multivarp));
                 }
 
-                var multidefault = packet.gSmart2or4null();
+                var multidefault = Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null();
 
                 if (multidefault != -1) {
                     lines.add("multiloc=default," + Unpacker.format(Type.LOC, multidefault));
@@ -180,7 +202,7 @@ public class LocUnpacker {
                 var count = Unpack.VERSION >= 900 ? packet.gSmart1or2() : packet.g1();
 
                 for (var i = 0; i <= count; ++i) {
-                    var multi = packet.gSmart2or4null();
+                    var multi = Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null();
 
                     if (multi != -1) {
                         lines.add("multiloc=" + i + "," + Unpacker.format(Type.LOC, multi));
@@ -190,11 +212,20 @@ public class LocUnpacker {
 
             case 93 -> lines.add("hillchange=rotate," + packet.g2());
             case 94 -> lines.add("hillchange=ceiling_skew");
-            case 95 -> lines.add("hillchange=skew_to_fit," + packet.g2());
+
+            case 95 -> {
+                if (Unpack.VERSION < 600) {
+                    lines.add("hillchange=skew_to_fit");
+                } else {
+                    lines.add("hillchange=skew_to_fit," + packet.g2());
+                }
+            }
+
+            case 96 -> lines.add("unknown96=yes");
             case 97 -> lines.add("msirotate=yes");
             case 98 -> lines.add("unknown98=yes");
-//            case 99 -> lines.add("unknown99=" + packet.g1() + "," + packet.g2()); // gone in nxt
-//            case 100 -> lines.add("unknown100=" + packet.g1() + "," + packet.g2()); // gone in nxt
+            case 99 -> lines.add("unknown99=" + packet.g1() + "," + packet.g2()); // gone in nxt
+            case 100 -> lines.add("unknown100=" + packet.g1() + "," + packet.g2()); // gone in nxt
             case 101 -> lines.add("msiangle=" + packet.g1());
             case 102 -> lines.add("msi=" + Unpacker.format(Type.MAPSCENEICON, packet.g2()));
             case 103 -> lines.add("occlude=no");

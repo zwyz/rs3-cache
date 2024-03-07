@@ -1,12 +1,9 @@
 package rs3.unpack;
 
+import rs3.Unpack;
 import rs3.unpack.script.ScriptUnpacker;
 import rs3.util.Tuple2;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -569,7 +566,11 @@ public class Unpacker {
     }
 
     public static String formatVar(VarDomain domain, int value) {
-        return "var" + domain.name().toLowerCase(Locale.ROOT) + getVarType(domain, value).name().toLowerCase(Locale.ROOT) + value;
+        if (Unpack.VERSION < 600) {
+            return "var" + domain.name().toLowerCase(Locale.ROOT) + value;
+        } else {
+            return "var" + domain.name().toLowerCase(Locale.ROOT) + getVarType(domain, value).name().toLowerCase(Locale.ROOT) + value;
+        }
     }
 
     public static String formatVarBit(int value) {
@@ -639,10 +640,18 @@ public class Unpacker {
     }
 
     public static Type getVarType(VarDomain domain, int id) {
+        if (Unpack.VERSION < 600) {
+            return Type.UNKNOWN_INT;
+        }
+
         return Objects.requireNonNull(VAR_TYPE.get(new Tuple2<>(domain, id)));
     }
 
     public static VarDomain getVarBitDomain(int id) {
+        if (Unpack.VERSION < 600) {
+            return VarDomain.PLAYER;
+        }
+
         return VARBIT_DOMAIN.get(id);
     }
 
@@ -687,9 +696,16 @@ public class Unpacker {
             return List.of(types.get(tuple));
         }
     }
+    public static List<Type> getDBColumnTypeTuple(int column) {
+        if (Unpack.VERSION < 930) {
+            return getDBColumnTypeTuple(column >>> 8, column & 255, -1);
+        } else {
+            return getDBColumnTypeTuple(column >>> 12, (column >>> 4) & 255, (column & 15) - 1);
+        }
+    }
 
-    public static Type getDBColumnTypeTupleAssertSingle(int table, int column, int tuple) {
-        var types = getDBColumnTypeTuple(table, column, tuple);
+    public static Type getDBColumnTypeTupleAssertSingle(int column) {
+        var types = getDBColumnTypeTuple(column);
 
         if (types.size() != 1) {
             throw new IllegalStateException("required single type, got " + types.size());

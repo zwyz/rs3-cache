@@ -5,8 +5,7 @@ import rs3.unpack.Unpacker;
 
 import java.util.*;
 
-import static rs3.unpack.script.Command.LocalDomain;
-import static rs3.unpack.script.Command.PUSH_CONSTANT_STRING;
+import static rs3.unpack.script.Command.*;
 
 public class ScriptUnpacker {
     public static final boolean DISASSEMBLE_ONLY = false;
@@ -62,7 +61,7 @@ public class ScriptUnpacker {
             for (var i = script.code.length - 2; i >= 0; i--) {
                 var command = script.code[i].command();
 
-                if (command != PUSH_CONSTANT_STRING) {
+                if (command != PUSH_CONSTANT_INT && command != PUSH_CONSTANT_STRING) {
                     break;
                 }
 

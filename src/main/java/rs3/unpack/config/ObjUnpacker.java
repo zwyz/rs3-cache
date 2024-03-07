@@ -1,5 +1,6 @@
 package rs3.unpack.config;
 
+import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.util.Packet;
@@ -23,7 +24,7 @@ public class ObjUnpacker {
                 return lines;
             }
 
-            case 1 -> lines.add("model=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
+            case 1 -> lines.add("model=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()));
             case 2 -> lines.add("name=" + packet.gjstr());
             case 3 -> lines.add("desc=" + packet.gjstr());
             case 4 -> lines.add("2dzoom=" + packet.g2());
@@ -31,17 +32,42 @@ public class ObjUnpacker {
             case 6 -> lines.add("2dyan=" + packet.g2());
             case 7 -> lines.add("2dxof=" + packet.g2s());
             case 8 -> lines.add("2dyof=" + packet.g2s());
-            case 9 -> lines.add("unknown9=" + packet.gjstr()); // todo: unused
+
+            case 9 -> {
+                if (Unpack.VERSION < 300) {
+                    lines.add("unknown9=yes");
+                } else {
+                    lines.add("unknown9=" + packet.gjstr()); // todo: unused
+                }
+            }
+
+            case 10 -> lines.add("unknown10=" + packet.g2()); // todo
             case 11 -> lines.add("stackable=always");
             case 12 -> lines.add("cost=" + packet.g4s());
             case 13 -> lines.add("wearpos=" + Unpacker.formatWearPos(packet.g1()));
             case 14 -> lines.add("wearpos2=" + Unpacker.formatWearPos(packet.g1()));
             case 15 -> lines.add("tradeable=no");
             case 16 -> lines.add("members=yes");
-            case 23 -> lines.add("manwear=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
-            case 24 -> lines.add("manwear2=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
-            case 25 -> lines.add("womanwear=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
-            case 26 -> lines.add("womanwear2=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
+
+            case 23 -> {
+                if (Unpack.VERSION < 500) {
+                    lines.add("manwear=" + Unpacker.format(Type.MODEL, packet.g2()) + "," + packet.g1());
+                } else {
+                    lines.add("manwear=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()));
+                }
+            }
+
+            case 24 -> lines.add("manwear2=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()));
+
+            case 25 -> {
+                if (Unpack.VERSION < 500) {
+                    lines.add("womanwear=" + Unpacker.format(Type.MODEL, packet.g2()) + "," + packet.g1());
+                } else {
+                    lines.add("womanwear=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()));
+                }
+            }
+
+            case 26 -> lines.add("womanwear2=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()));
             case 27 -> lines.add("wearpos3=" + Unpacker.formatWearPos(packet.g1()));
             case 30 -> lines.add("op1=" + packet.gjstr());
             case 31 -> lines.add("op2=" + packet.gjstr());
@@ -85,12 +111,12 @@ public class ObjUnpacker {
             case 45 -> lines.add("retexindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
             case 65 -> lines.add("stockmarket=yes");
             case 69 -> lines.add("stockmarketlimit=" + packet.g4s());
-            case 78 -> lines.add("manwear3=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
-            case 79 -> lines.add("womanwear3=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
-            case 90 -> lines.add("manhead=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
-            case 91 -> lines.add("womanhead=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
-            case 92 -> lines.add("manhead2=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
-            case 93 -> lines.add("womanhead2=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
+            case 78 -> lines.add("manwear3=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()));
+            case 79 -> lines.add("womanwear3=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()));
+            case 90 -> lines.add("manhead=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()));
+            case 91 -> lines.add("womanhead=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()));
+            case 92 -> lines.add("manhead2=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()));
+            case 93 -> lines.add("womanhead2=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()));
             case 94 -> lines.add("category=" + Unpacker.format(Type.CATEGORY, packet.g2()));
             case 95 -> lines.add("2dzan=" + packet.g2());
             case 96 -> lines.add("dummyitem=" + packet.g1());
@@ -116,10 +142,10 @@ public class ObjUnpacker {
             case 122 -> lines.add("lenttemplate=" + Unpacker.format(Type.OBJ, packet.g2()));
             case 125 -> lines.add("manwearoff=" + packet.g1s() + "," + packet.g1s() + "," + packet.g1s());
             case 126 -> lines.add("womanwearoff=" + packet.g1s() + "," + packet.g1s() + "," + packet.g1s());
-//            case 127 -> lines.add("unknown127=" + packet.g1() + "," + packet.g2()); // gone in nxt
-//            case 128 -> lines.add("unknown128=" + packet.g1() + "," + packet.g2()); // gone in nxt
-//            case 129 -> lines.add("unknown129=" + packet.g1() + "," + packet.g2()); // gone in nxt
-//            case 130 -> lines.add("unknown130=" + packet.g1() + "," + packet.g2()); // gone in nxt
+            case 127 -> lines.add("unknown127=" + packet.g1() + "," + packet.g2()); // gone in nxt
+            case 128 -> lines.add("unknown128=" + packet.g1() + "," + packet.g2()); // gone in nxt
+            case 129 -> lines.add("unknown129=" + packet.g1() + "," + packet.g2()); // gone in nxt
+            case 130 -> lines.add("unknown130=" + packet.g1() + "," + packet.g2()); // gone in nxt
             case 131 -> lines.add("unknown131=" + packet.gjstr());
 
             case 132 -> {

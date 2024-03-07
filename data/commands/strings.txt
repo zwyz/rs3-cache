@@ -1,7 +1,8 @@
 [command,append_num](string $x1,int $x2)(string)
 [command,append](string $x1,string $x2)(string)
 [command,append_signnum](string $x1,int $x2)(string)
-[command,tostring](int $x1,int $x2)(string)
+[command,tostring](int $x1)(string)
+[command,tostring](int $x1,int $x2)(string) 930
 [command,tostring_long](long $x1)(string)
 [command,unknown_command_54](long $x1)(string)
 [command,compare](string $x1,string $x2)(int)
@@ -20,7 +21,8 @@
 [command,string_length](string $x1)(int)
 [command,substring](string $x1,int $x2,int $x3)(string)
 [command,removetags](string $x1)(string)
-[command,string_indexof_char](string $x1,char $x2,int $x3)(int)
+[command,string_indexof_char](string $x1,char $x2)(int)
+[command,string_indexof_char](string $x1,char $x2,int $x3)(int) 500
 [command,string_indexof_string](string $x1,string $x2,int $x3)(int)
 [command,char_tolowercase](char $x1)(char)
 [command,char_touppercase](char $x1)(char)

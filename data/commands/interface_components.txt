@@ -1,5 +1,7 @@
-[command,if_setposition](int $x1,int $x2,setposh $x3,setposv $x4,component $x5)
-[command,cc_setposition](int $x1,int $x2,setposh $x3,setposv $x4)
+[command,if_setposition](int $x1,int $x2,component $x3)
+[command,if_setposition](int $x1,int $x2,setposh $x3,setposv $x4,component $x5) 500
+[command,cc_setposition](int $x1,int $x2)
+[command,cc_setposition](int $x1,int $x2,setposh $x3,setposv $x4) 500
 [command,if_getx](component $x1)(int)
 [command,cc_getx]()(int)
 [command,if_gety](component $x1)(int)
@@ -8,8 +10,10 @@
 [command,cc_unknown1]()(int)
 [command,if_unknown2](component $x1)(int)
 [command,cc_unknown2]()(int)
-[command,if_setsize](int $x1,int $x2,setsize $x3,setsize $x4,component $x5)
-[command,cc_setsize](int $x1,int $x2,setsize $x3,setsize $x4)
+[command,if_setsize](int $x1,int $x2,component $x3)
+[command,if_setsize](int $x1,int $x2,setsize $x3,setsize $x4,component $x5) 500
+[command,cc_setsize](int $x1,int $x2)
+[command,cc_setsize](int $x1,int $x2,setsize $x3,setsize $x4) 500
 [command,if_getwidth](component $x1)(int)
 [command,cc_getwidth]()(int)
 [command,if_getheight](component $x1)(int)

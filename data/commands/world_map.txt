@@ -1,9 +1,9 @@
 [command,worldmap_3dview_enable](wma $x1)
 [command,worldmap_3dview_disable]
 [command,worldmap_3dview_setloddistance](int $x1,int $x2)
-[command,worldmap_3dview_setlighting]todo signature
+[command,worldmap_3dview_setlighting](int $x1,int $x2,int $x3,int $x4,int $x5)
 [command,worldmap_3dview_getcoordfine](int $x1,int $x2,int $x3)(coordfine)
-[command,worldmap_setcategorypriority]todo signature
+[command,worldmap_setcategorypriority](int $x1,int $x2)
 [command,worldmap_3dview_settextfont](int $x1,int $x2)
 [command,worldmap_disabletextsize](int $x1,boolean $x2)
 [command,worldmap_disabletype](int $x1,int $x2)

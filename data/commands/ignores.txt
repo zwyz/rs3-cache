@@ -1,4 +1,5 @@
-[command,ignore_getname](int $x1)(string,string)
+[command,ignore_getname](int $x1)(string)
+[command,ignore_getname](int $x1)(string,string) 500
 [command,ignore_test](string $x1)(boolean)
 [command,ignore_add](string $x1)
 [command,ignore_add_temp](string $x1)

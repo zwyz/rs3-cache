@@ -1,5 +1,8 @@
 package rs3.unpack;
 
+import rs3.Unpack;
+import rs3.util.CP1252;
+
 import java.util.Locale;
 
 public enum Type {
@@ -255,6 +258,7 @@ public enum Type {
     VAR_PLAYER(-1, 0, BaseVarType.INTEGER),
     VAR_NPC(-1, 0, BaseVarType.INTEGER),
     VAR_CLIENT(-1, 0, BaseVarType.INTEGER),
+    VAR_CLIENT_STRING(-1, 0, BaseVarType.INTEGER),
     VAR_WORLD(-1, 0, BaseVarType.INTEGER),
     VAR_REGION(-1, 0, BaseVarType.INTEGER),
     VAR_OBJECT(-1, 0, BaseVarType.INTEGER),
@@ -300,7 +304,7 @@ public enum Type {
 
     Type(int id, int ch, BaseVarType baseType) {
         this.id = id;
-        this.ch = ch;
+        this.ch = CP1252.encode((char) ch) & 0xff;
         this.baseType = baseType;
         defaultValue = null;
         this.name = name().toLowerCase(Locale.ROOT);
@@ -309,7 +313,7 @@ public enum Type {
 
     Type(int id, int ch, BaseVarType baseType, String name) {
         this.id = id;
-        this.ch = ch;
+        this.ch = CP1252.encode((char) ch) & 0xff;
         this.baseType = baseType;
         defaultValue = null;
         this.name = name;
@@ -318,7 +322,7 @@ public enum Type {
 
     Type(int id, int ch, BaseVarType baseType, Type alias, String name) {
         this.id = id;
-        this.ch = ch;
+        this.ch = CP1252.encode((char) ch) & 0xff;
         this.baseType = baseType;
         defaultValue = null;
         this.alias = alias;
@@ -335,6 +339,10 @@ public enum Type {
     }
 
     public static Type byID(int id) {
+        if (Unpack.VERSION < 600) {
+            return byChar(id);
+        }
+
         for (var value : values()) {
             if (value.id == id) {
                 return value;
@@ -373,6 +381,14 @@ public enum Type {
 
         if (b == UNKNOWN_OBJECT) {
             return a.baseType == BaseVarType.STRING || a.baseType == BaseVarType.COORDFINE;
+        }
+
+        if (a == OBJ && b == NAMEDOBJ) { // todo: return has different behavior
+            return true;
+        }
+
+        if (a == FONTMETRICS && b == GRAPHIC) { // todo: return has different behavior
+            return true;
         }
 
         if (a.alias == b) {

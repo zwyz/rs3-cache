@@ -4,7 +4,8 @@
 [command,login_disallowtrigger]()(int)
 [command,login_reply]()(int)
 [command,login_hoptime]()(int)
-[command,login_request](string $x1,string $x2)
+[command,login_request](string $x1,string $x2,int $x3)
+[command,login_request](string $x1,string $x2) 600
 [command,lobby_entergame](string $x1,boolean $x2)
 [command,lobby_entergamereply]()(int)
 [command,lobby_enterlobby](string $x1,string $x2,string $x3,boolean $x4)
@@ -37,7 +38,8 @@
 [command,login_inprogress]()(boolean)
 [command,login_queue_position]()(int)
 [command,login_request_social_network](int $x1,string $x2,int $x3)
-[command,lobby_enterlobby_social_network](socialnetwork $x1,string $x2,boolean $x3,int $x4)
+[command,lobby_enterlobby_social_network](socialnetwork $x1,string $x2,boolean $x3)
+[command,lobby_enterlobby_social_network](socialnetwork $x1,string $x2,boolean $x3,int $x4) 930
 [command,federated_login](socialnetwork $x1,int $x2)
 [command,federated_login_status]()(int)
 [command,openstore](int $x1,string $x2)

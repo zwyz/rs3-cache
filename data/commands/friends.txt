@@ -1,5 +1,6 @@
 [command,friend_count]()(int)
-[command,friend_getname](int $x1)(string,string)
+[command,friend_getname](int $x1)(string)
+[command,friend_getname](int $x1)(string,string) 500
 [command,friend_getworld](int $x1)(int)
 [command,friend_getrank](int $x1)(int)
 [command,friend_getworldflags](int $x1)(int)

@@ -1,5 +1,6 @@
 package rs3.unpack.script;
 
+import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 
@@ -78,8 +79,8 @@ public class CodeFormatter {
 
     static String format(Expression expression, int prec, int indent, Set<LocalReference> declaredLocals) {
         return " ".repeat(indent) + switch (expression.command.name) {
-            case "push_constant_int" -> String.valueOf((int) expression.operand); // todo: when is this used
-            case "push_long_constant" -> String.valueOf((long) expression.operand); // todo: when is this used
+            case "push_constant_int" -> formatConstant(expression.type.get(0), expression.operand);
+            case "push_long_constant" -> formatConstant(expression.type.get(0), expression.operand);
             case "push_constant_string" -> formatConstant(expression.type.get(0), expression.operand);
 
             case "flow_assign" -> {
@@ -106,6 +107,8 @@ public class CodeFormatter {
 
                             case VarReference var -> left.add(formatVar(var));
                             case VarBitReference var -> left.add(formatVarBit(var));
+                            case VarClientReference var -> left.add(formatVarClient(var));
+                            case VarClientStringReference var -> left.add(formatVarClientString(var));
                             case null -> left.add("$_");
                             default -> throw new IllegalStateException("invalid assign target type");
                         }
@@ -193,12 +196,17 @@ public class CodeFormatter {
 
             case "tostring" -> {
                 var value = expression.arguments.get(0);
-                var base = expression.arguments.get(1);
 
-                if (base.command == PUSH_CONSTANT_STRING && (int) base.operand == 10) {
+                if (Unpack.VERSION < 930) {
                     yield "tostring(" + format(value) + ")";
                 } else {
-                    yield "tostring(" + format(value) + ", " + format(expression.arguments.get(1)) + ")";
+                    var base = expression.arguments.get(1);
+
+                    if (base.command == PUSH_CONSTANT_STRING && (int) base.operand == 10) {
+                        yield "tostring(" + format(value) + ")";
+                    } else {
+                        yield "tostring(" + format(value) + ", " + format(expression.arguments.get(1)) + ")";
+                    }
                 }
             }
 
@@ -297,6 +305,8 @@ public class CodeFormatter {
             case LocalReference local -> formatLocal(local, type);
             case VarReference var -> formatVar(var);
             case VarBitReference var -> formatVarBit(var);
+            case VarClientReference var -> formatVarClient(var);
+            case VarClientStringReference var -> formatVarClientString(var);
             default -> throw new IllegalStateException("invalid load target type");
         };
     }
@@ -416,6 +426,14 @@ public class CodeFormatter {
         var var = ((VarBitReference) operand).var();
         var secondary = ((VarBitReference) operand).secondary();
         return (secondary ? "." : "") + "%" + Unpacker.formatVarBit(var);
+    }
+
+    private static String formatVarClient(VarClientReference var) {
+        return "%" + Unpacker.format(Type.VAR_CLIENT, var.var());
+    }
+
+    private static String formatVarClientString(VarClientStringReference var) {
+        return "%" + Unpacker.format(Type.VAR_CLIENT_STRING, var.var());
     }
 
     private static String escape(String s) {

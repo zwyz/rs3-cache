@@ -1,5 +1,6 @@
 package rs3.unpack.script;
 
+import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.unpack.VarDomain;
@@ -75,6 +76,16 @@ public class SyntaxBuilder {
             return;
         }
 
+        if (command == POP_VARC_INT) {
+            pops.add(new VarClientReference((int) operand));
+            return;
+        }
+
+        if (command == POP_VARC_STRING) {
+            pops.add(new VarClientStringReference((int) operand));
+            return;
+        }
+
         if (!pops.isEmpty()) {
             var argumentTypes = new ArrayList<Type>();
 
@@ -82,6 +93,8 @@ public class SyntaxBuilder {
                 switch (pop) {
                     case VarReference var -> argumentTypes.add(Unpacker.getVarType(var.domain(), var.var()));
                     case VarBitReference _ -> argumentTypes.add(Type.INT_INT);
+                    case VarClientReference _ -> argumentTypes.add(Type.UNKNOWN_INT);
+                    case VarClientStringReference _ -> argumentTypes.add(Type.STRING);
 
                     case LocalReference local -> argumentTypes.add(switch (local.domain()) {
                         case INTEGER -> Type.UNKNOWN_INT;
@@ -129,6 +142,20 @@ public class SyntaxBuilder {
         if (command == PUSH_VARBIT) {
             var var = (VarBitReference) operand;
             buildCommand(code, index, FLOW_LOAD, var, List.of(), List.of(Type.INT_INT));
+            return;
+        }
+
+        if (Unpack.VERSION < 600 && command == PUSH_VARC_INT) {
+            var var = (int) operand;
+            var type = Type.UNKNOWN_INT;
+            buildCommand(code, index, FLOW_LOAD, new VarClientReference(var), List.of(), List.of(type));
+            return;
+        }
+
+        if (Unpack.VERSION < 600 && command == PUSH_VARC_STRING) {
+            var var = (int) operand;
+            var type = Type.STRING;
+            buildCommand(code, index, FLOW_LOAD, new VarClientStringReference(var), List.of(), List.of(type));
             return;
         }
 
@@ -291,32 +318,55 @@ public class SyntaxBuilder {
         if (command == DB_GETFIELD) {
             var column = (int) stack.get(stack.size() - 2).operand;
             var argumentTypes = List.of(Type.DBROW, Type.DBCOLUMN, Type.INT_INT);
-            var returnTypes = Unpacker.getDBColumnTypeTuple(column >>> 12, (column >>> 4) & 255, (column & 15) - 1);
+            var returnTypes = Unpacker.getDBColumnTypeTuple(column);
             buildCommand(code, index, command, operand, argumentTypes, returnTypes);
             return;
         }
 
         if (command == DB_FIND) {
-            var column = (int) stack.get(stack.size() - 3).operand;
-            var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column >>> 12, (column >>> 4) & 255, (column & 15) - 1), Type.BASEVARTYPE);
-            var returnTypes = List.<Type>of();
-            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
+            if (Unpack.VERSION < 930) {
+                var column = (int) stack.get(stack.size() - 2).operand;
+                var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column));
+                var returnTypes = List.<Type>of();
+                buildCommand(code, index, command, operand, argumentTypes, returnTypes);
+            } else {
+                var column = (int) stack.get(stack.size() - 3).operand;
+                var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column), Type.BASEVARTYPE);
+                var returnTypes = List.<Type>of();
+                buildCommand(code, index, command, operand, argumentTypes, returnTypes);
+            }
+
             return;
         }
 
         if (command == DB_FIND_WITH_COUNT) {
-            var column = (int) stack.get(stack.size() - 3).operand;
-            var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column >>> 12, (column >>> 4) & 255, (column & 15) - 1), Type.BASEVARTYPE);
-            var returnTypes = List.of(Type.INT_INT);
-            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
+            if (Unpack.VERSION < 930) {
+                var column = (int) stack.get(stack.size() - 2).operand;
+                var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column));
+                var returnTypes = List.of(Type.INT_INT);
+                buildCommand(code, index, command, operand, argumentTypes, returnTypes);
+            } else {
+                var column = (int) stack.get(stack.size() - 3).operand;
+                var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column), Type.BASEVARTYPE);
+                var returnTypes = List.of(Type.INT_INT);
+                buildCommand(code, index, command, operand, argumentTypes, returnTypes);
+            }
+
             return;
         }
 
         if (command == DB_FIND_REFINE) {
             var column = (int) stack.get(stack.size() - 3).operand;
-            var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column >>> 12, (column >>> 4) & 255, (column & 15) - 1), Type.BASEVARTYPE);
+            var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column), Type.BASEVARTYPE);
             var returnTypes = List.of(Type.INT_INT);
             buildCommand(code, index, command, operand, argumentTypes, returnTypes);
+            return;
+        }
+
+        if (command == RUNJAVASCRIPT) {
+            var argumentTypes = new ArrayList<>(JavaScriptCommand.byID((int) stack.get(stack.size() - 1).operand).params);
+            argumentTypes.add(Type.INT);
+            buildCommand(code, index, command, operand, argumentTypes, List.of());
             return;
         }
 
@@ -331,12 +381,18 @@ public class SyntaxBuilder {
         while (argumentTypes.contains(Type.HOOK)) {
             var hookIndex = argumentTypes.lastIndexOf(Type.HOOK);
 
-            var signature = ((String) stack.get(stack.size() - (argumentTypes.size() - hookIndex)).operand).codePoints().mapToObj(c -> switch (c) {
-                case 'i' -> Type.UNKNOWN_INT;
-                case 'l' -> Type.UNKNOWN_LONG;
-                case 's' -> Type.UNKNOWN_OBJECT;
-                case 'Y' -> Type.TRANSMIT_LIST;
-                default -> throw new IllegalStateException("invalid hook signature element");
+            var signature = ((String) stack.get(stack.size() - (argumentTypes.size() - hookIndex)).operand).codePoints().mapToObj(c -> {
+                if (Unpack.VERSION < 600) {
+                    return Type.byChar(c);
+                } else {
+                    return switch (c) {
+                        case 'i' -> Type.UNKNOWN_INT;
+                        case 'l' -> Type.UNKNOWN_LONG;
+                        case 's' -> Type.UNKNOWN_OBJECT;
+                        case 'Y' -> Type.TRANSMIT_LIST;
+                        default -> throw new IllegalStateException("invalid hook signature element");
+                    };
+                }
             }).toList();
 
             var result = new ArrayList<>(argumentTypes.subList(0, hookIndex));

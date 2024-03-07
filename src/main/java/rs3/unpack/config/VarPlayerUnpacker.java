@@ -1,6 +1,5 @@
 package rs3.unpack.config;
 
-import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.util.Packet;
@@ -8,11 +7,11 @@ import rs3.util.Packet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AudioDefaultsUnpacker {
+public class VarPlayerUnpacker {
     public static List<String> unpack(int id, byte[] data) {
         var lines = new ArrayList<String>();
         var packet = new Packet(data);
-        lines.add("[audiodefaults_" + id + "]");
+        lines.add("[" + Unpacker.format(Type.VAR_PLAYER, id) + "]");
 
         while (true) switch (packet.g1()) {
             case 0 -> {
@@ -23,7 +22,7 @@ public class AudioDefaultsUnpacker {
                 return lines;
             }
 
-            case 1 -> lines.add("titlescreensong=" + Unpacker.format(Type.MIDI, Unpack.VERSION >= 920 ? packet.g4s() : packet.g2()));
+            case 5 -> lines.add("clientcode=" + packet.g2());
 
             default -> throw new IllegalStateException("unknown opcode");
         }
