@@ -12,7 +12,7 @@ public class InterfaceUnpacker {
     public static List<String> unpack(int id, byte[] data) {
         var lines = new ArrayList<String>();
         var packet = new Packet(data);
-        lines.add("[" + Unpacker.format(Type.COMPONENT, id) + "]");
+        lines.add("[com" + id + "]");
 
         if (Unpack.VERSION < 500 && data[0] != 0xff) {
             return lines; // todo if1
@@ -67,7 +67,7 @@ public class InterfaceUnpacker {
         var layer = packet.g2null();
 
         if (layer != -1) {
-            line(lines, "layer=", layer); // if_getlayer
+            line(lines, "layer=com", layer); // if_getlayer
         }
 
         var flags = packet.g1();

@@ -48,7 +48,7 @@ public class Unpacker {
                     yield "null";
                 }
 
-                yield "interface_" + (value >> 16) + ":" + (value & 0xffff);
+                yield "interface_" + (value >> 16) + ":com" + (value & 0xffff);
             }
 
             case DBCOLUMN -> {
@@ -84,7 +84,13 @@ public class Unpacker {
                     yield "null";
                 }
 
-                yield GRAPHIC_NAMES.getOrDefault(value, "graphic_" + value);
+                var name = GRAPHIC_NAMES.getOrDefault(value, "graphic_" + value);
+
+                if (name.contains(",")) {
+                    name = "\"" + name + "\"";
+                }
+
+                yield name;
             }
 
             case VAR_REFERENCE_INT -> {
@@ -461,10 +467,10 @@ public class Unpacker {
                 default -> "^settextalignv_" + value;
             };
 
-            case INT_WINDOWMODE -> switch (value) {
+            case INT_WINDOWMODE -> switch (value) { // tfu
                 case -1 -> "null";
                 case 0 -> "0";
-                case 1 -> "^windowmode_fixed";
+                case 1 -> "^windowmode_small";
                 case 2 -> "^windowmode_resizable";
                 case 3 -> "^windowmode_fullscreen";
                 default -> "^windowmode_" + value;
@@ -696,6 +702,7 @@ public class Unpacker {
             return List.of(types.get(tuple));
         }
     }
+
     public static List<Type> getDBColumnTypeTuple(int column) {
         if (Unpack.VERSION < 930) {
             return getDBColumnTypeTuple(column >>> 8, column & 255, -1);

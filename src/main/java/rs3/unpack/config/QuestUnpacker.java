@@ -51,7 +51,7 @@ public class QuestUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("unknown10=" + packet.g4s());
+                    lines.add("unknown10=" + Unpacker.format(Type.COORDGRID, packet.g4s()));
                 }
             }
 

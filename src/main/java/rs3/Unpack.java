@@ -39,45 +39,167 @@ public class Unpack {
 
     public static void main(String[] args) throws IOException {
         var root = Path.of("unpacked");
+        Files.createDirectories(root);
         Files.createDirectories(root.resolve("config"));
+        Files.createDirectories(root.resolve("script"));
+        Files.createDirectories(root.resolve("interface"));
 
         if (VERSION < 400) {
-            var config = new Jagfile(Files.readAllBytes(BASE_PATH.resolve("0/2.dat")));
-            unpackLegacyConfig(config, "idk", IDKUnpacker::unpack, root.resolve("config/dump.idk"));
-            unpackLegacyConfig(config, "flo", FloorOverlayUnpacker::unpack, root.resolve("config/dump.flo"));
-            unpackLegacyConfig(config, "loc", LocUnpacker::unpack, root.resolve("config/dump.loc"));
-            unpackLegacyConfig(config, "mesanim", MesAnimUnpacker::unpack, root.resolve("config/dump.mesanim"));
-            unpackLegacyConfig(config, "npc", NPCUnpacker::unpack, root.resolve("config/dump.npc"));
-            unpackLegacyConfig(config, "obj", ObjUnpacker::unpack, root.resolve("config/dump.obj"));
-            unpackLegacyConfig(config, "param", ParamUnpacker::unpack, root.resolve("config/dump.param"));
-            unpackLegacyConfig(config, "seq", SeqUnpacker::unpack, root.resolve("config/dump.seq"));
-            unpackLegacyConfig(config, "spotanim", EffectAnimUnpacker::unpack, root.resolve("config/dump.spot"));
-            return;
+            unpackLegacy(root);
+        } else {
+            unpackCurrent(root);
         }
+    }
 
+    private static void unpackLegacy(Path root) throws IOException {
+        var config = new Jagfile(Files.readAllBytes(BASE_PATH.resolve("0/2.dat")));
+        unpackLegacyConfig(config, "idk", IDKUnpacker::unpack, root.resolve("config/dump.idk"));
+        unpackLegacyConfig(config, "flo", FloorOverlayUnpacker::unpack, root.resolve("config/dump.flo"));
+        unpackLegacyConfig(config, "loc", LocUnpacker::unpack, root.resolve("config/dump.loc"));
+        unpackLegacyConfig(config, "mesanim", MesAnimUnpacker::unpack, root.resolve("config/dump.mesanim"));
+        unpackLegacyConfig(config, "npc", NPCUnpacker::unpack, root.resolve("config/dump.npc"));
+        unpackLegacyConfig(config, "obj", ObjUnpacker::unpack, root.resolve("config/dump.obj"));
+        unpackLegacyConfig(config, "param", ParamUnpacker::unpack, root.resolve("config/dump.param"));
+        unpackLegacyConfig(config, "seq", SeqUnpacker::unpack, root.resolve("config/dump.seq"));
+        unpackLegacyConfig(config, "spotanim", EffectAnimUnpacker::unpack, root.resolve("config/dump.spot"));
+    }
+
+    private static void unpackCurrent(Path root) throws IOException {
         // load names
         loadGroupNamesScriptTrigger(12, Unpacker.SCRIPT_NAMES);
         loadGroupNames(Path.of("data/names/scripts.txt"), 12, Unpacker.SCRIPT_NAMES);
         loadGroupNames(Path.of("data/names/graphics.txt"), 8, Unpacker.GRAPHIC_NAMES);
 
         // unpack
-        unpackConfig(root.resolve("scripts"));
-        unpackConfigGroup(23, 0, MapAreaUnpacker::unpack, root.resolve("scripts/dump.wma")); // worldmapdata details
-        unpackDefaults(root.resolve("defaults"));
-        unpackScripts(12, root.resolve("scripts/dump.cs2"));
-        unpackConfigArchive(3, 16, InterfaceUnpacker::unpack, root.resolve("scripts/dump.if3"));
-        unpackConfigArchive(60, 0, StylesheetUnpacker::unpack, root.resolve("scripts/dump.stylesheet"));
-        unpackConfigArchive(26, 0, MaterialUnpacker::unpack, root.resolve("scripts/dump.material"));
+
+        // things stuff depends on
+        if (Unpack.VERSION < 600) {
+            unpackConfigGroup(2, 16, VarPlayerUnpacker::unpack, root.resolve("config/dump.varp"));
+        } else {
+            unpackConfigGroup(2, 60, (id, data) -> VarUnpacker.unpack(VarDomain.PLAYER, id, data), root.resolve("config/dump.varp"));
+            unpackConfigGroup(2, 61, (id, data) -> VarUnpacker.unpack(VarDomain.NPC, id, data), root.resolve("config/dump.varn"));
+            unpackConfigGroup(2, 62, (id, data) -> VarUnpacker.unpack(VarDomain.CLIENT, id, data), root.resolve("config/dump.varc"));
+            unpackConfigGroup(2, 63, (id, data) -> VarUnpacker.unpack(VarDomain.WORLD, id, data), root.resolve("config/dump.varworld")); // client ignores
+            unpackConfigGroup(2, 64, (id, data) -> VarUnpacker.unpack(VarDomain.REGION, id, data), root.resolve("config/dump.varregion")); // client ignores
+            unpackConfigGroup(2, 65, (id, data) -> VarUnpacker.unpack(VarDomain.OBJECT, id, data), root.resolve("config/dump.varobject"));
+            unpackConfigGroup(2, 66, (id, data) -> VarUnpacker.unpack(VarDomain.CLAN, id, data), root.resolve("config/dump.varclan"));
+            unpackConfigGroup(2, 67, (id, data) -> VarUnpacker.unpack(VarDomain.CLAN_SETTING, id, data), root.resolve("config/dump.varclansetting"));
+            unpackConfigGroup(2, 68, (id, data) -> VarUnpacker.unpack(VarDomain.CONTROLLER, id, data), root.resolve("config/dump.varcontroller")); // client ignores
+            unpackConfigGroup(2, 75, (id, data) -> VarUnpacker.unpack(VarDomain.GLOBAL, id, data), root.resolve("config/dump.varglobal")); // client ignores
+            unpackConfigGroup(2, 80, (id, data) -> VarUnpacker.unpack(VarDomain.PLAYER_GROUP, id, data), root.resolve("config/dump.varplayergroup"));
+            unpackConfigGroup(2, 69, VarBitUnpacker::unpack, root.resolve("config/dump.varbit"));
+        }
+
+        unpackConfigGroup(2, 11, ParamUnpacker::unpack, root.resolve("config/dump.param"));
+
+        // regular configs
+        unpackConfigGroup(2, 1, FloorUnderlayUnpacker::unpack, root.resolve("config/dump.flu"));
+        unpackConfigGroup(2, 2, HuntUnpacker::unpack, root.resolve("config/dump.hunt")); // client ignores
+        unpackConfigGroup(2, 3, IDKUnpacker::unpack, root.resolve("config/dump.idk"));
+        unpackConfigGroup(2, 4, FloorOverlayUnpacker::unpack, root.resolve("config/dump.flo"));
+        unpackConfigGroup(2, 5, InvUnpacker::unpack, root.resolve("config/dump.inv"));
+
+        if (Unpack.VERSION < 500) {
+            unpackConfigGroup(2, 6, LocUnpacker::unpack, root.resolve("config/dump.loc"));
+        } else {
+            unpackConfigArchive(16, 8, LocUnpacker::unpack, root.resolve("config/dump.loc")); // 6
+        }
+
+        unpackConfigGroup(2, 7, MesAnimUnpacker::unpack, root.resolve("config/dump.mesanim")); // client ignores
+
+        if (Unpack.VERSION < 500) {
+            unpackConfigGroup(2, 8, EnumUnpacker::unpack, root.resolve("config/dump.enum"));
+        } else {
+            unpackConfigArchive(17, 8, EnumUnpacker::unpack, root.resolve("config/dump.enum")); // 8
+        }
+
+        if (Unpack.VERSION < 500) {
+            unpackConfigGroup(2, 9, NPCUnpacker::unpack, root.resolve("config/dump.npc"));
+        } else {
+            unpackConfigArchive(18, 7, NPCUnpacker::unpack, root.resolve("config/dump.npc")); // 9
+        }
+
+        if (Unpack.VERSION < 500) {
+            unpackConfigGroup(2, 10, ObjUnpacker::unpack, root.resolve("config/dump.obj"));
+        } else {
+            unpackConfigArchive(19, 8, ObjUnpacker::unpack, root.resolve("config/dump.obj")); // 10
+        }
+
+        if (Unpack.VERSION < 500) {
+            unpackConfigGroup(2, 12, SeqUnpacker::unpack, root.resolve("config/dump.seq"));
+        } else {
+            unpackConfigArchive(20, 7, SeqUnpacker::unpack, root.resolve("config/dump.seq")); // 12
+        }
+
+        if (Unpack.VERSION < 500) {
+            unpackConfigGroup(2, 13, EffectAnimUnpacker::unpack, root.resolve("config/dump.spot"));
+        } else {
+            unpackConfigArchive(21, 8, EffectAnimUnpacker::unpack, root.resolve("config/dump.spot")); // 13
+        }
+
+        unpackConfigGroup(2, 18, AreaUnpacker::unpack, root.resolve("config/dump.area")); // client ignores
+
+        if (Unpack.VERSION < 600) {
+            unpackConfigGroup(2, 26, StructUnpacker::unpack, root.resolve("config/dump.struct"));
+        } else {
+            unpackConfigArchive(22, 5, StructUnpacker::unpack, root.resolve("config/dump.struct")); // 26
+        }
+
+        unpackConfigGroup(2, 29, SkyBoxUnpacker::unpack, root.resolve("config/dump.skybox"));
+        unpackConfigGroup(2, 31, LightUnpacker::unpack, root.resolve("config/dump.light"));
+        unpackConfigGroup(2, 32, BASUnpacker::unpack, root.resolve("config/dump.bas"));
+        unpackConfigGroup(2, 33, CursorUnpacker::unpack, root.resolve("config/dump.cursor"));
+        unpackConfigGroup(2, 34, MSIUnpacker::unpack, root.resolve("config/dump.msi"));
+        unpackConfigGroup(2, 35, QuestUnpacker::unpack, root.resolve("config/dump.quest"));
+        unpackConfigGroup(2, 36, MapElementUnpacker::unpack, root.resolve("config/dump.mel")); // todo
+        unpackConfigGroup(2, 40, DBTableUnpacker::unpack, root.resolve("config/dump.dbtable")); // todo: use dbtableindex
+        unpackConfigGroup(2, 41, DBRowUnpacker::unpack, root.resolve("config/dump.dbrow"));
+        unpackConfigGroup(2, 42, ControllerUnpacker::unpack, root.resolve("config/dump.controller")); // client ignores
+        unpackConfigGroup(2, 46, HitmarkUnpacker::unpack, root.resolve("config/dump.hitmark"));
+        unpackConfigGroup(2, 48, ItemCodeUnpacker::unpack, root.resolve("config/dump.itemcode")); // client ignores
+        unpackConfigGroup(2, 49, CategoryUnpacker::unpack, root.resolve("config/dump.category")); // client ignores
+        unpackConfigGroup(2, 70, GameLogEventUnpacker::unpack, root.resolve("config/dump.gamelogevent")); // client ignores
+        unpackConfigGroup(2, 72, HeadbarUnpacker::unpack, root.resolve("config/dump.headbar"));
+        unpackConfigGroup(2, 73, Config73Unpacker::unpack, root.resolve("config/dump.config73"));
+        unpackConfigGroup(2, 76, WaterUnpacker::unpack, root.resolve("config/dump.water"));
+        unpackConfigGroup(2, 77, SeqGroupUnpacker::unpack, root.resolve("config/dump.seqgroup"));
+        unpackConfigGroup(2, 83, WorldAreaUnpacker::unpack, root.resolve("config/dump.worldarea"));
+        unpackConfigArchive(57, 7, AchievementUnpacker::unpack, root.resolve("config/dump.achievement")); // 85
+        unpackConfigGroup(27, 0, ParticleEmitterUnpacker::unpack, root.resolve("config/dump.particleemitter"));
+        unpackConfigGroup(27, 1, ParticleEffectorUnpacker::unpack, root.resolve("config/dump.particleeffector"));
+        unpackConfigGroup(29, 0, BillboardUnpacker::unpack, root.resolve("config/dump.billboard"));
+        unpackConfigGroup(24, 0, QuickChatCatUnpacker::unpack, root.resolve("config/dump.quickchatcat"));
+        unpackConfigGroup(24, 1, QuickChatPhraseUnpacker::unpack, root.resolve("config/dump.quickchatphrase"));
+        unpackConfigGroup(23, 0, MapAreaUnpacker::unpack, root.resolve("config/dump.wma")); // worldmapdata details
+
+        // defaults
+        unpackDefaults(28, 3, GraphicsDefaultsUnpacker::unpack, root.resolve("config/graphics.defaults"));
+        unpackDefaults(28, 4, AudioDefaultsUnpacker::unpack, root.resolve("config/audio.defaults"));
+        unpackDefaults(28, 6, WearPosDefaultsUnpacker::unpack, root.resolve("config/wearpos.defaults"));
+        unpackDefaults(28, 10, WorldMapDefaultsUnpacker::unpack, root.resolve("config/worldmap.defaults"));
+        unpackDefaults(28, 12, TitleDefaultsUnpacker::unpack, root.resolve("config/title.defaults"));
+
+        // scripts
+        unpackScripts(12, root.resolve("script"));
+
+        // interface
+        unpackInterfaces(3, InterfaceUnpacker::unpack, root.resolve("interface"));
+
+        // other
+        unpackConfigArchive(60, 0, StylesheetUnpacker::unpack, root.resolve("config/dump.stylesheet"));
+        unpackConfigArchive(26, 0, MaterialUnpacker::unpack, root.resolve("config/dump.material"));
 //        iterateArchive(8, SpriteUnpacker::unpack);
 //        unpackArchiveTransformed(47, b -> GSON.toJson(new Model(new Packet(b))), root.resolve("model"), ".json");
 //        iterateArchive(54, TextureUnpacker::unpack);
         unpackArchive(10, root.resolve("binary"), ".dat");
         unpackArchive(59, root.resolve("ttf"), ".ttf");
         unpackArchiveTransformed(61, VFXUnpacker::unpack, root.resolve("vfx"), ".json");
-        unpackArchiveTransformed(62, b -> GSON_PRETTY.toJson(AnimatorController.decode(new Packet(b))), root.resolve("animators"), ".json");
+        unpackArchiveTransformed(62, b -> GSON_PRETTY.toJson(AnimatorController.decode(new Packet(b))), root.resolve("animator"), ".json");
         unpackGroupTransformed(65, 0, b -> GSON_PRETTY.toJson(new AnimCurve(new Packet(b))), root.resolve("uianimcurve"), ".json");
         unpackGroupTransformed(65, 1, b -> GSON_PRETTY.toJson(new Anim(new Packet(b))), root.resolve("uianim"), ".json");
         unpackArchiveTransformed(66, b -> GSON_PRETTY.toJson(new Cutscene2D(new Packet(b))), root.resolve("cutscene2d"), ".json");
+
+        // maps
         unpackMaps(root);
         unpackWorldAreaMap(root);
     }
@@ -241,13 +363,11 @@ public class Unpack {
 
         ScriptUnpacker.decompile();
 
-        var lines = new ArrayList<String>();
         for (var group : archiveIndex.groupId) {
-            lines.addAll(ScriptUnpacker.unpack(group));
-            lines.add("");
+            var lines = new ArrayList<>(ScriptUnpacker.unpack(group));
+            lines.addFirst("// " + group);
+            Files.write(path.resolve(Unpacker.getScriptName(group) + ".cs2"), lines);
         }
-
-        Files.write(path, lines);
     }
 
     private static void unpackMaps(Path root) throws IOException {
@@ -288,118 +408,6 @@ public class Unpack {
         }
 
         return result;
-    }
-
-    private static void unpackConfig(Path path) throws IOException {
-        Files.createDirectories(path);
-
-        // things stuff depends on
-        if (Unpack.VERSION < 600) {
-            unpackConfigGroup(2, 16, VarPlayerUnpacker::unpack, path.resolve("dump.varp"));
-        } else {
-            unpackConfigGroup(2, 60, (id, data) -> VarUnpacker.unpack(VarDomain.PLAYER, id, data), path.resolve("dump.varp"));
-            unpackConfigGroup(2, 61, (id, data) -> VarUnpacker.unpack(VarDomain.NPC, id, data), path.resolve("dump.varn"));
-            unpackConfigGroup(2, 62, (id, data) -> VarUnpacker.unpack(VarDomain.CLIENT, id, data), path.resolve("dump.varc"));
-            unpackConfigGroup(2, 63, (id, data) -> VarUnpacker.unpack(VarDomain.WORLD, id, data), path.resolve("dump.varworld")); // client ignores
-            unpackConfigGroup(2, 64, (id, data) -> VarUnpacker.unpack(VarDomain.REGION, id, data), path.resolve("dump.varregion")); // client ignores
-            unpackConfigGroup(2, 65, (id, data) -> VarUnpacker.unpack(VarDomain.OBJECT, id, data), path.resolve("dump.varobject"));
-            unpackConfigGroup(2, 66, (id, data) -> VarUnpacker.unpack(VarDomain.CLAN, id, data), path.resolve("dump.varclan"));
-            unpackConfigGroup(2, 67, (id, data) -> VarUnpacker.unpack(VarDomain.CLAN_SETTING, id, data), path.resolve("dump.varclansetting"));
-            unpackConfigGroup(2, 68, (id, data) -> VarUnpacker.unpack(VarDomain.CONTROLLER, id, data), path.resolve("dump.varcontroller")); // client ignores
-            unpackConfigGroup(2, 75, (id, data) -> VarUnpacker.unpack(VarDomain.GLOBAL, id, data), path.resolve("dump.varglobal")); // client ignores
-            unpackConfigGroup(2, 80, (id, data) -> VarUnpacker.unpack(VarDomain.PLAYER_GROUP, id, data), path.resolve("dump.varplayergroup"));
-            unpackConfigGroup(2, 69, VarBitUnpacker::unpack, path.resolve("dump.varbit"));
-        }
-
-        unpackConfigGroup(2, 11, ParamUnpacker::unpack, path.resolve("dump.param"));
-
-        // regular configs
-        unpackConfigGroup(2, 1, FloorUnderlayUnpacker::unpack, path.resolve("dump.flu"));
-        unpackConfigGroup(2, 2, HuntUnpacker::unpack, path.resolve("dump.hunt")); // client ignores
-        unpackConfigGroup(2, 3, IDKUnpacker::unpack, path.resolve("dump.idk"));
-        unpackConfigGroup(2, 4, FloorOverlayUnpacker::unpack, path.resolve("dump.flo"));
-        unpackConfigGroup(2, 5, InvUnpacker::unpack, path.resolve("dump.inv"));
-
-        if (Unpack.VERSION < 500) {
-            unpackConfigGroup(2, 6, LocUnpacker::unpack, path.resolve("dump.loc"));
-        } else {
-            unpackConfigArchive(16, 8, LocUnpacker::unpack, path.resolve("dump.loc")); // 6
-        }
-
-        unpackConfigGroup(2, 7, MesAnimUnpacker::unpack, path.resolve("dump.mesanim")); // client ignores
-
-        if (Unpack.VERSION < 500) {
-            unpackConfigGroup(2, 8, EnumUnpacker::unpack, path.resolve("dump.enum"));
-        } else {
-            unpackConfigArchive(17, 8, EnumUnpacker::unpack, path.resolve("dump.enum")); // 8
-        }
-
-        if (Unpack.VERSION < 500) {
-            unpackConfigGroup(2, 9, NPCUnpacker::unpack, path.resolve("dump.npc"));
-        } else {
-            unpackConfigArchive(18, 7, NPCUnpacker::unpack, path.resolve("dump.npc")); // 9
-        }
-
-        if (Unpack.VERSION < 500) {
-            unpackConfigGroup(2, 10, ObjUnpacker::unpack, path.resolve("dump.obj"));
-        } else {
-            unpackConfigArchive(19, 8, ObjUnpacker::unpack, path.resolve("dump.obj")); // 10
-        }
-
-        if (Unpack.VERSION < 500) {
-            unpackConfigGroup(2, 12, SeqUnpacker::unpack, path.resolve("dump.seq"));
-        } else {
-            unpackConfigArchive(20, 7, SeqUnpacker::unpack, path.resolve("dump.seq")); // 12
-        }
-
-        if (Unpack.VERSION < 500) {
-            unpackConfigGroup(2, 13, EffectAnimUnpacker::unpack, path.resolve("dump.spot"));
-        } else {
-            unpackConfigArchive(21, 8, EffectAnimUnpacker::unpack, path.resolve("dump.spot")); // 13
-        }
-
-        unpackConfigGroup(2, 18, AreaUnpacker::unpack, path.resolve("dump.area")); // client ignores
-
-        if (Unpack.VERSION < 600) {
-            unpackConfigGroup(2, 26, StructUnpacker::unpack, path.resolve("dump.struct"));
-        } else {
-            unpackConfigArchive(22, 5, StructUnpacker::unpack, path.resolve("dump.struct")); // 26
-        }
-
-        unpackConfigGroup(2, 29, SkyBoxUnpacker::unpack, path.resolve("dump.skybox"));
-        unpackConfigGroup(2, 31, LightUnpacker::unpack, path.resolve("dump.light"));
-        unpackConfigGroup(2, 32, BASUnpacker::unpack, path.resolve("dump.bas"));
-        unpackConfigGroup(2, 33, CursorUnpacker::unpack, path.resolve("dump.cursor"));
-        unpackConfigGroup(2, 34, MSIUnpacker::unpack, path.resolve("dump.msi"));
-        unpackConfigGroup(2, 35, QuestUnpacker::unpack, path.resolve("dump.quest"));
-//        unpackConfigGroup(2, 36, MapElementUnpacker::unpack, path.resolve("dump.mel")); // todo
-        unpackConfigGroup(2, 40, DBTableUnpacker::unpack, path.resolve("dump.dbtable")); // todo: use dbtableindex
-        unpackConfigGroup(2, 41, DBRowUnpacker::unpack, path.resolve("dump.dbrow"));
-        unpackConfigGroup(2, 42, ControllerUnpacker::unpack, path.resolve("dump.controller")); // client ignores
-        unpackConfigGroup(2, 46, HitmarkUnpacker::unpack, path.resolve("dump.hitmark"));
-        unpackConfigGroup(2, 48, ItemCodeUnpacker::unpack, path.resolve("dump.itemcode")); // client ignores
-        unpackConfigGroup(2, 49, CategoryUnpacker::unpack, path.resolve("dump.category")); // client ignores
-        unpackConfigGroup(2, 70, GameLogEventUnpacker::unpack, path.resolve("dump.gamelogevent")); // client ignores
-        unpackConfigGroup(2, 72, HeadbarUnpacker::unpack, path.resolve("dump.headbar"));
-        unpackConfigGroup(2, 73, Config73Unpacker::unpack, path.resolve("dump.config73"));
-        unpackConfigGroup(2, 76, WaterUnpacker::unpack, path.resolve("dump.water"));
-        unpackConfigGroup(2, 77, SeqGroupUnpacker::unpack, path.resolve("dump.seqgroup"));
-        unpackConfigGroup(2, 83, WorldAreaUnpacker::unpack, path.resolve("dump.worldarea"));
-        unpackConfigArchive(57, 7, AchievementUnpacker::unpack, path.resolve("dump.achievement")); // 85
-        unpackConfigGroup(27, 0, ParticleEmitterUnpacker::unpack, path.resolve("dump.particleemitter"));
-        unpackConfigGroup(27, 1, ParticleEffectorUnpacker::unpack, path.resolve("dump.particleeffector"));
-        unpackConfigGroup(29, 0, BillboardUnpacker::unpack, path.resolve("dump.billboard"));
-        unpackConfigGroup(24, 0, QuickChatCatUnpacker::unpack, path.resolve("dump.quickchatcat"));
-        unpackConfigGroup(24, 1, QuickChatPhraseUnpacker::unpack, path.resolve("dump.quickchatphrase"));
-    }
-
-    private static void unpackDefaults(Path path) throws IOException {
-        Files.createDirectories(path);
-        unpackDefaults(28, 3, GraphicsDefaultsUnpacker::unpack, path.resolve("graphics.defaults"));
-        unpackDefaults(28, 4, AudioDefaultsUnpacker::unpack, path.resolve("audio.defaults"));
-        unpackDefaults(28, 6, WearPosDefaultsUnpacker::unpack, path.resolve("wearpos.defaults"));
-        unpackDefaults(28, 10, WorldMapDefaultsUnpacker::unpack, path.resolve("worldmap.defaults"));
-        unpackDefaults(28, 12, TitleDefaultsUnpacker::unpack, path.resolve("title.defaults"));
     }
 
     private static void unpackArchive(int archive, Path path, String extension) throws IOException {
@@ -586,6 +594,22 @@ public class Unpack {
         }
 
         Files.write(result, lines);
+    }
+
+    private static void unpackInterfaces(int archive, BiFunction<Integer, byte[], List<String>> unpack, Path result) throws IOException {
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
+
+        for (var group : archiveIndex.groupId) {
+            var files = Js5Util.unpackGroup(archiveIndex, group, Files.readAllBytes(BASE_PATH.resolve(archive + "/" + group + ".dat")));
+            var lines = new ArrayList<String>();
+
+            for (var file : files.keySet()) {
+                lines.addAll(unpack.apply((group << 16) + file, files.get(file)));
+                lines.add("");
+            }
+
+            Files.write(result.resolve(Unpacker.format(Type.INTERFACE, group) + ".if3"), lines);
+        }
     }
 
     private static void unpackArchive(int archive, BiFunction<Integer, byte[], List<String>> unpack, Path result) throws IOException {
