@@ -79,8 +79,15 @@ public class Command {
         try {
             var opcodes = new HashMap<String, Integer>();
 
-            for (var line : Files.readAllLines(Unpack.VERSION == 10000 ? Path.of("data/opcodes.txt") : Path.of("data/opcodes-" + (Unpack.VERSION < 600 ? "unscrambled" : Unpack.VERSION) + ".txt"))) {
+            for (var line : Files.readAllLines(Unpack.VERSION == 10000 ? Path.of("data/opcodes.txt") : Path.of("data/opcodes-" + (Unpack.VERSION < 669 ? "unscrambled" : Unpack.VERSION) + ".txt"))) {
                 var parts = line.split(",");
+
+                if (parts.length >= 3) {
+                    if (Integer.parseInt(parts[2]) > Unpack.VERSION) {
+                        continue; // override for higher version
+                    }
+                }
+
                 opcodes.put(parts[0], Integer.parseInt(parts[1]));
             }
 
@@ -190,6 +197,14 @@ public class Command {
     public static final Command POP_ARRAY_INT_LEAVE_VALUE_ON_STACK = findCommand("pop_array_int_leave_value_on_stack");
     public static final Command BRANCH_IF_TRUE = findCommand("branch_if_true");
     public static final Command BRANCH_IF_FALSE = findCommand("branch_if_false");
+    public static final Command PUSH_VARCLAN = findCommand("push_varclan");
+    public static final Command PUSH_VARCLANBIT = findCommand("push_varclanbit");
+    public static final Command PUSH_VARCLAN_LONG = findCommand("push_varclan_long");
+    public static final Command PUSH_VARCLAN_STRING = findCommand("push_varclan_string");
+    public static final Command PUSH_VARCLANSETTING = findCommand("push_varclansetting");
+    public static final Command PUSH_VARCLANSETTINGBIT = findCommand("push_varclansettingbit");
+    public static final Command PUSH_VARCLANSETTING_LONG = findCommand("push_varclansetting_long");
+    public static final Command PUSH_VARCLANSETTING_STRING = findCommand("push_varclansetting_string");
     public static final Command OPCOUNT = findCommand("opcount");
     public static final Command VAR_REFERENCE_GET = findCommand("var_reference_get");
 

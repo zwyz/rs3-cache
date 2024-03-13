@@ -10,7 +10,7 @@
 [command,chat_lastuid]()(int)
 [command,chat_clear]
 [command,chat_gethistorylength]()(int)
-[command,chat_gethistorylength](chattype $x1)(int) 600
+[command,chat_gethistorylength](chattype $x1)(int) 700
 [command,chat_getnextuid](int $x1)(int)
 [command,chat_getprevuid](int $x1)(int)
 [command,chat_setmode](int $x1)

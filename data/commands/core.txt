@@ -24,7 +24,7 @@
 [command,push_array_int](int $x1)(unknown_int)
 [command,pop_array_int](int $x1, unknown_int $x2)
 [command,switch](unknown_int $x1)
-[command,push_long_constant]()(long)
+[command,push_long_constant]()(unknown_long)
 [command,pop_long_discard]todo
 [command,push_long_local]()(unknown_long)
 [command,pop_long_local](unknown_long $x1)
@@ -37,7 +37,7 @@
 [command,push_array_int_leave_index_on_stack]todo
 [command,push_array_int_and_index]todo
 [command,pop_array_int_leave_value_on_stack]todo
-[command,branch_if_true]todo
-[command,branch_if_false]todo
+[command,branch_if_true](unknown_int $x1)
+[command,branch_if_false](unknown_int $x1)
 [command,opcount]()(int)
 [command,var_reference_get](var_reference_int $x1)(int)

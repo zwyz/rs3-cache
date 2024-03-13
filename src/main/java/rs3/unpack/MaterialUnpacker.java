@@ -36,7 +36,7 @@ public class MaterialUnpacker {
 
         var flaga0 = (flagsA & 1) != 0;
         var flaga1 = (flagsA & 2) != 0;
-        var flaga2 = (flagsA & 2) != 0;
+        var flaga2 = (flagsA & 4) != 0;
         var flaga3 = (flagsA & 8) != 0;
         var flaga4 = (flagsA & 16) != 0;
 

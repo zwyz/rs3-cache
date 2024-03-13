@@ -23,15 +23,15 @@ public class BASUnpacker {
                 return lines;
             }
 
-            case 1 -> lines.add("readyanim=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()) + "," + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()));
-            case 2 -> lines.add("crawlanim=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()));
-            case 3 -> lines.add("crawlanim_b=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()));
-            case 4 -> lines.add("crawlanim_l=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()));
-            case 5 -> lines.add("crawlanim_r=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()));
-            case 6 -> lines.add("runanim=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()));
-            case 7 -> lines.add("runanim_b=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()));
-            case 8 -> lines.add("runanim_l=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()));
-            case 9 -> lines.add("runanim_r=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()));
+            case 1 -> lines.add("readyanim=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()) + "," + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 2 -> lines.add("crawlanim=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 3 -> lines.add("crawlanim_b=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 4 -> lines.add("crawlanim_l=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 5 -> lines.add("crawlanim_r=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 6 -> lines.add("runanim=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 7 -> lines.add("runanim_b=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 8 -> lines.add("runanim_l=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 9 -> lines.add("runanim_r=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
             case 26 -> lines.add("offset=" + packet.g1() + "," + packet.g1());
             case 27 -> lines.add("unknown27=" + packet.g1() + "," + packet.g2s() + "," + packet.g2s() + "," + packet.g2s() + "," + packet.g2s() + "," + packet.g2s() + "," + packet.g2s());
 
@@ -52,26 +52,26 @@ public class BASUnpacker {
             case 35 -> lines.add("unknown35=" + packet.g2());
             case 36 -> lines.add("unknown36=" + packet.g2s());
             case 37 -> lines.add("walkspeed=" + packet.g1());
-            case 38 -> lines.add("readyanim_l=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()));
-            case 39 -> lines.add("readyanim_r=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()));
-            case 40 -> lines.add("walkanim_b=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()));
-            case 41 -> lines.add("walkanim_l=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()));
-            case 42 -> lines.add("walkanim_r=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()));
+            case 38 -> lines.add("readyanim_l=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 39 -> lines.add("readyanim_r=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 40 -> lines.add("walkanim_b=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 41 -> lines.add("walkanim_l=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 42 -> lines.add("walkanim_r=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
             case 43 -> lines.add("unknown43=" + packet.g2());
             case 44 -> lines.add("unknown44=" + packet.g2());
             case 45 -> lines.add("unknown45=" + packet.g2());
-            case 46 -> lines.add("unknown46=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()));
-            case 47 -> lines.add("unknown47=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()));
-            case 48 -> lines.add("unknown48=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()));
-            case 49 -> lines.add("unknown49=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()));
-            case 50 -> lines.add("unknown50=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()));
-            case 51 -> lines.add("unknown51=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null()));
+            case 46 -> lines.add("unknown46=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 47 -> lines.add("unknown47=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 48 -> lines.add("unknown48=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 49 -> lines.add("unknown49=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 50 -> lines.add("unknown50=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 51 -> lines.add("unknown51=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
 
             case 52 -> {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
-                    var anim = Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null();
+                    var anim = Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null();
                     var weight = packet.g1();
                     var line = "randomreadyanim=" + Unpacker.format(Type.SEQ, anim) + "," + weight;
 

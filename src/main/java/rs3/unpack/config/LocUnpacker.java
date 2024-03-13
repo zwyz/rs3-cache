@@ -39,7 +39,7 @@ public class LocUnpacker {
                         var modelCount = packet.g1();
 
                         for (var j = 0; j < modelCount; j++) {
-                            lines.add("model=" + shape + "," + Unpacker.format(Type.MODEL, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()));
+                            lines.add("model=" + shape + "," + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
                         }
                     }
                 }
@@ -49,10 +49,34 @@ public class LocUnpacker {
             case 3 -> lines.add("desc=" + packet.gjstr());
 
             case 5 -> {
-                var count = packet.g1();
+                if (Unpack.VERSION < 600) {
+                    var count = packet.g1();
 
-                for (var i = 0; i < count; ++i) {
-                    lines.add("model=" + Unpacker.format(Type.MODEL, packet.g2())); // https://www.youtube.com/watch?v=vZ7oG1IDz1w 2:09:30
+                    for (var i = 0; i < count; ++i) {
+                        lines.add("model=" + Unpacker.format(Type.MODEL, packet.g2())); // https://www.youtube.com/watch?v=vZ7oG1IDz1w 2:09:30
+                    }
+                } else {
+                    var shapeCount1 = packet.g1();
+
+                    for (var i = 0; i < shapeCount1; ++i) {
+                        var shape = Unpacker.format(Type.LOC_SHAPE, packet.g1s());
+                        var modelCount = packet.g1();
+
+                        for (var j = 0; j < modelCount; j++) {
+                            lines.add("modela=" + shape + "," + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
+                        }
+                    }
+
+                    var shapeCount2 = packet.g1();
+
+                    for (var i = 0; i < shapeCount2; ++i) {
+                        var shape = Unpacker.format(Type.LOC_SHAPE, packet.g1s());
+                        var modelCount = packet.g1();
+
+                        for (var j = 0; j < modelCount; j++) {
+                            lines.add("modelb=" + shape + "," + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
+                        }
+                    }
                 }
             }
 
@@ -61,7 +85,7 @@ public class LocUnpacker {
             case 17 -> lines.add("blockwalk=no"); // https://www.youtube.com/watch?v=ovGBifJR4Fs 4:38:00
             case 18 -> lines.add("blockrange=no"); // https://www.youtube.com/watch?v=ovGBifJR4Fs 4:38:00
             case 19 -> lines.add("active=" + Unpacker.formatBoolean(packet.g1())); //https://www.youtube.com/watch?v=ovGBifJR4Fs 4:38:00
-            case 21 -> lines.add("hillchange=floor_skew");
+            case 21 -> lines.add("hillskew=yes"); // https://www.youtube.com/watch?v=ovGBifJR4Fs 4:38:00
             case 22 -> lines.add("sharelight=yes"); // https://www.youtube.com/watch?v=ovGBifJR4Fs 4:38:00
             case 23 -> lines.add("occlude=yes"); // https://www.youtube.com/watch?v=vZ7oG1IDz1w 2:09:30
             case 24 -> lines.add("anim=" + Unpacker.format(Type.SEQ, packet.gSmart2or4null()));
@@ -152,7 +176,7 @@ public class LocUnpacker {
                 var count = Unpack.VERSION < 900 ? packet.g1() : packet.gSmart1or2();
 
                 for (var i = 0; i <= count; ++i) {
-                    var multi = Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null();
+                    var multi = Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null();
 
                     if (multi != -1) {
                         lines.add("multiloc=" + i + "," + Unpacker.format(Type.LOC, multi));
@@ -193,7 +217,7 @@ public class LocUnpacker {
                     lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, multivarp));
                 }
 
-                var multidefault = Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null();
+                var multidefault = Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null();
 
                 if (multidefault != -1) {
                     lines.add("multiloc=default," + Unpacker.format(Type.LOC, multidefault));
@@ -202,7 +226,7 @@ public class LocUnpacker {
                 var count = Unpack.VERSION >= 900 ? packet.gSmart1or2() : packet.g1();
 
                 for (var i = 0; i <= count; ++i) {
-                    var multi = Unpack.VERSION < 600 ? packet.g2() : packet.gSmart2or4null();
+                    var multi = Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null();
 
                     if (multi != -1) {
                         lines.add("multiloc=" + i + "," + Unpacker.format(Type.LOC, multi));

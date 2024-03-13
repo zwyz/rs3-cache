@@ -145,17 +145,31 @@ public class SyntaxBuilder {
             return;
         }
 
-        if (Unpack.VERSION < 600 && command == PUSH_VARC_INT) {
+        if (Unpack.VERSION < 700 && command == PUSH_VARC_INT) {
             var var = (int) operand;
             var type = Type.UNKNOWN_INT;
             buildCommand(code, index, FLOW_LOAD, new VarClientReference(var), List.of(), List.of(type));
             return;
         }
 
-        if (Unpack.VERSION < 600 && command == PUSH_VARC_STRING) {
+        if (Unpack.VERSION < 700 && command == PUSH_VARC_STRING) {
             var var = (int) operand;
             var type = Type.STRING;
             buildCommand(code, index, FLOW_LOAD, new VarClientStringReference(var), List.of(), List.of(type));
+            return;
+        }
+
+        if (command == PUSH_VARCLAN || command == PUSH_VARCLAN_LONG || command == PUSH_VARCLAN_STRING || command == PUSH_VARCLANBIT) {
+            var var = (int) operand;
+            var type = Unpacker.getVarType(VarDomain.CLAN, var);
+            buildCommand(code, index, FLOW_LOAD, new VarReference(VarDomain.CLAN, var, false), List.of(), List.of(type));
+            return;
+        }
+
+        if (command == PUSH_VARCLANSETTING || command == PUSH_VARCLANSETTING_LONG || command == PUSH_VARCLANSETTING_STRING || command == PUSH_VARCLANSETTINGBIT) {
+            var var = (int) operand;
+            var type = Unpacker.getVarType(VarDomain.CLAN_SETTING, var);
+            buildCommand(code, index, FLOW_LOAD, new VarReference(VarDomain.CLAN_SETTING, var, false), List.of(), List.of(type));
             return;
         }
 
@@ -382,7 +396,7 @@ public class SyntaxBuilder {
             var hookIndex = argumentTypes.lastIndexOf(Type.HOOK);
 
             var signature = ((String) stack.get(stack.size() - (argumentTypes.size() - hookIndex)).operand).codePoints().mapToObj(c -> {
-                if (Unpack.VERSION < 600) {
+                if (Unpack.VERSION < 700) {
                     return Type.byChar(c);
                 } else {
                     return switch (c) {
@@ -569,6 +583,8 @@ public class SyntaxBuilder {
             case "branch_greater_than", "long_branch_greater_than" -> new Expression(FLOW_GT, null, List.of(Type.CONDITION), command1.arguments);
             case "branch_less_than_or_equals", "long_branch_less_than_or_equals" -> new Expression(FLOW_LE, null, List.of(Type.CONDITION), command1.arguments);
             case "branch_greater_than_or_equals", "long_branch_greater_than_or_equals" -> new Expression(FLOW_GE, null, List.of(Type.CONDITION), command1.arguments);
+            case "branch_if_true" -> new Expression(FLOW_EQ, null, List.of(Type.CONDITION), List.of(command1.arguments.get(0), new Expression(PUSH_CONSTANT_INT, 1, List.of(Type.UNKNOWN_INT), List.of())));
+            case "branch_if_false" -> new Expression(FLOW_EQ, null, List.of(Type.CONDITION), List.of(command1.arguments.get(0), new Expression(PUSH_CONSTANT_INT, 0, List.of(Type.UNKNOWN_INT), List.of())));
             default -> null;
         };
 

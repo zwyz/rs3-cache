@@ -57,9 +57,9 @@
 [command,if_setpausetext](string $x1,component $x2)
 [command,cc_setpausetext](string $x1)
 [command,cc_setparam]todo
-[command,if_setparam_int](int $x1,int $x2,component $x3)
+[command,if_setparam_int](param $x1,int $x2,component $x3)
 [command,cc_setparam_int](param $x1,int $x2)
-[command,if_setparam_string](int $x1,string $x2,component $x3)
+[command,if_setparam_string](param $x1,string $x2,component $x3)
 [command,cc_setparam_string](param $x1,string $x2)
 [command,if_callonresize](component $x1)
 [command,cc_callonresize]
@@ -187,8 +187,10 @@
 [command,cc_getmodel]()(model)
 [command,if_setrecol](int $x1,int $x2,int $x3,component $x4)
 [command,cc_setrecol](int $x1,int $x2,int $x3)
-[command,if_setretex](int $x1,material $x2,material $x3,component $x4)
-[command,cc_setretex](int $x1,material $x2,material $x3)
+[command,if_setretex](int $x1,texture $x2,texture $x3,component $x4)
+[command,if_setretex](int $x1,material $x2,material $x3,component $x4) 700
+[command,cc_setretex](int $x1,texture $x2,texture $x3)
+[command,cc_setretex](int $x1,material $x2,material $x3) 700
 [command,if_setnpchead](npc $x1,component $x2)
 [command,cc_setnpchead](npc $x1)
 [command,if_setnpcmodel](npc $x1,component $x2)

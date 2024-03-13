@@ -5,7 +5,7 @@
 [command,login_reply]()(int)
 [command,login_hoptime]()(int)
 [command,login_request](string $x1,string $x2,int $x3)
-[command,login_request](string $x1,string $x2) 600
+[command,login_request](string $x1,string $x2) 700
 [command,lobby_entergame](string $x1,boolean $x2)
 [command,lobby_entergamereply]()(int)
 [command,lobby_enterlobby](string $x1,string $x2,string $x3,boolean $x4)

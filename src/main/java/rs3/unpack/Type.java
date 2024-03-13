@@ -256,10 +256,13 @@ public enum Type {
     DBFILTER(-1, 0, BaseVarType.INTEGER),
 
     VAR_PLAYER(-1, 0, BaseVarType.INTEGER),
+    VAR_PLAYER_BIT(-1, 0, BaseVarType.INTEGER),
     VAR_NPC(-1, 0, BaseVarType.INTEGER),
+    VAR_NPC_BIT(-1, 0, BaseVarType.INTEGER),
     VAR_CLIENT(-1, 0, BaseVarType.INTEGER),
     VAR_CLIENT_STRING(-1, 0, BaseVarType.INTEGER),
     VAR_WORLD(-1, 0, BaseVarType.INTEGER),
+    VAR_WORLD_STRING(-1, 0, BaseVarType.INTEGER),
     VAR_REGION(-1, 0, BaseVarType.INTEGER),
     VAR_OBJECT(-1, 0, BaseVarType.INTEGER),
     VAR_CLAN(-1, 0, BaseVarType.INTEGER),
@@ -339,10 +342,14 @@ public enum Type {
     }
 
     public static Type byID(int id) {
-        if (Unpack.VERSION < 600) {
+        if (Unpack.VERSION < 700) {
             return byChar(id);
         }
 
+        return byIDForced(id);
+    }
+
+    public static Type byIDForced(int id) {
         for (var value : values()) {
             if (value.id == id) {
                 return value;

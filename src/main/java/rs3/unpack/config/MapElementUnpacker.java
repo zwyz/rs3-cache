@@ -1,5 +1,6 @@
 package rs3.unpack.config;
 
+import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.util.Packet;
@@ -57,15 +58,20 @@ public class MapElementUnpacker {
                     lines.add("unknown15a=" + packet.g2s());
                 }
 
-                lines.add("unknown15b=" + packet.g4s());
-                var count2 = packet.g1();
-
-                for (var i = 0; i < count2; ++i) {
+                if (Unpack.VERSION < 600) {
+                    lines.add("unknown15b=" + packet.g4s());
                     lines.add("unknown15c=" + packet.g4s());
-                }
+                } else {
+                    lines.add("unknown15b=" + packet.g4s());
+                    var count2 = packet.g1();
 
-                for (var i = 0; i < count1; ++i) {
-                    lines.add("unknown15d=" + packet.g1s());
+                    for (var i = 0; i < count2; ++i) {
+                        lines.add("unknown15c=" + packet.g4s());
+                    }
+
+                    for (var i = 0; i < count1; ++i) {
+                        lines.add("unknown15d=" + packet.g1s());
+                    }
                 }
             }
 

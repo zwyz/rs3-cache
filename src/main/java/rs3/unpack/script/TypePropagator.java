@@ -56,7 +56,7 @@ public class TypePropagator {
                 for (var i = hookStart; i < hookEnd; i++) {
                     var arg = expression.arguments.get(i);
 
-                    if (arg.command == PUSH_CONSTANT_STRING) {
+                    if (arg.command == PUSH_CONSTANT_STRING || arg.command == PUSH_CONSTANT_INT) {
                         if (Objects.equals(arg.operand, "event_opbase")) bound(type(arg, 0), Type.STRING); // event_opbase
                         if (Objects.equals(arg.operand, "event_text")) bound(type(arg, 0), Type.STRING); // event_text
                         if (Objects.equals(arg.operand, Integer.MIN_VALUE + 1)) bound(type(arg, 0), Type.INT_INT); // event_mousex

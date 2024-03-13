@@ -25,7 +25,7 @@ public class SeqUnpacker {
             }
 
             case 1 -> {
-                if (Unpack.VERSION < 400) {
+                if (Unpack.VERSION < 460) {
                     var count = packet.g1();
 
                     for (var i = 0; i < count; i++) {
@@ -61,11 +61,11 @@ public class SeqUnpacker {
             case 2 -> lines.add("loopframes=" + packet.g2());
 
             case 3 -> {
-                var count = Unpack.VERSION < 600 ? packet.g1() : packet.gSmart1or2();
+                var count = Unpack.VERSION < 700 ? packet.g1() : packet.gSmart1or2();
                 var result = new ArrayList<String>();
 
                 for (var i = 0; i < count; i++) {
-                    result.add("label_" + (Unpack.VERSION < 600 ? packet.g1() : packet.gSmart1or2()));
+                    result.add("label_" + (Unpack.VERSION < 700 ? packet.g1() : packet.gSmart1or2()));
                 }
 
                 lines.add("walkmerge=" + String.join(",", result));

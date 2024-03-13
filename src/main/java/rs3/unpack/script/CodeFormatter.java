@@ -347,7 +347,7 @@ public class CodeFormatter {
     }
 
     private static String formatHookArgument(Expression expression) {
-        if (expression.command == PUSH_CONSTANT_STRING) {
+        if (expression.command == PUSH_CONSTANT_STRING || expression.command == PUSH_CONSTANT_INT) {
             if (Objects.equals(expression.operand, "event_opbase")) return "event_opbase";
             if (Objects.equals(expression.operand, "event_text")) return "event_text";
             if (Objects.equals(expression.operand, Integer.MIN_VALUE + 1)) return "event_mousex";

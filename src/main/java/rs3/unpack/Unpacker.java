@@ -105,10 +105,15 @@ public class Unpacker {
                 }
             }
 
+            case VARBIT -> formatVarBit(value);
             case VAR_PLAYER -> formatVar(VarDomain.PLAYER, value);
+            case VAR_PLAYER_BIT -> "varplayerbit" + value;
             case VAR_NPC -> formatVar(VarDomain.NPC, value);
+            case VAR_NPC_BIT -> "varnpcbit" + value;
             case VAR_CLIENT -> formatVar(VarDomain.CLIENT, value);
+            case VAR_CLIENT_STRING -> "varclientstring" + value;
             case VAR_WORLD -> formatVar(VarDomain.WORLD, value);
+            case VAR_WORLD_STRING -> "varworldstring" + value;
             case VAR_REGION -> formatVar(VarDomain.REGION, value);
             case VAR_OBJECT -> formatVar(VarDomain.OBJECT, value);
             case VAR_CLAN -> formatVar(VarDomain.CLAN, value);
@@ -572,7 +577,7 @@ public class Unpacker {
     }
 
     public static String formatVar(VarDomain domain, int value) {
-        if (Unpack.VERSION < 600) {
+        if (Unpack.VERSION < 700) {
             return "var" + domain.name().toLowerCase(Locale.ROOT) + value;
         } else {
             return "var" + domain.name().toLowerCase(Locale.ROOT) + getVarType(domain, value).name().toLowerCase(Locale.ROOT) + value;
@@ -646,15 +651,17 @@ public class Unpacker {
     }
 
     public static Type getVarType(VarDomain domain, int id) {
-        if (Unpack.VERSION < 600) {
-            return Type.UNKNOWN_INT;
+        var type = VAR_TYPE.get(new Tuple2<>(domain, id));
+
+        if (Unpack.VERSION < 700 && type == null) {
+            return Type.UNKNOWN_INT; // only varcs have types in older versions
         }
 
-        return Objects.requireNonNull(VAR_TYPE.get(new Tuple2<>(domain, id)));
+        return Objects.requireNonNull(type);
     }
 
     public static VarDomain getVarBitDomain(int id) {
-        if (Unpack.VERSION < 600) {
+        if (Unpack.VERSION < 700) {
             return VarDomain.PLAYER;
         }
 

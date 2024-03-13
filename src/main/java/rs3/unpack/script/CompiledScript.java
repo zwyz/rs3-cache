@@ -73,7 +73,11 @@ public class CompiledScript {
         }
 
         packet.pos = 0;
-        script.name = packet.gjstrnull();
+
+        if (Unpack.VERSION >= 460) {
+            script.name = packet.gjstrnull();
+        }
+
         var index = 0;
 
         while (packet.pos < headerPos) {
@@ -88,9 +92,9 @@ public class CompiledScript {
         if (command == PUSH_CONSTANT_INT) {
             return packet.g4s(); // int
         } else if (command == PUSH_LONG_CONSTANT) {
-            return packet.g4s(); // long
+            return packet.g8s(); // long
         } else if (command == PUSH_CONSTANT_STRING) {
-            if (Unpack.VERSION < 600) {
+            if (Unpack.VERSION < 700) {
                 return packet.gjstr();
             } else {
                 return switch (packet.g1()) {
@@ -103,13 +107,13 @@ public class CompiledScript {
         } else if (command == PUSH_INT_LOCAL || command == POP_INT_LOCAL || command == PUSH_STRING_LOCAL || command == POP_STRING_LOCAL || command == PUSH_LONG_LOCAL || command == POP_LONG_LOCAL) {
             return packet.g4s(); // local
         } else if (command == PUSH_VAR || command == POP_VAR) {
-            if (Unpack.VERSION < 600) {
+            if (Unpack.VERSION < 700) {
                 return new VarReference(VarDomain.PLAYER, packet.g4s(), false);
             } else {
                 return new VarReference(VarDomain.byID(packet.g1()), packet.g2(), packet.g1() == 1); // var
             }
         } else if (command == PUSH_VARBIT || command == POP_VARBIT) {
-            if (Unpack.VERSION < 600) {
+            if (Unpack.VERSION < 700) {
                 return new VarBitReference(packet.g4s(), false);
             } else {
                 return new VarBitReference(packet.g2(), packet.g1() == 1); // varbit
@@ -117,6 +121,22 @@ public class CompiledScript {
         } else if (command == PUSH_VARC_INT || command == POP_VARC_INT) {
             return packet.g4s();
         } else if (command == PUSH_VARC_STRING || command == POP_VARC_STRING) {
+            return packet.g4s();
+        } else if (command == PUSH_VARCLAN) {
+            return packet.g4s();
+        } else if (command == PUSH_VARCLANBIT) {
+            return packet.g4s();
+        } else if (command == PUSH_VARCLAN_LONG) {
+            return packet.g4s();
+        } else if (command == PUSH_VARCLAN_STRING) {
+            return packet.g4s();
+        } else if (command == PUSH_VARCLANSETTING) {
+            return packet.g4s();
+        } else if (command == PUSH_VARCLANSETTINGBIT) {
+            return packet.g4s();
+        } else if (command == PUSH_VARCLANSETTING_LONG) {
+            return packet.g4s();
+        } else if (command == PUSH_VARCLANSETTING_STRING) {
             return packet.g4s();
         } else if (command == BRANCH || command == BRANCH_NOT || command == BRANCH_EQUALS || command == BRANCH_LESS_THAN || command == BRANCH_GREATER_THAN || command == BRANCH_LESS_THAN_OR_EQUALS || command == BRANCH_GREATER_THAN_OR_EQUALS || command == LONG_BRANCH_NOT || command == LONG_BRANCH_EQUALS || command == LONG_BRANCH_LESS_THAN || command == LONG_BRANCH_GREATER_THAN || command == LONG_BRANCH_LESS_THAN_OR_EQUALS || command == LONG_BRANCH_GREATER_THAN_OR_EQUALS || command == BRANCH_IF_TRUE || command == BRANCH_IF_FALSE) {
             return index + packet.g4s(); // branch

@@ -28,7 +28,7 @@ public class NPCUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("model=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()));
+                    lines.add("model=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
                 }
             }
 
@@ -90,7 +90,7 @@ public class NPCUnpacker {
                 var length = packet.g1();
 
                 for (var i = 0; i < length; i++) {
-                    lines.add("headmodel=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 600 ? packet.g2null() : packet.gSmart2or4null()));
+                    lines.add("headmodel=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
                 }
             }
 
@@ -103,8 +103,8 @@ public class NPCUnpacker {
             case 101 -> lines.add("contrast=" + packet.g1s());
 
             case 102 -> {
-                if (Unpack.VERSION < 600) {
-                    lines.add("headicon=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
+                if (Unpack.VERSION < 700) {
+                    lines.add("headicon=" + packet.g2());
                 } else {
                     var filter = packet.g1();
 

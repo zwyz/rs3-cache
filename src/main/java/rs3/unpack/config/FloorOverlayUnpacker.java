@@ -36,7 +36,7 @@ public class FloorOverlayUnpacker {
 
             case 5 -> lines.add("occlude=no");
             case 6 -> lines.add("debugname=" + packet.gjstr());
-            case 7 -> lines.add("averagecolour=0x" + Integer.toHexString(packet.g3()));
+            case 7 -> lines.add("mapcolour=0x" + Integer.toHexString(packet.g3()));
             case 8 -> lines.add("unknown8=yes");
             case 9 -> lines.add("materialscale=" + packet.g2());
             case 10 -> lines.add("hardshadow=no");
