@@ -116,7 +116,43 @@ public class InterfaceUnpacker {
             events = packet.g4s();
         }
 
-        line(lines, "events=", events, 0); // if_setevents
+        // if_setevents
+        line(lines, "pausebutton=", ((events >>> 0) & 1) != 0 ? "yes" : "no", "no");
+
+        line(lines, "transmitop1=", ((events >>> 1) & 1) != 0 ? "yes" : "no", "no");
+        line(lines, "transmitop2=", ((events >>> 2) & 1) != 0 ? "yes" : "no", "no");
+        line(lines, "transmitop3=", ((events >>> 3) & 1) != 0 ? "yes" : "no", "no");
+        line(lines, "transmitop4=", ((events >>> 4) & 1) != 0 ? "yes" : "no", "no");
+        line(lines, "transmitop5=", ((events >>> 5) & 1) != 0 ? "yes" : "no", "no");
+        line(lines, "transmitop6=", ((events >>> 6) & 1) != 0 ? "yes" : "no", "no");
+        line(lines, "transmitop7=", ((events >>> 7) & 1) != 0 ? "yes" : "no", "no");
+        line(lines, "transmitop8=", ((events >>> 8) & 1) != 0 ? "yes" : "no", "no");
+        line(lines, "transmitop9=", ((events >>> 9) & 1) != 0 ? "yes" : "no", "no");
+        line(lines, "transmitop10=", ((events >>> 10) & 1) != 0 ? "yes" : "no", "no");
+
+        var targetmask = (events >>> 11) & 0b1111111;
+        var parts = new ArrayList<String>();
+        if ((targetmask & (1 << 0)) != 0) parts.add("obj");
+        if ((targetmask & (1 << 1)) != 0) parts.add("npc");
+        if ((targetmask & (1 << 2)) != 0) parts.add("loc");
+        if ((targetmask & (1 << 3)) != 0) parts.add("player");
+        if ((targetmask & (1 << 4)) != 0) parts.add("inv");
+        if ((targetmask & (1 << 5)) != 0) parts.add("com");
+        if ((targetmask & (1 << 6)) != 0) parts.add("coord");
+        line(lines, "targetmask=", String.join(",", parts), "");
+        line(lines, "dragdepth=", (events >>> 18) & 0b111, 0);
+        line(lines, "candrop=", ((events >>> 21) & 1) != 0 ? "yes" : "no", "no");
+        line(lines, "cantarget=", ((events >>> 22) & 1) != 0 ? "yes" : "no", "no");
+
+        line(lines, "event23=", ((events >>> 23) & 1) != 0 ? "yes" : "no", "no");
+        line(lines, "event24=", ((events >>> 24) & 1) != 0 ? "yes" : "no", "no");
+        line(lines, "event25=", ((events >>> 25) & 1) != 0 ? "yes" : "no", "no");
+        line(lines, "event26=", ((events >>> 26) & 1) != 0 ? "yes" : "no", "no");
+        line(lines, "event27=", ((events >>> 27) & 1) != 0 ? "yes" : "no", "no");
+        line(lines, "event28=", ((events >>> 28) & 1) != 0 ? "yes" : "no", "no");
+        line(lines, "event29=", ((events >>> 29) & 1) != 0 ? "yes" : "no", "no");
+        line(lines, "event30=", ((events >>> 30) & 1) != 0 ? "yes" : "no", "no");
+        line(lines, "event31=", ((events >>> 31) & 1) != 0 ? "yes" : "no", "no");
 
         if (Unpack.VERSION >= 500) {
             var value = packet.g1();
@@ -141,7 +177,7 @@ public class InterfaceUnpacker {
 
         if (opcount > 0) {
             for (var i = 0; i < opcount; ++i) {
-                line(lines, "op" + i + "=", packet.gjstr(), ""); // if_setop
+                line(lines, "op" + (i + 1) + "=", packet.gjstr(), ""); // if_setop
             }
         }
 
@@ -162,7 +198,7 @@ public class InterfaceUnpacker {
         line(lines, "dragrenderbehaviour=", packet.g1(), 0); // if_setdragrenderbehaviour
         line(lines, "targetverb=", packet.gjstr(), ""); // if_settargetverb
 
-        if (Unpack.VERSION >= 500 && (events & 0x3f800) != 0) {
+        if (Unpack.VERSION >= 500 && targetmask != 0) {
             line(lines, "targetcursor0=", Unpacker.format(Type.CURSOR, packet.g2null()), "null"); // if_settargetcursors
             line(lines, "targetcursor1=", Unpacker.format(Type.CURSOR, packet.g2null()), "null"); // if_settargetcursors
             line(lines, "targetcursor2=", Unpacker.format(Type.CURSOR, packet.g2null()), "null"); // if_settargetcursors
