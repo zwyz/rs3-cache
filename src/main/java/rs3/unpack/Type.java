@@ -251,6 +251,8 @@ public enum Type {
     BASEVARTYPE(-1, 0, BaseVarType.INTEGER),
     PARAM(-1, 0, BaseVarType.INTEGER),
     CLIENTSCRIPT(-1, 0, BaseVarType.INTEGER),
+    TWITCH_EVENT(-1, 0, BaseVarType.INTEGER),
+    MINIMENU_EVENT(-1, 0, BaseVarType.INTEGER),
     DBCOLUMN(-1, 0, BaseVarType.INTEGER),
     VARBIT(-1, 0, BaseVarType.INTEGER),
     DBFILTER(-1, 0, BaseVarType.INTEGER),

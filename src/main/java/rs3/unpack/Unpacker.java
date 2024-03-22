@@ -240,6 +240,21 @@ public class Unpacker {
                 yield name;
             }
 
+            case TWITCH_EVENT -> switch (value) {
+                case 0 -> "report";
+                case 1 -> "result";
+                case 2 -> "chat_message";
+                case 3 -> "webcam_device_info";
+                default -> throw new IllegalArgumentException("" + value);
+            };
+
+            case MINIMENU_EVENT -> switch (value) {
+                case 0 -> "open";
+                case 1 -> "close";
+                case 2 -> "click";
+                default -> throw new IllegalArgumentException("" + value);
+            };
+
             case INT_INT -> String.valueOf(value);
 
             case INT_BOOLEAN -> switch (value) {
