@@ -62,7 +62,7 @@ public class Unpack {
         unpackLegacyConfig(config, "obj", ObjUnpacker::unpack, root.resolve("config/dump.obj"));
         unpackLegacyConfig(config, "param", ParamUnpacker::unpack, root.resolve("config/dump.param"));
         unpackLegacyConfig(config, "seq", SeqUnpacker::unpack, root.resolve("config/dump.seq"));
-        unpackLegacyConfig(config, "spotanim", EffectAnimUnpacker::unpack, root.resolve("config/dump.spot"));
+        unpackLegacyConfig(config, "spotanim", EffectAnimUnpacker::unpack, root.resolve("config/dump.spotanim"));
     }
 
     private static void unpackCurrent(Path root) throws IOException {
@@ -92,7 +92,7 @@ public class Unpack {
             unpackConfigGroup(2, 62, (id, data) -> VarUnpacker.unpack(VarDomain.CLIENT, id, data), root.resolve("config/dump.varc"));
             unpackConfigGroup(2, 63, (id, data) -> VarUnpacker.unpack(VarDomain.WORLD, id, data), root.resolve("config/dump.varworld")); // client ignores
             unpackConfigGroup(2, 64, (id, data) -> VarUnpacker.unpack(VarDomain.REGION, id, data), root.resolve("config/dump.varregion")); // client ignores
-            unpackConfigGroup(2, 65, (id, data) -> VarUnpacker.unpack(VarDomain.OBJECT, id, data), root.resolve("config/dump.varobject"));
+            unpackConfigGroup(2, 65, (id, data) -> VarUnpacker.unpack(VarDomain.OBJECT, id, data), root.resolve("config/dump.varobj"));
             unpackConfigGroup(2, 66, (id, data) -> VarUnpacker.unpack(VarDomain.CLAN, id, data), root.resolve("config/dump.varclan"));
             unpackConfigGroup(2, 67, (id, data) -> VarUnpacker.unpack(VarDomain.CLAN_SETTING, id, data), root.resolve("config/dump.varclansetting"));
             unpackConfigGroup(2, 68, (id, data) -> VarUnpacker.unpack(VarDomain.CONTROLLER, id, data), root.resolve("config/dump.varcontroller")); // client ignores
@@ -143,9 +143,9 @@ public class Unpack {
         }
 
         if (Unpack.VERSION < 500) {
-            unpackConfigGroup(2, 13, EffectAnimUnpacker::unpack, root.resolve("config/dump.spot"));
+            unpackConfigGroup(2, 13, EffectAnimUnpacker::unpack, root.resolve("config/dump.spotanim"));
         } else {
-            unpackConfigArchive(21, 8, EffectAnimUnpacker::unpack, root.resolve("config/dump.spot")); // 13
+            unpackConfigArchive(21, 8, EffectAnimUnpacker::unpack, root.resolve("config/dump.spotanim")); // 13
         }
 
         unpackConfigGroup(2, 18, AreaUnpacker::unpack, root.resolve("config/dump.area")); // client ignores

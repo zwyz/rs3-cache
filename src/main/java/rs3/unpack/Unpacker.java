@@ -35,7 +35,7 @@ public class Unpacker {
                     yield "null";
                 }
 
-                var level = value >> 28;
+                var level = value >>> 28;
                 var x = value >>> 14 & 16383;
                 var z = value & 16383;
                 yield level + "_" + (x / 64) + "_" + (z / 64) + "_" + (x % 64) + "_" + (z % 64);
@@ -160,10 +160,14 @@ public class Unpacker {
 
             case CLIENT_TYPE -> switch (value) {
                 case -1 -> "null";
-                case 0 -> "java";
-                case 1 -> "nxt";
-                case 7 -> "android";
-                case 8 -> "ios";
+                case 1 -> "java";
+                case 2 -> "android";
+                case 3 -> "ios";
+                case 4 -> "enhanced_windows";
+                case 5 -> "enhanced_mac";
+                case 7 -> "enhanced_android";
+                case 8 -> "enhanced_ios";
+                case 10 -> "enhanced_linux";
                 default -> "client_type_" + value;
             };
 
