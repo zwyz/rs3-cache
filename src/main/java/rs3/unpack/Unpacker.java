@@ -2,6 +2,7 @@ package rs3.unpack;
 
 import rs3.Unpack;
 import rs3.unpack.script.ScriptUnpacker;
+import rs3.util.CP1252;
 import rs3.util.Tuple2;
 
 import java.util.*;
@@ -29,6 +30,16 @@ public class Unpacker {
                 case 1 -> "true";
                 default -> throw new IllegalArgumentException("invalid boolean");
             };
+
+            case CHAR -> {
+                if (value == -1) {
+                    yield "null";
+                }
+
+                if (value == 39) yield "'\\''";
+                if (value == 92) yield "'\\\\'";
+                yield "'" + CP1252.decode(value) + "'";
+            }
 
             case COORDGRID -> {
                 if (value == -1) {

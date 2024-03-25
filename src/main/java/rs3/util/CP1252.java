@@ -91,20 +91,23 @@ public class CP1252 {
             var c = arr[off + i] & 255;
 
             if (c != 0) {
-                if (c >= 128 && c < 160) {
-                    var d = ASCII_EXTENSION[c - 128];
-
-                    if (d == 0) {
-                        d = '?';
-                    }
-
-                    c = d;
-                }
-
-                chars[j++] = (char) c;
+                chars[j++] = decode(c);
             }
         }
 
         return new String(chars, 0, j);
+    }
+
+    public static char decode(int c) {
+        if (c >= 128 && c < 160) {
+            var d = ASCII_EXTENSION[c - 128];
+
+            if (d == 0) {
+                d = '?';
+            }
+
+            c = d;
+        }
+        return (char) c;
     }
 }
