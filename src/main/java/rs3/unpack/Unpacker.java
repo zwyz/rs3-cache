@@ -610,12 +610,13 @@ public class Unpacker {
         if (Unpack.VERSION < 700) {
             return "var" + domain.name().toLowerCase(Locale.ROOT) + value;
         } else {
-            return "var" + domain.name().toLowerCase(Locale.ROOT) + getVarType(domain, value).name().toLowerCase(Locale.ROOT) + value;
+            String type = getVarType(domain, value).name.replaceAll("_", "");
+            return "var" + domain.name().toLowerCase(Locale.ROOT) + type + "_" + value;
         }
     }
 
     public static String formatVarBit(int value) {
-        return "var" + getVarBitDomain(value).name().toLowerCase(Locale.ROOT) + "bit" + value;
+        return "var" + getVarBitDomain(value).name().toLowerCase(Locale.ROOT) + "bit_" + value;
     }
 
     public static String formatVarDomain(int value) {
