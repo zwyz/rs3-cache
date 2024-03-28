@@ -63,14 +63,23 @@ public class Unpacker {
             }
 
             case DBCOLUMN -> {
-                var table = value >>> 12;
-                var column = (value >>> 4) & 255;
-                var tuple = (value & 15) - 1;
+                int table;
+                int column;
+                int tuple;
+                if (Unpack.VERSION < 912) {
+                    table = value >>> 8;
+                    column = value & 0xFF;
+                    tuple = -1;
+                } else {
+                    table = value >>> 12;
+                    column = (value >>> 4) & 255;
+                    tuple = (value & 15) - 1;
+                }
 
                 if (tuple == -1) {
-                    yield format(Type.DBTABLE, table) + ":" + column;
+                    yield format(Type.DBTABLE, table) + ":col" + column;
                 } else {
-                    yield format(Type.DBTABLE, table) + ":" + column + ":" + tuple;
+                    yield format(Type.DBTABLE, table) + ":col" + column + ":" + tuple;
                 }
             }
 
@@ -742,7 +751,7 @@ public class Unpacker {
     }
 
     public static List<Type> getDBColumnTypeTuple(int column) {
-        if (Unpack.VERSION < 930) {
+        if (Unpack.VERSION < 912) {
             return getDBColumnTypeTuple(column >>> 8, column & 255, -1);
         } else {
             return getDBColumnTypeTuple(column >>> 12, (column >>> 4) & 255, (column & 15) - 1);
