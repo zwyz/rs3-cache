@@ -113,6 +113,19 @@ public class Unpacker {
                 yield name;
             }
 
+            case FONTMETRICS -> {
+                if (value == -1) {
+                    yield "null";
+                }
+
+                // TODO figure out when fonts were reworked
+                if (Unpack.VERSION < 917) {
+                    yield GRAPHIC_NAMES.getOrDefault(value, "fontmetrics_" + value);
+                } else {
+                    yield "fontmetrics_" + value;
+                }
+            }
+
             case VAR_REFERENCE_INT -> {
                 if (value == -1) {
                     yield "null";
