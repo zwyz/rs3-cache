@@ -200,7 +200,7 @@ public class LocUnpacker {
             case 81 -> lines.add("hillchange=tree_skew," + packet.g1());
             case 82 -> lines.add("istexture=yes");
             case 88 -> lines.add("hardshadow=no");
-            case 89 -> lines.add("randseq=no");
+            case 89 -> lines.add("randomanimframe=no"); // https://twitter.com/JagexAsh/status/1773322757041766706
             case 90 -> lines.add("unknown90=yes"); // removed
             case 91 -> lines.add("members=yes");
 

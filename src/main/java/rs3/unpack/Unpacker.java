@@ -140,13 +140,13 @@ public class Unpacker {
 
             case VARBIT -> formatVarBit(value);
             case VAR_PLAYER -> formatVar(VarDomain.PLAYER, value);
-            case VAR_PLAYER_BIT -> "varplayerbit" + value;
+            case VAR_PLAYER_BIT -> "varplayerbit_" + value;
             case VAR_NPC -> formatVar(VarDomain.NPC, value);
-            case VAR_NPC_BIT -> "varnpcbit" + value;
+            case VAR_NPC_BIT -> "varnpcbit_" + value;
             case VAR_CLIENT -> formatVar(VarDomain.CLIENT, value);
-            case VAR_CLIENT_STRING -> "varclientstring" + value;
+            case VAR_CLIENT_STRING -> "varclientstring_" + value;
             case VAR_WORLD -> formatVar(VarDomain.WORLD, value);
-            case VAR_WORLD_STRING -> "varworldstring" + value;
+            case VAR_WORLD_STRING -> "varworldstring_" + value;
             case VAR_REGION -> formatVar(VarDomain.REGION, value);
             case VAR_OBJECT -> formatVar(VarDomain.OBJECT, value);
             case VAR_CLAN -> formatVar(VarDomain.CLAN, value);
