@@ -140,6 +140,10 @@ public class Command {
     }
 
     private static Type parseType(String name) {
+        if (name.equals("anyint")) {
+            return Type.INT;
+        }
+
         for (var type : Type.values()) {
             if (type == Type.INT) continue; // subdivided, int refers to int_int
 
