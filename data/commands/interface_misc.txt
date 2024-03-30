@@ -1,5 +1,5 @@
 [command,if_close]
-[command,if_opensubclient](component $x1,interface $x2)
+[command,if_opensubclient](component $x1,clientinterface $x2)
 [command,if_closesubclient](component $x1)
 [command,if_hassub](component $x1)(boolean)
 [command,if_hassubmodal](component $x1,interface $x2)(boolean)

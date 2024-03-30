@@ -634,7 +634,7 @@
 [command,if_triggerop](component $x1,int $x2,int $x3)
 [command,cc_triggerop](int $x1)
 [command,cc_param]todo
-[command,if_gettop]()(interface)
+[command,if_gettop]()(toplevelinterface)
 [command,cc_setopkey](int $x1,key $x2,int $x3,key $x4,int $x5,key $x6,int $x7,key $x8,int $x9,key $x10,int $x11)
 [command,if_setopkey](int $x1,key $x2,int $x3,component $x4)
 [command,cc_list_addentry](int $x1,string $x2,int $x3)(int)
