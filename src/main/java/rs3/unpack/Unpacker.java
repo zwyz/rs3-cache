@@ -614,7 +614,7 @@ public class Unpacker {
 
     public static String format(Type type, long value) {
         return switch (type) {
-            case LONG -> value + "L";
+            case LONG -> String.valueOf(value);
 
             default -> {
                 if (value == -1) {
