@@ -68,7 +68,7 @@ public class Unpacker {
                 int table;
                 int column;
                 int tuple;
-                if (Unpack.VERSION < 912) {
+                if (Unpack.VERSION <= 910) {
                     table = value >>> 8;
                     column = value & 0xFF;
                     tuple = -1;
@@ -766,7 +766,7 @@ public class Unpacker {
     }
 
     public static List<Type> getDBColumnTypeTuple(int column) {
-        if (Unpack.VERSION < 912) {
+        if (Unpack.VERSION <= 910) {
             return getDBColumnTypeTuple(column >>> 8, column & 255, -1);
         } else {
             return getDBColumnTypeTuple(column >>> 12, (column >>> 4) & 255, (column & 15) - 1);
