@@ -54,6 +54,8 @@ public class Unpacker {
 
             case TYPE -> Type.byID(value).name;
 
+            case TOPLEVELINTERFACE, OVERLAYINTERFACE, CLIENTINTERFACE -> format(Type.INTERFACE, value);
+
             case COMPONENT -> {
                 if (value == -1) {
                     yield "null";
