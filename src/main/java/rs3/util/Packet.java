@@ -840,4 +840,8 @@ public class Packet {
     public int remainingBits(int length) {
         return length * 8 - this.bitpos;
     }
+
+    public void pSmart2or4null(int transmog) {
+        throw new IllegalStateException("todo");
+    }
 }
