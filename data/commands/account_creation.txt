@@ -6,7 +6,8 @@
 [command,create_connect_reply]()(int)
 [command,create_availablerequest](string $x1)
 [command,create_connectrequest]
-[command,create_createrequest](string $x1,string $x2,int $x3,boolean $x4,string $x5)
+[command,create_createrequest](string $x1,string $x2,int $x3,boolean $x4)
+[command,create_createrequest](string $x1,string $x2,int $x3,boolean $x4,string $x5) 800
 [command,create_setunder13]
 [command,create_step_reached](int $x1)
 [command,create_under13]()(boolean)

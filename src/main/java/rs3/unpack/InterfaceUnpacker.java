@@ -15,7 +15,7 @@ public class InterfaceUnpacker {
         lines.add("[com" + (id & 0xffff) + "]");
         var version = packet.g1();
 
-        if (Unpack.VERSION < 500 && version != 0xff) {
+        if (Unpack.VERSION < 550 && version != 0xff) {
             return lines; // todo if1
         }
 
@@ -154,7 +154,7 @@ public class InterfaceUnpacker {
         line(lines, "event30=", ((events >>> 30) & 1) != 0 ? "yes" : "no", "no");
         line(lines, "event31=", ((events >>> 31) & 1) != 0 ? "yes" : "no", "no");
 
-        if (Unpack.VERSION >= 500) {
+        if (Unpack.VERSION >= 550) {
             var value = packet.g1();
 
             while (value != 0) {
@@ -198,7 +198,7 @@ public class InterfaceUnpacker {
         line(lines, "dragrenderbehaviour=", packet.g1(), 0); // if_setdragrenderbehaviour
         line(lines, "targetverb=", packet.gjstr(), ""); // if_settargetverb
 
-        if (Unpack.VERSION >= 500 && targetmask != 0) {
+        if (Unpack.VERSION >= 550 && targetmask != 0) {
             line(lines, "targetcursor0=", Unpacker.format(Type.CURSOR, packet.g2null()), "null"); // if_settargetcursors
             line(lines, "targetcursor1=", Unpacker.format(Type.CURSOR, packet.g2null()), "null"); // if_settargetcursors
             line(lines, "targetcursor2=", Unpacker.format(Type.CURSOR, packet.g2null()), "null"); // if_settargetcursors
@@ -655,7 +655,7 @@ public class InterfaceUnpacker {
         line(lines, prefix + "vflip=", (packet.g1() == 1 ? "yes" : "no"), "no"); // if_setvflip
         line(lines, prefix + "hflip=", (packet.g1() == 1 ? "yes" : "no"), "no"); // if_sethflip
 
-        if (Unpack.VERSION >= 500) {
+        if (Unpack.VERSION >= 550) {
             line(lines, prefix + "colour=", Unpacker.formatColour(packet.g4s()), defaultColour); // if_setcolour
         }
 

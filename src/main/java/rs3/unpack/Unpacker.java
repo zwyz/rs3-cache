@@ -68,7 +68,7 @@ public class Unpacker {
                 int table;
                 int column;
                 int tuple;
-                if (Unpack.VERSION <= 910) {
+                if (Unpack.VERSION < 911) {
                     table = value >>> 8;
                     column = value & 0xFF;
                     tuple = -1;
@@ -631,10 +631,10 @@ public class Unpacker {
     }
 
     public static String formatVar(VarDomain domain, int value) {
-        if (Unpack.VERSION < 700) {
-            return "var" + domain.name().toLowerCase(Locale.ROOT) + value;
+        if (Unpack.VERSION < 800) {
+            return "var" + domain.name().toLowerCase(Locale.ROOT) + "_" + value;
         } else {
-            String type = getVarType(domain, value).name.replaceAll("_", "");
+            var type = getVarType(domain, value).name.replaceAll("_", "");
             return "var" + domain.name().toLowerCase(Locale.ROOT) + type + "_" + value;
         }
     }
@@ -708,16 +708,16 @@ public class Unpacker {
     public static Type getVarType(VarDomain domain, int id) {
         var type = VAR_TYPE.get(new Tuple2<>(domain, id));
 
-        if (Unpack.VERSION < 700 && type == null) {
-            return Type.UNKNOWN_INT; // only varcs have types in older versions
+        if (Unpack.VERSION < 800 && type == null) {
+            return Type.UNKNOWN_INT; // todo: rework this
         }
 
         return Objects.requireNonNull(type);
     }
 
     public static VarDomain getVarBitDomain(int id) {
-        if (Unpack.VERSION < 700) {
-            return VarDomain.PLAYER;
+        if (Unpack.VERSION < 800) {
+            return VarDomain.PLAYER; // todo: rework this
         }
 
         return VARBIT_DOMAIN.get(id);
@@ -766,7 +766,7 @@ public class Unpacker {
     }
 
     public static List<Type> getDBColumnTypeTuple(int column) {
-        if (Unpack.VERSION <= 910) {
+        if (Unpack.VERSION < 911) {
             return getDBColumnTypeTuple(column >>> 8, column & 255, -1);
         } else {
             return getDBColumnTypeTuple(column >>> 12, (column >>> 4) & 255, (column & 15) - 1);

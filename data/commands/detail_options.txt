@@ -28,8 +28,8 @@
 [command,detail_customcursors](boolean $x1)
 [command,detailget_removeroofs_option]()(boolean)
 [command,detail_removeroofs_option](boolean $x1)
-[command,detailget_removeroofs_option]()(int) 700
-[command,detail_removeroofs_option](int $x1) 700
+[command,detailget_removeroofs_option]()(int) 800
+[command,detail_removeroofs_option](int $x1) 800
 [command,detail_removeroofs_option_override](int $x1)
 [command,detailcanmod_dof]()(boolean)
 [command,detailcanset_dof](int $x1)(int)

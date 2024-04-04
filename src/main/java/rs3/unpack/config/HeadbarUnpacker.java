@@ -30,11 +30,11 @@ public class HeadbarUnpacker {
             case 6 -> lines.add("unknown6=" + packet.g2());
             case 7 -> lines.add("full=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null())); // https://twitter.com/JagexAsh/status/1654124199194288137
             case 8 -> lines.add("empty=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null())); // https://twitter.com/JagexAsh/status/1654124199194288137
-            case 9 -> lines.add("fulllocalpartner=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
-            case 10 -> lines.add("emptylocalpartner=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
+            case 9 -> lines.add("fullplayergroup=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
+            case 10 -> lines.add("emptyplayergroup=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
             case 11 -> lines.add("fadeout=" + packet.g2()); // https://twitter.com/JagexAsh/status/1654124199194288137
-            case 12 -> lines.add("fullglobalpartner=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
-            case 13 -> lines.add("emptyglobalpartner=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
+            case 12 -> lines.add("fullplayergroupteam=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
+            case 13 -> lines.add("emptyplayergroupteam=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
             case 14 -> lines.add("unknown14=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
             case 15 -> lines.add("unknown15=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
             case 16 -> lines.add("unknown16=yes");

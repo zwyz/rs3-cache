@@ -1,12 +1,15 @@
-[command,worldlist_specific](int $x1)(int,string,int,string,int,int)
+[command,worldlist_specific](int $x1)(int,string,int,string,int)
+[command,worldlist_specific](int $x1)(int,string,int,string,int,int) 550
 [command,worldlist_specific](int $x1)(int,string,int,string,int,int,string) 600
 [command,worldlist_specific_thisworld]()(int)
 [command,worldlist_pingworlds](boolean $x1)
 [command,worldlist_fetch]()(boolean)
 [command,worldlist_sort](int $x1,boolean $x2,int $x3,boolean $x4)
-[command,worldlist_start]()(int,int,string,int,string,int,int)
+[command,worldlist_start]()(int,int,string,int,string,int)
+[command,worldlist_start]()(int,int,string,int,string,int,int) 550
 [command,worldlist_start]()(int,int,string,int,string,int,int,string) 600
-[command,worldlist_next]()(int,int,string,int,string,int,int)
+[command,worldlist_next]()(int,int,string,int,string,int)
+[command,worldlist_next]()(int,int,string,int,string,int,int) 550
 [command,worldlist_next]()(int,int,string,int,string,int,int,string) 600
 [command,worldlist_autoworld]
 [command,worldlist_switch](int $x1)(boolean)

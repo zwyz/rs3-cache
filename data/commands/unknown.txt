@@ -9,12 +9,13 @@
 [command,unknown_command_5018](int $x1)(chattype)
 [command,unknown_command_5019](int $x1)(string)
 [command,unknown_command_5210](wma $x1)(int, int)
-[command,unknown_command_5401](int $x1,int $x2)
+[command,setclientpalette](int $x1,int $x2)
 [command,unknown_command_5420]()(boolean)
 [command,unknown_command_5422](int $x1,string $x2,string $x3)
 [command,unknown_command_5603](int $x1,int $x2,int $x3,int $x4)
 [command,unknown_command_5604](string $x1)
-[command,unknown_command_5605](string $x1,string $x2,int $x3,int $x4,int $x5,int $x6,string $x7,int $x8,int $x9,int $x10)
+[command,unknown_command_5605](string $x1,string $x2,int $x3,int $x4,int $x5,int $x6) 500
+[command,unknown_command_5605](string $x1,string $x2,int $x3,int $x4,int $x5,int $x6,string $x7,int $x8,int $x9,int $x10) 550
 [command,unknown_command_5605](string $x1,string $x2,int $x3,int $x4) 600
 [command,unknown_command_5606]
 [command,unknown_command_5610]()(string,string,string,string,string)
@@ -139,3 +140,12 @@
 [command,push_varclansettingbit]todo signature
 [command,push_varclansetting_long]todo signature
 [command,push_varclansetting_string]todo signature
+[command,unknown_command_3328]()(boolean)
+[command,unknown_command_5202](int $x1)
+[command,unknown_command_5203](string $x1)
+[command,unknown_command_5204](string $x1)(string)
+[command,boost_advert_exists](string $x1)(boolean)
+[command,boost_advert_available](string $x1)(boolean)
+[command,boost_advert_launch](string $x1)
+[command,has_signonkey]()(boolean)
+[command,java_version_supported]()(boolean)

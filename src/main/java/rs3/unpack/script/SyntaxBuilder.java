@@ -145,30 +145,72 @@ public class SyntaxBuilder {
             return;
         }
 
-        if (Unpack.VERSION < 700 && command == PUSH_VARC_INT) {
+        if (Unpack.VERSION < 800 && command == PUSH_VARC_INT) {
             var var = (int) operand;
             var type = Type.UNKNOWN_INT;
             buildCommand(code, index, FLOW_LOAD, new VarClientReference(var), List.of(), List.of(type));
             return;
         }
 
-        if (Unpack.VERSION < 700 && command == PUSH_VARC_STRING) {
+        if (Unpack.VERSION < 800 && command == PUSH_VARC_STRING) {
             var var = (int) operand;
             var type = Type.STRING;
             buildCommand(code, index, FLOW_LOAD, new VarClientStringReference(var), List.of(), List.of(type));
             return;
         }
 
-        if (command == PUSH_VARCLAN || command == PUSH_VARCLAN_LONG || command == PUSH_VARCLAN_STRING || command == PUSH_VARCLANBIT) {
+        if (command == PUSH_VARCLAN) {
             var var = (int) operand;
-            var type = Unpacker.getVarType(VarDomain.CLAN, var);
+            var type = Type.UNKNOWN_INT;
             buildCommand(code, index, FLOW_LOAD, new VarReference(VarDomain.CLAN, var, false), List.of(), List.of(type));
             return;
         }
 
-        if (command == PUSH_VARCLANSETTING || command == PUSH_VARCLANSETTING_LONG || command == PUSH_VARCLANSETTING_STRING || command == PUSH_VARCLANSETTINGBIT) {
+        if (command == PUSH_VARCLAN_LONG) {
             var var = (int) operand;
-            var type = Unpacker.getVarType(VarDomain.CLAN_SETTING, var);
+            var type = Type.UNKNOWN_LONG;
+            buildCommand(code, index, FLOW_LOAD, new VarReference(VarDomain.CLAN, var, false), List.of(), List.of(type));
+            return;
+        }
+
+        if (command == PUSH_VARCLAN_STRING) {
+            var var = (int) operand;
+            var type = Type.STRING;
+            buildCommand(code, index, FLOW_LOAD, new VarReference(VarDomain.CLAN, var, false), List.of(), List.of(type));
+            return;
+        }
+
+        if (command == PUSH_VARCLANBIT) {
+            var var = (int) operand;
+            var type = Type.INT;
+            buildCommand(code, index, FLOW_LOAD, new VarReference(VarDomain.CLAN, var, false), List.of(), List.of(type));
+            return;
+        }
+
+        if (command == PUSH_VARCLANSETTING) {
+            var var = (int) operand;
+            var type = Type.UNKNOWN_INT;
+            buildCommand(code, index, FLOW_LOAD, new VarReference(VarDomain.CLAN_SETTING, var, false), List.of(), List.of(type));
+            return;
+        }
+
+        if (command == PUSH_VARCLANSETTING_LONG) {
+            var var = (int) operand;
+            var type = Type.UNKNOWN_LONG;
+            buildCommand(code, index, FLOW_LOAD, new VarReference(VarDomain.CLAN_SETTING, var, false), List.of(), List.of(type));
+            return;
+        }
+
+        if (command == PUSH_VARCLANSETTING_STRING) {
+            var var = (int) operand;
+            var type = Type.STRING;
+            buildCommand(code, index, FLOW_LOAD, new VarReference(VarDomain.CLAN_SETTING, var, false), List.of(), List.of(type));
+            return;
+        }
+
+        if (command == PUSH_VARCLANSETTINGBIT) {
+            var var = (int) operand;
+            var type = Type.INT;
             buildCommand(code, index, FLOW_LOAD, new VarReference(VarDomain.CLAN_SETTING, var, false), List.of(), List.of(type));
             return;
         }
@@ -338,7 +380,7 @@ public class SyntaxBuilder {
         }
 
         if (command == DB_FIND) {
-            if (Unpack.VERSION < 930) {
+            if (Unpack.VERSION < 920) {
                 var column = (int) stack.get(stack.size() - 2).operand;
                 var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column));
                 var returnTypes = List.<Type>of();
@@ -354,7 +396,7 @@ public class SyntaxBuilder {
         }
 
         if (command == DB_FIND_WITH_COUNT) {
-            if (Unpack.VERSION < 930) {
+            if (Unpack.VERSION < 920) {
                 var column = (int) stack.get(stack.size() - 2).operand;
                 var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column));
                 var returnTypes = List.of(Type.INT_INT);
@@ -396,7 +438,7 @@ public class SyntaxBuilder {
             var hookIndex = argumentTypes.lastIndexOf(Type.HOOK);
 
             var signature = ((String) stack.get(stack.size() - (argumentTypes.size() - hookIndex)).operand).codePoints().mapToObj(c -> {
-                if (Unpack.VERSION < 700) {
+                if (Unpack.VERSION < 800) {
                     return Type.byChar(c);
                 } else {
                     return switch (c) {

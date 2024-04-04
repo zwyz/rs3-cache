@@ -150,7 +150,7 @@ public class Unpack {
 
         unpackConfigGroup(2, 18, AreaUnpacker::unpack, root.resolve("config/dump.area")); // client ignores
 
-        if (Unpack.VERSION < 700) {
+        if (Unpack.VERSION < 800) {
             unpackConfigGroup(2, 26, StructUnpacker::unpack, root.resolve("config/dump.struct"));
         } else {
             unpackConfigArchive(22, 5, StructUnpacker::unpack, root.resolve("config/dump.struct")); // 26
@@ -258,6 +258,10 @@ public class Unpack {
         generateNames(path, unhash);
         var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
 
+        if (archiveIndex.groupNameHash == null) {
+            return; // clientscript names disabled in some older revs
+        }
+
         for (var group : archiveIndex.groupId) {
             var hash = archiveIndex.groupNameHash[group];
 
@@ -273,17 +277,22 @@ public class Unpack {
         }
 
         var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
+
+        if (archiveIndex.groupNameHash == null) {
+            return; // clientscript names disabled in some older revs
+        }
+
         var archiveIndexConfig = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + 2 + ".dat"))));
         var archiveIndexInterface = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + 3 + ".dat"))));
         var maxMapElement = 0;
         var maxCutscene = 0;
 
-        if (Unpack.VERSION >= 500) {
-            maxMapElement = archiveIndexConfig.groupMaxFileId[36];
+        if (archiveIndexConfig.groupMaxFileId.length > 35) {
+            maxCutscene = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + 35 + ".dat")))).groupArraySize;
         }
 
-        if (Unpack.VERSION >= 700) {
-            maxCutscene = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + 35 + ".dat")))).groupArraySize;
+        if (archiveIndexConfig.groupMaxFileId.length > 36) {
+            maxMapElement = archiveIndexConfig.groupMaxFileId[36];
         }
 
         var maxInterface = archiveIndexInterface.groupArraySize;

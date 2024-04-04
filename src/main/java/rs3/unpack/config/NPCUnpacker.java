@@ -103,7 +103,7 @@ public class NPCUnpacker {
             case 101 -> lines.add("contrast=" + packet.g1s());
 
             case 102 -> {
-                if (Unpack.VERSION < 700) {
+                if (Unpack.VERSION < 800) {
                     lines.add("headicon=" + packet.g2());
                 } else {
                     var filter = packet.g1();
@@ -147,6 +147,7 @@ public class NPCUnpacker {
             case 111 -> lines.add("spotshadow=no");
             case 113 -> lines.add("spotshadowcolour=" + packet.g2() + "," + packet.g2());
             case 114 -> lines.add("spotshadowtrans=" + packet.g1s() + "," + packet.g1s());
+            case 115 -> lines.add("unknown115=" + packet.g1() + "," + packet.g1());
 
             case 118 -> {
                 var multivarbit = packet.g2null();
@@ -179,6 +180,7 @@ public class NPCUnpacker {
             }
 
             case 119 -> lines.add("unknown119=" + packet.g1s());
+            case 120 -> lines.add("unknown120=" + packet.g2() + "," + packet.g2() + "," + packet.g2() + "," + packet.g1());
 
             case 121 -> {
                 var count = packet.g1();

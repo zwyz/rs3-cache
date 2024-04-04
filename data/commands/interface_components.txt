@@ -188,9 +188,9 @@
 [command,if_setrecol](int $x1,int $x2,int $x3,component $x4)
 [command,cc_setrecol](int $x1,int $x2,int $x3)
 [command,if_setretex](int $x1,texture $x2,texture $x3,component $x4)
-[command,if_setretex](int $x1,material $x2,material $x3,component $x4) 700
+[command,if_setretex](int $x1,material $x2,material $x3,component $x4) 800
 [command,cc_setretex](int $x1,texture $x2,texture $x3)
-[command,cc_setretex](int $x1,material $x2,material $x3) 700
+[command,cc_setretex](int $x1,material $x2,material $x3) 800
 [command,if_setnpchead](npc $x1,component $x2)
 [command,cc_setnpchead](npc $x1)
 [command,if_setnpcmodel](npc $x1,component $x2)

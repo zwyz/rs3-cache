@@ -207,7 +207,7 @@ public class CodeFormatter {
             case "tostring" -> {
                 var value = expression.arguments.get(0);
 
-                if (Unpack.VERSION < 930) {
+                if (Unpack.VERSION < 920) {
                     yield "tostring(" + format(value) + ")";
                 } else {
                     var base = expression.arguments.get(1);
