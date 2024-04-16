@@ -92,7 +92,7 @@ public class TypePropagator {
         }
 
         // locals
-        if (expression.command == FLOW_LOAD) {
+        if (expression.command == FLOW_LOAD || expression.command == FLOW_PREINC || expression.command == FLOW_POSTINC || expression.command == FLOW_PREDEC || expression.command == FLOW_POSTDEC) {
             if (expression.operand instanceof LocalReference local) {
                 merge(type(expression, 0), local(script, local.domain(), local.local()));
             }
