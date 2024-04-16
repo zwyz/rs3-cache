@@ -20,6 +20,9 @@ public class Unpacker {
     public static final Map<Integer, String> WMA_NAMES = new HashMap<>();
     public static final Map<Integer, String> STYLESHEET_NAMES = new HashMap<>();
 
+    // Unconfirmed exact version due to gap in caches. Synths were converted to vorbis sometime between 754-759
+    public static final Type CONFIG_SOUND_TYPE = Unpack.VERSION < 754 ? Type.SYNTH : Type.VORBIS;
+
     public static String format(Type type, int value) {
         return switch (type) {
             case INT -> String.valueOf(value);

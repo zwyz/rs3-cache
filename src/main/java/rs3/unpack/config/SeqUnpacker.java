@@ -127,7 +127,7 @@ public class SeqUnpacker {
                             var type = value >> 8;
                             var loops = value >> 4 & 7;
                             var range = value & 15;
-                            lines.add("sound" + i + "=" + Unpacker.format(Type.SYNTH, type) + "," + loops + "," + range);
+                            lines.add("sound" + i + "=" + Unpacker.format(Unpacker.CONFIG_SOUND_TYPE, type) + "," + loops + "," + range);
                         }
                     }
                 } else {
@@ -141,7 +141,7 @@ public class SeqUnpacker {
                             var type = value >> 8;
                             var loops = value >> 4 & 7;
                             var range = value & 15;
-                            var line = "sound" + i + "=" + Unpacker.format(Type.SYNTH, type) + "," + loops + "," + range;
+                            var line = "sound" + i + "=" + Unpacker.format(Unpacker.CONFIG_SOUND_TYPE, type) + "," + loops + "," + range;
 
                             for (var j = 1; j < count2; ++j) {
                                 line += "," + packet.g2();

@@ -190,14 +190,14 @@ public class LocUnpacker {
                 }
             }
 
-            case 78 -> lines.add("bgsound=" + Unpacker.format(Type.SYNTH, packet.g2()) + "," + packet.g1()); // https://twitter.com/JagexAsh/status/1651904693671546881
+            case 78 -> lines.add("bgsound=" + Unpacker.format(Unpacker.CONFIG_SOUND_TYPE, packet.g2()) + "," + packet.g1()); // https://twitter.com/JagexAsh/status/1651904693671546881
 
             case 79 -> { // https://twitter.com/JagexAsh/status/1651904693671546881
                 var line = "randomsound=" + packet.g2() + "," + packet.g2() + "," + packet.g1();
                 var count = packet.g1();
 
                 for (var i = 0; i < count; ++i) {
-                    line += "," + Unpacker.format(Type.SYNTH, packet.g2());
+                    line += "," + Unpacker.format(Unpacker.CONFIG_SOUND_TYPE, packet.g2());
                 }
 
                 lines.add(line);

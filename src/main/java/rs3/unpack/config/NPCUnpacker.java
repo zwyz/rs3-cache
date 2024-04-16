@@ -201,7 +201,7 @@ public class NPCUnpacker {
             case 125 -> lines.add("respawndir=" + packet.g1s());
             case 127 -> lines.add("bas=" + Unpacker.format(Type.BAS, packet.g2())); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
             case 128 -> lines.add("defaultmovemode=" + Unpacker.format(Type.MOVESPEED, packet.g1())); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
-            case 134 -> lines.add("bgsound=" + Unpacker.format(Type.SYNTH, packet.g2null()) + "," + Unpacker.format(Type.SYNTH, packet.g2null()) + "," + Unpacker.format(Type.SYNTH, packet.g2null()) + "," + Unpacker.format(Type.SYNTH, packet.g2null()) + "," + packet.g1());
+            case 134 -> lines.add("bgsound=" + Unpacker.format(Unpacker.CONFIG_SOUND_TYPE, packet.g2null()) + "," + Unpacker.format(Unpacker.CONFIG_SOUND_TYPE, packet.g2null()) + "," + Unpacker.format(Unpacker.CONFIG_SOUND_TYPE, packet.g2null()) + "," + Unpacker.format(Unpacker.CONFIG_SOUND_TYPE, packet.g2null()) + "," + packet.g1());
             case 135 -> lines.add("unknown135=" + packet.g1() + "," + packet.g2()); // gone in nxt
             case 136 -> lines.add("unknown136=" + packet.g1() + "," + packet.g2()); // gone in nxt
             case 137 -> lines.add("cursorattack=" + Unpacker.format(Type.CURSOR, packet.g2()));
