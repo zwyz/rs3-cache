@@ -1,5 +1,6 @@
 package rs3.unpack.config;
 
+import rs3.unpack.ColourConversion;
 import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
@@ -84,8 +85,13 @@ public class ObjUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; ++i) {
-                    lines.add("recol" + (i + 1) + "s=" + packet.g2());
-                    lines.add("recol" + (i + 1) + "d=" + packet.g2());
+                    if (Unpack.VERSION < 500) {
+                        lines.add("recol" + (i + 1) + "s=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
+                        lines.add("recol" + (i + 1) + "d=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
+                    } else {
+                        lines.add("recol" + (i + 1) + "s=" + packet.g2());
+                        lines.add("recol" + (i + 1) + "d=" + packet.g2());
+                    }
                 }
             }
 

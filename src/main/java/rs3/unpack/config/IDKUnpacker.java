@@ -1,5 +1,6 @@
 package rs3.unpack.config;
 
+import rs3.unpack.ColourConversion;
 import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
@@ -37,20 +38,25 @@ public class IDKUnpacker {
             case 3 -> lines.add("disable=yes");
 
             case 40 -> {
-                if (Unpack.VERSION < 400) {
+                if (Unpack.VERSION < 460) {
                     lines.add("recol1s=" + packet.g2());
                 } else {
                     var count = packet.g1();
 
                     for (var i = 0; i < count; ++i) {
-                        lines.add("recol" + (i + 1) + "s=" + packet.g2());
-                        lines.add("recol" + (i + 1) + "d=" + packet.g2());
+                        if (Unpack.VERSION < 500) {
+                            lines.add("recol" + (i + 1) + "s=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
+                            lines.add("recol" + (i + 1) + "d=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
+                        } else {
+                            lines.add("recol" + (i + 1) + "s=" + packet.g2());
+                            lines.add("recol" + (i + 1) + "d=" + packet.g2());
+                        }
                     }
                 }
             }
 
             case 41 -> {
-                if (Unpack.VERSION < 400) {
+                if (Unpack.VERSION < 460) {
                     lines.add("recol2d=" + packet.g2());
                 } else {
                     var count = packet.g1();
@@ -66,7 +72,7 @@ public class IDKUnpacker {
             case 43 -> lines.add("recol4s=" + packet.g2());
 
             case 44 -> {
-                if (Unpack.VERSION < 400) {
+                if (Unpack.VERSION < 460) {
                     lines.add("recol5s=" + packet.g2());
                 } else {
                     lines.add("recolindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
@@ -74,7 +80,7 @@ public class IDKUnpacker {
             }
 
             case 45 -> {
-                if (Unpack.VERSION < 400) {
+                if (Unpack.VERSION < 460) {
                     lines.add("recol6s=" + packet.g2());
                 } else {
                     lines.add("retexindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));

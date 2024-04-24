@@ -1,5 +1,6 @@
 package rs3.unpack.config;
 
+import rs3.unpack.ColourConversion;
 import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
@@ -32,7 +33,7 @@ public class EffectAnimUnpacker {
             case 6 -> lines.add("rotation=" + packet.g2());
             case 7 -> lines.add("ambient=" + packet.g1());
             case 8 -> lines.add("contrast=" + packet.g1());
-            case 10 -> lines.add("unknown10=yes");
+            case 10 -> lines.add("allowloop=yes");
 
             case 9 -> lines.add("hillchange=rotate");
             case 15 -> lines.add("hillchange=rotate," + packet.g2());
@@ -45,8 +46,13 @@ public class EffectAnimUnpacker {
                     var count = packet.g1();
 
                     for (var i = 0; i < count; i++) {
-                        lines.add("recol" + (i + 1) + "s=" + packet.g2());
-                        lines.add("recol" + (i + 1) + "d=" + packet.g2());
+                        if (Unpack.VERSION < 500) {
+                            lines.add("recol" + (i + 1) + "s=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
+                            lines.add("recol" + (i + 1) + "d=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
+                        } else {
+                            lines.add("recol" + (i + 1) + "s=" + packet.g2());
+                            lines.add("recol" + (i + 1) + "d=" + packet.g2());
+                        }
                     }
                 }
             }

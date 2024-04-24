@@ -1,6 +1,7 @@
 package rs3.unpack.config;
 
 import rs3.Unpack;
+import rs3.unpack.ColourConversion;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.util.Packet;
@@ -104,8 +105,13 @@ public class LocUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; ++i) {
-                    lines.add("recol" + (i + 1) + "s=" + packet.g2());
-                    lines.add("recol" + (i + 1) + "d=" + packet.g2());
+                    if (Unpack.VERSION < 500) {
+                        lines.add("recol" + (i + 1) + "s=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
+                        lines.add("recol" + (i + 1) + "d=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
+                    } else {
+                        lines.add("recol" + (i + 1) + "s=" + packet.g2());
+                        lines.add("recol" + (i + 1) + "d=" + packet.g2());
+                    }
                 }
             }
 
@@ -303,7 +309,15 @@ public class LocUnpacker {
             case 194 -> lines.add("cursor5=" + Unpacker.format(Type.CURSOR, packet.g2()));
             case 195 -> lines.add("cursor6=" + Unpacker.format(Type.CURSOR, packet.g2()));
 
-            case 196 -> lines.add("unknown196=" + packet.g1());
+            case 196 -> lines.add("forcelod=" + switch (packet.g1()) {
+                case 0 -> "max";
+                case 1 -> "high";
+                case 2 -> "medium";
+                case 3 -> "low";
+                case 4 -> "min";
+                default -> throw new AssertionError();
+            });
+
             case 197 -> lines.add("unknown197=" + packet.g1());
             case 198 -> lines.add("unknown198=yes");
             case 199 -> lines.add("unknown199=no");
@@ -334,16 +348,13 @@ public class LocUnpacker {
                 }
             }
 
-            // _thy/_thz/_tia/_tie
-            // 2 7 pjm
-            // bgsound _vmc/_vyj _tbh/_tcv
-            case 250 -> lines.add("bgsoundshape=" + packet.g1()); // todo: sound _vmd/_vyl
-            case 251 -> lines.add("unknown251=" + Unpacker.formatBoolean(packet.g1())); // todo: sound _vme/_vym
-            case 252 -> lines.add("unknown252=" + packet.g2() + "," + packet.g2() + "," + packet.g2()); // todo sound _vmg/_vyo _vmi/_vyp _vmk/_vyr
+            case 250 -> lines.add("bgsoundshape=" + packet.g1());
+            case 251 -> lines.add("unknown251=" + Unpacker.formatBoolean(packet.g1()));
+            case 252 -> lines.add("unknown252=" + packet.g2() + "," + packet.g2() + "," + packet.g2());
 
-            case 253 -> lines.add("randomsoundshape=" + packet.g1()); // todo sound _vml/_vyy
-            case 254 -> lines.add("unknown254=" + Unpacker.formatBoolean(packet.g1())); // todo: sound _vmm/_vza
-            case 255 -> lines.add("unknown255=" + packet.g2() + "," + packet.g2() + "," + packet.g2()); // todo: sound _vmn/_vzc _vmp/_vzd _vmq/_vzf
+            case 253 -> lines.add("randomsoundshape=" + packet.g1());
+            case 254 -> lines.add("unknown254=" + Unpacker.formatBoolean(packet.g1()));
+            case 255 -> lines.add("unknown255=" + packet.g2() + "," + packet.g2() + "," + packet.g2());
 
             default -> throw new IllegalStateException("unknown opcode");
         }
