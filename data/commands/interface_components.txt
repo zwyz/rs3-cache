@@ -715,8 +715,10 @@
 [command,cc_settext](string $x1)
 [command,if_gettext](component $x1)(string)
 [command,cc_gettext]()(string)
-[command,if_settextfont](fontmetrics $x1,component $x2)
-[command,cc_settextfont](fontmetrics $x1)
+[command,if_settextfont](graphic $x1,component $x2)
+[command,if_settextfont](fontmetrics $x1,component $x2) 800
+[command,cc_settextfont](graphic $x1)
+[command,cc_settextfont](fontmetrics $x1) 800
 [command,if_getfontmetrics](component $x1)(fontmetrics)
 [command,cc_getfontmetrics]()(fontmetrics)
 [command,if_settextalign](settextalignh $x1,settextalignv $x2,int $x3,component $x4)

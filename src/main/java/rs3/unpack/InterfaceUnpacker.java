@@ -261,13 +261,13 @@ public class InterfaceUnpacker {
             line(lines, "onupdated=", decodeHook(packet), "null"); // if_crmview_setonupdated
         }
 
-        line(lines, "onvartransmitlist=", decodeHookTransmitList(packet), "null");
-        line(lines, "oninvtransmitlist=", decodeHookTransmitList(packet), "null");
-        line(lines, "onstattransmitlist=", decodeHookTransmitList(packet), "null");
+        line(lines, "onvartransmitlist=", decodeHookTransmitList(packet, Type.VAR_PLAYER), "null");
+        line(lines, "oninvtransmitlist=", decodeHookTransmitList(packet, Type.INV), "null");
+        line(lines, "onstattransmitlist=", decodeHookTransmitList(packet, Type.STAT), "null");
 
         if (Unpack.VERSION >= 500) {
-            line(lines, "onvarctransmitlist=", decodeHookTransmitList(packet), "null");
-            line(lines, "onvarcstrtransmitlist=", decodeHookTransmitList(packet), "null");
+            line(lines, "onvarctransmitlist=", decodeHookTransmitList(packet, Type.VAR_CLIENT), "null");
+            line(lines, "onvarcstrtransmitlist=", decodeHookTransmitList(packet, Type.VAR_CLIENT_STRING), "null");
         }
     }
 
@@ -328,7 +328,7 @@ public class InterfaceUnpacker {
         return "\"" + value + "\"";
     }
 
-    private static String decodeHookTransmitList(Packet packet) {
+    private static String decodeHookTransmitList(Packet packet, Type type) {
         var count = packet.g1();
 
         if (count == 0) {
@@ -342,7 +342,7 @@ public class InterfaceUnpacker {
                 sb.append(",");
             }
 
-            sb.append(packet.g4s());
+            sb.append(Unpacker.format(type, packet.g4s()));
         }
 
         return sb.toString();
@@ -621,7 +621,11 @@ public class InterfaceUnpacker {
 
 
     private static void decodeTextPart(String prefix, ArrayList<String> lines, Packet packet, int version, int defaultAlignH, int defaultAlignV, String defaultTextShadow) {
-        line(lines, prefix + "textfont=", Unpacker.format(Type.FONTMETRICS, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()), "null"); // if_settextfont
+        if (Unpack.VERSION < 800) {
+            line(lines, prefix + "textfont=", Unpacker.format(Type.GRAPHIC, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()), "null"); // if_settextfont
+        } else {
+            line(lines, prefix + "textfont=", Unpacker.format(Type.FONTMETRICS, packet.gSmart2or4null()), "null"); // if_settextfont
+        }
 
         if (version >= 2) {
             line(lines, prefix + "fontmono=", (packet.g1() == 1 ? "yes" : "no"), "yes"); // if_setfontmono
