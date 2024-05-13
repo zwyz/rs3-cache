@@ -13,17 +13,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-// 0 = request normal
-// 1 = request urgent
-// 2 = logged in
-// 3 = logged out
-// 4 = set xor byte
-// 5 =
-// 6 = connected (rs3)
-// 17 = request ???
-// 32 = request ???
-// 33 = request ???
-
 public class TcpJs5ResourceProvider implements Js5ResourceProvider, AutoCloseable {
     private static final int BLOCK_SIZE = 100 * 1024 - 5;
     private static final int MAX_PENDING_REQUESTS = 500;
@@ -70,7 +59,7 @@ public class TcpJs5ResourceProvider implements Js5ResourceProvider, AutoCloseabl
             while (responses.size() < MAX_PENDING_REQUESTS && !unsentRequests.isEmpty()) {
                 var request = unsentRequests.poll();
                 responses.put(new ArchiveGroup(request.archive, request.group), request);
-                sendRequestGroupB(request.archive, request.group);
+                requestUrgent(request.archive, request.group, 0);
             }
 
             if (socket.getInputStream().available() > 0) {
@@ -105,90 +94,59 @@ public class TcpJs5ResourceProvider implements Js5ResourceProvider, AutoCloseabl
                 throw new IOException("failed to connect " + status);
             }
 
-            sendConnected(5, 0);
-            sendLoggedOut(5, 0);
+            sendConnected(5, version);
+            sendLoggedOut();
             connected = true;
         }
     }
 
-    private void sendRequestGroupA(int archive, int group) throws IOException {
+    private void requestPrefetch(int archive, int group, int priority) throws IOException {
         var request = Packet.create(10);
         request.clear();
-        request.p1(0);
+        request.p1(0 + (priority << 4));
         request.p1(archive);
         request.p4(group);
-        request.p2(version);
-        request.p2(unknown);
         send(request);
     }
 
-    private void sendRequestGroupB(int archive, int group) throws IOException {
+    private void requestUrgent(int archive, int group, int priority) throws IOException {
         var request = Packet.create(10);
-        request.p1(1);
+        request.p1(1 + (priority << 4));
         request.p1(archive);
         request.p4(group);
-        request.p2(version);
-        request.p2(unknown);
         send(request);
     }
 
-    private void sendRequestGroupC(int archive, int group) throws IOException {
-        var request = Packet.create(10);
-        request.p1(17);
-        request.p1(archive);
-        request.p4(group);
-        request.p2(version);
-        request.p2(unknown);
-        send(request);
-    }
-
-    private void sendRequestGroupD(int archive, int group) throws IOException {
-        var request = Packet.create(10);
-        request.p1(32);
-        request.p1(archive);
-        request.p4(group);
-        request.p2(version);
-        request.p2(unknown);
-        send(request);
-    }
-
-    private void sendRequestGroupE(int archive, int group) throws IOException {
-        var request = Packet.create(10);
-        request.p1(33);
-        request.p1(archive);
-        request.p4(group);
-        request.p2(version);
-        request.p2(unknown);
-        send(request);
-    }
-
-    private void sendLoggedIn(int arg1, int arg2) throws IOException {
+    private void sendLoggedIn() throws IOException {
         var request = Packet.create(10);
         request.p1(2);
-        request.p3(arg1);
-        request.p2(arg2);
-        request.p2(version);
-        request.p2(unknown);
         send(request);
     }
 
-    private void sendLoggedOut(int arg1, int arg2) throws IOException {
+    private void sendLoggedOut() throws IOException {
         var request = Packet.create(10);
         request.p1(3);
-        request.p3(arg1);
-        request.p2(arg2);
-        request.p2(version);
-        request.p2(unknown);
         send(request);
     }
 
-    private void sendConnected(int arg1, int arg2) throws IOException {
+    private void sendEnableXor(int key) throws IOException {
+        var request = Packet.create(10);
+        request.p1(4);
+        request.p1(key);
+        send(request);
+    }
+
+    private void sendConnected(int unknown, int version) throws IOException {
         var request = Packet.create(10);
         request.p1(6);
-        request.p3(arg1);
-        request.p2(arg2);
-        request.p2(version);
-        request.p2(unknown);
+        request.p3(unknown);
+        request.p4(version);
+        send(request);
+    }
+
+    private void sendUnknown7() throws IOException {
+        var request = Packet.create(10);
+        request.p1(7);
         send(request);
     }
 
@@ -222,7 +180,7 @@ public class TcpJs5ResourceProvider implements Js5ResourceProvider, AutoCloseabl
     }
 
     private void send(Packet request) throws IOException {
-        socket.getOutputStream().write(request.arr, 0, request.pos);
+        socket.getOutputStream().write(request.arr, 0, request.arr.length);
         socket.getOutputStream().flush();
     }
 
