@@ -38,17 +38,17 @@
 [command,highlight_get_category_default_colour](int $x1)(int,int,int)
 [command,highlight_get_category_colour](int $x1)(int,int,int)
 [command,highlight_set_category_colour](int $x1,int $x2,int $x3,int $x4)
-[command,unknown_command_63]todo signature
-[command,highlight_get_category_scale]todo signature
-[command,highlight_set_category_scale]todo signature
-[command,highlight_get_category_default_mode]todo signature
-[command,highlight_get_category_default_scale]todo signature
-[command,highlight_reset_category_to_default]todo signature
-[command,highlight_set_localplayer_silhouette_mode]todo signature
-[command,unknown_command_64]todo signature
-[command,unknown_command_65]todo signature
-[command,unknown_command_66]todo signature
-[command,highlight_set_base_alpha]todo signature
-[command,unknown_command_67]todo signature
-[command,unknown_command_68]todo signature
-[command,unknown_command_69]todo signature
+[command,highlight_get_category_count]()(int)
+[command,highlight_get_category_scale](int $x1)(int)
+[command,highlight_set_category_scale](int $x1, int $x2)
+[command,highlight_get_category_default_mode](int $x1)(int)
+[command,highlight_get_category_default_scale](int $x1, int $x2)
+[command,highlight_reset_category_to_default](int $x1)
+[command,highlight_set_localplayer_silhouette_mode](int $x1)
+[command,highlight_get_localplayer_silhouette_mode]()(int)
+[command,unknown_command_65](boolean $x1)
+[command,unknown_command_66]()(boolean)
+[command,highlight_set_base_alpha](int $x1, int $x2)
+[command,highlight_get_base_alpha]()(int, int)
+[command,unknown_command_68](boolean $x1)
+[command,unknown_command_69]()(boolean)

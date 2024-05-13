@@ -751,6 +751,8 @@ public class Unpacker {
         if (table == 267 && column == 0) return List.of(Type.INT); // todo
         if (table == 268 && column == 0) return List.of(Type.INT); // todo
         if (table == 268 && column == 2) return List.of(Type.INT); // todo
+        if (table == 285 && column == 13) return List.of(Type.INT); // todo
+        if (table == 285 && column == 14) return List.of(Type.STRING); // todo
 
         return Objects.requireNonNull(DBCOLUMN_TYPE.get(new Tuple2<>(table, column)));
     }
