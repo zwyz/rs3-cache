@@ -7,7 +7,7 @@
 [command,automatedtestflags]()(int,int)
 [command,reboottimer]()(int)
 [command,playercountry]()(int)
-[command,map_members]()(int)
+[command,map_members]()(boolean)
 [command,map_quickchat]()(boolean)
 [command,map_preload](coord $x1)
 [command,map_loadedpercent]()(int)

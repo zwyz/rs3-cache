@@ -301,11 +301,7 @@ public class InterfaceUnpacker {
     }
 
     private static String formatHookArgument(Object value, Type type) {
-        if (ScriptUnpacker.ASSUME_UNKNOWN_TYPES_ARE_BASE) {
-            if (type == Type.UNKNOWN_INT) type = Type.INT_INT;
-            if (type == Type.UNKNOWN_LONG) type = Type.LONG;
-            if (type == Type.UNKNOWN_OBJECT) type = Type.STRING;
-        }
+        type = ScriptUnpacker.chooseDisplayType(type);
 
         if (Objects.equals(value, "event_opbase")) return "event_opbase";
         if (Objects.equals(value, "event_text")) return "event_text";

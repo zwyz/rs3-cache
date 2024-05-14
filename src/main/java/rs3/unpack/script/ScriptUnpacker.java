@@ -20,7 +20,7 @@ public class ScriptUnpacker {
     private static final Map<Integer, CompiledScript> SCRIPTS = new HashMap<>();
     private static final Map<Integer, List<Expression>> SCRIPTS_DECOMPILED = new HashMap<>();
     private static final Map<Integer, Integer> SCRIPT_PARAMETER_COUNT = new HashMap<>();
-    private static final Map<Integer, Integer> SCRIPT_RETURN_COUNT = new HashMap<>();
+    private static final Map<Integer, List<Type>> SCRIPT_RETURN_TYPES = new HashMap<>();
     public static final Map<Integer, List<Type>> SCRIPT_PARAMETERS = new HashMap<>();
     public static final Map<Integer, List<Type>> SCRIPT_RETURNS = new HashMap<>();
     public static final Set<Integer> CALLED = new LinkedHashSet<>();
@@ -43,8 +43,8 @@ public class ScriptUnpacker {
         };
     }
 
-    public static int getReturnCount(int script) {
-        return SCRIPT_RETURN_COUNT.get(script);
+    public static List<Type> getReturnTypes(int script) {
+        return SCRIPT_RETURN_TYPES.get(script);
     }
 
     public static void decompile() {
@@ -56,19 +56,30 @@ public class ScriptUnpacker {
         for (var id : SCRIPTS.keySet()) {
             var script = SCRIPTS.get(id);
             SCRIPT_PARAMETER_COUNT.put(id, script.argumentCountInt + script.argumentCountObject + script.argumentCountLong);
-            var count = 0;
+            var returnTypes = new ArrayList<Type>();
 
             for (var i = script.code.length - 2; i >= 0; i--) {
                 var command = script.code[i].command();
+                var operand = script.code[i].operand();
 
                 if (command != PUSH_CONSTANT_INT && command != PUSH_CONSTANT_STRING) {
                     break;
                 }
 
-                count++;
+                if (Objects.equals(operand, 0)) {
+                    returnTypes.addFirst(Type.INT);
+                } else if (Objects.equals(operand, -1)) {
+                    returnTypes.addFirst(Type.UNKNOWN_INT_NOTINT);
+                } else if (Objects.equals(operand, "")) {
+                    returnTypes.addFirst(Type.UNKNOWN_OBJECT); // todo
+                } else if (Objects.equals(operand, -1L)) {
+                    returnTypes.addFirst(Type.UNKNOWN_LONG); // todo
+                } else {
+                    throw new IllegalStateException("invalid default return: " + operand);
+                }
             }
 
-            SCRIPT_RETURN_COUNT.put(id, count);
+            SCRIPT_RETURN_TYPES.put(id, returnTypes);
         }
 
         // decompile
@@ -99,5 +110,18 @@ public class ScriptUnpacker {
         }
 
         return CodeFormatter.formatScript(Unpacker.getScriptName(id), SCRIPT_PARAMETERS.get(id), SCRIPT_RETURNS.get(id), script).lines().toList();
+    }
+
+    public static Type chooseDisplayType(Type type) {
+        if (ASSUME_UNKNOWN_TYPES_ARE_BASE) {
+            if (type == Type.UNKNOWN_INT) return Type.INT_INT; // todo: could assume boolean
+            if (type == Type.UNKNOWN_INT_NOTINT) return Type.BOOLEAN;
+            if (type == Type.UNKNOWN_INT_NOTINT_NOTBOOLEAN) return Type.INT_INT; // todo: can format this specially
+            if (type == Type.UNKNOWN_INT_NOTBOOLEAN) return Type.INT_INT;
+            if (type == Type.UNKNOWN_LONG) type = Type.LONG;
+            if (type == Type.UNKNOWN_OBJECT) type = Type.STRING;
+        }
+
+        return type;
     }
 }

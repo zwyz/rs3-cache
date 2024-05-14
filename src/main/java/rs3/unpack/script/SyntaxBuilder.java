@@ -217,13 +217,13 @@ public class SyntaxBuilder {
 
         if (command == GOSUB_WITH_PARAMS) {
             var argumentTypes = Collections.nCopies(ScriptUnpacker.getParameterCount((int) operand), Type.UNKNOWN);
-            var returnTypes = Collections.nCopies(ScriptUnpacker.getReturnCount((int) operand), Type.UNKNOWN);
+            var returnTypes = ScriptUnpacker.getReturnTypes((int) operand);
             buildCommand(code, index, command, operand, argumentTypes, returnTypes);
             return;
         }
 
         if (command == RETURN) {
-            var argumentTypes = Collections.nCopies(ScriptUnpacker.getReturnCount(currentScript), Type.UNKNOWN);
+            var argumentTypes = ScriptUnpacker.getReturnTypes(currentScript);
             var returnTypes = List.<Type>of();
             buildCommand(code, index, command, operand, argumentTypes, returnTypes);
             return;
@@ -238,12 +238,24 @@ public class SyntaxBuilder {
 
         if (command == PUSH_CONSTANT_STRING) {
             switch (operand) {
-                case Integer _ -> buildCommand(code, index, command, operand, List.of(), List.of(Type.UNKNOWN_INT));
+                case Integer _ -> {
+                    var value = (int) operand;
+                    var booleanPossible = value == -1 || value == 0 || value == 1;
+                    buildCommand(code, index, command, operand, List.of(), List.of(booleanPossible ? Type.UNKNOWN_INT : Type.UNKNOWN_INT_NOTBOOLEAN));
+                }
+
                 case Long _ -> buildCommand(code, index, command, operand, List.of(), List.of(Type.UNKNOWN_LONG));
                 case String _ -> buildCommand(code, index, command, operand, List.of(), List.of(Type.STRING)); // string is the only type of basevartype string
                 default -> throw new IllegalStateException("invalid constant");
             }
 
+            return;
+        }
+
+        if (command == PUSH_CONSTANT_INT) {
+            var value = (int) operand;
+            var booleanPossible = value == -1 || value == 0 || value == 1;
+            buildCommand(code, index, command, operand, List.of(), List.of(booleanPossible ? Type.UNKNOWN_INT : Type.UNKNOWN_INT_NOTBOOLEAN));
             return;
         }
 
@@ -507,8 +519,10 @@ public class SyntaxBuilder {
                     var expectedType = remainingTypes.removeLast();
 
                     if (expectedType != currentType) {
-                        if (Type.subtype(expectedType, currentType)) {
-                            expressionTypes.set(i, expectedType); // propagate down
+                        var meet = Type.meet(expectedType, currentType);
+
+                        if (meet != null) {
+                            expressionTypes.set(i, meet); // propagate down
                         } else if (!Type.subtype(currentType, expectedType)) { // incomparable types
                             throw new IllegalStateException("type mismatch in script " + currentScript + ", assigning " + expectedType + " to " + currentType + ", context: " + List.of(code).subList(0, index + 1));
                         }
