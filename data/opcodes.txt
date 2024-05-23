@@ -1774,7 +1774,7 @@ achievement_getmembers,1300
 achievement_getunused,1458
 achievement_getprogress,1123
 achievement_is_checklist,1190
-steam_setachivement,1775
+steam_setachievement,1775
 steam_setstat,103
 steam_storestats,2074
 npc_find,594
