@@ -79,7 +79,7 @@ public class Command {
         try {
             var opcodes = new HashMap<String, Integer>();
 
-            for (var line : Files.readAllLines(Unpack.VERSION == 10000 ? Path.of("data/opcodes.txt") : Path.of("data/opcodes-" + (Unpack.VERSION < 669 ? "unscrambled" : Unpack.VERSION) + ".txt"))) {
+            for (var line : Files.readAllLines(Path.of("data/opcodes-" + (Unpack.VERSION < 669 ? "unscrambled" : Unpack.VERSION) + ".txt"))) {
                 var parts = line.split(",");
 
                 if (parts.length >= 3) {

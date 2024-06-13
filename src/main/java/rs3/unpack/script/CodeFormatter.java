@@ -258,6 +258,22 @@ public class CodeFormatter {
                 }
             }
 
+            case "tostring_long" -> {
+                var value = expression.arguments.get(0);
+
+                if (Unpack.VERSION < 936) {
+                    yield "tostring_long(" + format(value) + ")";
+                } else {
+                    var base = expression.arguments.get(1);
+
+                    if (base.command == PUSH_CONSTANT_STRING && (int) base.operand == 10) {
+                        yield "tostring_long(" + format(value) + ")";
+                    } else {
+                        yield "tostring_long(" + format(value) + ", " + format(expression.arguments.get(1)) + ")";
+                    }
+                }
+            }
+
             // control flow
             case "flow_ne" -> formatBinary(prec, 40, " ! ", expression.arguments.get(0), expression.arguments.get(1));
             case "flow_eq" -> formatBinary(prec, 40, " = ", expression.arguments.get(0), expression.arguments.get(1));

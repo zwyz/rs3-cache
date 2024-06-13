@@ -21,9 +21,9 @@ public class Download {
     public static final HttpClient HTTP = HttpClient.newBuilder().build();
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-        try (var js5 = TcpJs5ResourceProvider.create("content.runescape.com", 43594, getClientToken(), 935, 1, 0, 0)) {
+        try (var js5 = TcpJs5ResourceProvider.create("content.runescape.com", 43594, getClientToken(), 936, 1, 0, 0)) {
 //        try (var js5 = TcpJs5ResourceProvider.create("content.beta.runescape.com", 443, getClientToken(), 935, 1, 0, 0)) {
-//        try (var js5 = new OpenRS2Js5ResourceProvider("runescape", 659)) {
+//        try (var js5 = new OpenRS2Js5ResourceProvider("runescape", 1806)) {
             var masterIndex = new Js5MasterIndex(Js5Util.decompress(js5.get(255, 255)));
 
             try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {

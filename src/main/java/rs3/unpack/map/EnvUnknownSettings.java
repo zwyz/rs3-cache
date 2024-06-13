@@ -2,7 +2,7 @@ package rs3.unpack.map;
 
 import rs3.util.Packet;
 
-public class EnvironmentF {
+public class EnvUnknownSettings {
     public final float unknown1;
     public final float unknown2;
     public final float unknown3;
@@ -10,7 +10,7 @@ public class EnvironmentF {
     public final float unknown5;
     public final float unknown6;
 
-    public EnvironmentF(Packet packet) {
+    public EnvUnknownSettings(Packet packet) {
         this.unknown1 = packet.gFloat();
         this.unknown2 = packet.gFloat();
         this.unknown3 = packet.gFloat();

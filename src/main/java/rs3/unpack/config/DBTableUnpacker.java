@@ -24,7 +24,7 @@ public class DBTableUnpacker {
             }
 
             case 1 -> {
-                var columnCount = packet.g1(); // todo: can log this
+                var columnCount = packet.g1();
 
                 for (var value = packet.g1(); value != 255; value = packet.g1()) {
                     var column = value & 127;
@@ -57,6 +57,57 @@ public class DBTableUnpacker {
                             lines.add(sb.toString());
                         }
                     }
+                }
+            }
+
+            case 2 -> {
+                var size = packet.g4s();
+                var start = packet.pos;
+                var columnCount = packet.g1();
+                var columnType = new Type[columnCount][];
+
+                for (var col = packet.g1(); col != 255; col = packet.g1()) {
+                    for (var op = packet.g1(); op != 0; op = packet.g1()) {
+                        if (op == 1) {
+                            var tupleLength = packet.g1();
+                            columnType[col] = new Type[tupleLength];
+                            var sb = new StringBuilder("column=col" + col);
+
+                            for (int tup = 0; tup < tupleLength; tup++) {
+                                columnType[col][tup] = Type.byID(packet.gSmart1or2());
+                                sb.append(",").append(columnType[col][tup].name);
+                            }
+
+                            Unpacker.setDBColumnType(id, col, List.of(columnType[col]));
+                            lines.add(sb.toString());
+                        } else if (op == 2) {
+                            var defaultCount = packet.gSmart1or2();
+
+                            for (int def = 0; def < defaultCount; def++) {
+                                var tupleLength = columnType[col].length;
+                                var sb = new StringBuilder("default=col" + col);
+
+                                for (int tup = 0; tup < tupleLength; tup++) {
+                                    var type = columnType[col][def];
+
+                                    sb.append(",").append(switch (type.baseType) {
+                                        case INTEGER -> Unpacker.format(type, packet.g4s());
+                                        case LONG -> Unpacker.format(type, packet.g8s());
+                                        case STRING -> Unpacker.format(type, packet.gjstr());
+                                        default -> throw new IllegalStateException();
+                                    });
+                                }
+
+                                lines.add(sb.toString());
+                            }
+                        } else {
+                            throw new IllegalStateException("invalid column op " + op);
+                        }
+                    }
+                }
+
+                if (packet.pos - start != size) {
+                    throw new AssertionError("invalid size");
                 }
             }
 

@@ -4,6 +4,7 @@
 [command,tostring](anyint $x1)(string)
 [command,tostring](anyint $x1,int $x2)(string) 930
 [command,tostring_long](long $x1)(string)
+[command,tostring_long](long $x1,int $x2)(string) 936
 [command,unknown_command_54](long $x1)(string)
 [command,compare](string $x1,string $x2)(int)
 [command,paraheight](string $x1,int $x2,fontmetrics $x3)(int)
