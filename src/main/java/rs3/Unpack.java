@@ -34,7 +34,7 @@ import java.util.function.Function;
 // todo: clean this up
 public class Unpack {
     public static final int VERSION = 936;
-    private static final Path BASE_PATH = Path.of(System.getProperty("user.home") + "/.rscache/" + (VERSION == 935 ? "rs3" : VERSION));
+    public static final Path BASE_PATH = Path.of(System.getProperty("user.home") + "/.rscache/rs3");
     public static final Gson GSON = new GsonBuilder().serializeSpecialFloatingPointValues().create();
     public static final Gson GSON_PRETTY = new GsonBuilder().serializeSpecialFloatingPointValues().setPrettyPrinting().create();
 
