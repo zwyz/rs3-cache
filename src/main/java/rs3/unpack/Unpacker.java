@@ -131,7 +131,7 @@ public class Unpacker {
                 }
             }
 
-            case VAR_REFERENCE_INT -> {
+            case VAR_INT -> {
                 if (value == -1) {
                     yield "null";
                 }
