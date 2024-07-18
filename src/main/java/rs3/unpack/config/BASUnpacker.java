@@ -32,7 +32,7 @@ public class BASUnpacker {
             case 7 -> lines.add("runanim_b=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
             case 8 -> lines.add("runanim_l=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
             case 9 -> lines.add("runanim_r=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
-            case 26 -> lines.add("offset=" + packet.g1() + "," + packet.g1());
+            case 26 -> lines.add("hillrotate=" + packet.g1() + "," + packet.g1());
             case 27 -> lines.add("unknown27=" + packet.g1() + "," + packet.g2s() + "," + packet.g2s() + "," + packet.g2s() + "," + packet.g2s() + "," + packet.g2s() + "," + packet.g2s());
 
             case 28 -> {
@@ -44,7 +44,7 @@ public class BASUnpacker {
             }
 
             case 29 -> lines.add("turnspeed=" + packet.g1());
-            case 30 -> lines.add("unknown30=" + packet.g2());
+            case 30 -> lines.add("turnacceleration=" + packet.g2());
             case 31 -> lines.add("unknown31=" + packet.g1());
             case 32 -> lines.add("unknown32=" + packet.g2());
             case 33 -> lines.add("unknown33=" + packet.g2s());
@@ -59,13 +59,13 @@ public class BASUnpacker {
             case 42 -> lines.add("walkanim_r=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
             case 43 -> lines.add("unknown43=" + packet.g2());
             case 44 -> lines.add("unknown44=" + packet.g2());
-            case 45 -> lines.add("unknown45=" + packet.g2());
-            case 46 -> lines.add("unknown46=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
-            case 47 -> lines.add("unknown47=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
-            case 48 -> lines.add("unknown48=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
-            case 49 -> lines.add("unknown49=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
-            case 50 -> lines.add("unknown50=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
-            case 51 -> lines.add("unknown51=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 45 -> lines.add("overlayheight=" + packet.g2());
+            case 46 -> lines.add("crawlturn_l=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 47 -> lines.add("crawlturn_r=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 48 -> lines.add("runturn_l=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 49 -> lines.add("runturn_r=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 50 -> lines.add("walkturn_l=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 51 -> lines.add("walkturn_r=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null()));
 
             case 52 -> {
                 var count = packet.g1();
@@ -88,7 +88,7 @@ public class BASUnpacker {
             }
 
             case 53 -> lines.add("unknown53=no");
-            case 54 -> lines.add("unknown54=" + packet.g1() + "," + packet.g1());
+            case 54 -> lines.add("hillrotatelimit=" + packet.g1() + "," + packet.g1());
             case 55 -> lines.add("unknown55=" + packet.g1() + "," + packet.g2());
             case 56 -> lines.add("unknown56=" + packet.g1() + "," + packet.g2s() + "," + packet.g2s() + "," + packet.g2s());
 

@@ -5,10 +5,10 @@ import rs3.util.Packet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VFXKeyedFloat {
+public class ModulePropertyFloatCurve {
     private List<KeyFrame> keyframes = new ArrayList<>();
 
-    public VFXKeyedFloat(Packet packet, int version) {
+    public ModulePropertyFloatCurve(Packet packet, int version) {
         var frames = packet.g1();
 
         if (frames == 1) {
