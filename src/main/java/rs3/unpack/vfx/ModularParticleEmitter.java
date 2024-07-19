@@ -57,7 +57,6 @@ public class ModularParticleEmitter {
                 default -> throw new IllegalStateException("unknown type " + type);
             };
 
-            System.out.println(module.getType());
             modules.add(module);
         }
     }
