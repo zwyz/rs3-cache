@@ -3,21 +3,15 @@ package rs3.unpack.map;
 import rs3.util.Packet;
 
 public class EnvColourGradingSettings {
-    public final boolean toneMapEnabled;
-    public final int toneMapOperator;
-    public final float minBlackLum;
-    public final float maxWhiteLum;
-    public final float exposureKey;
-    public final float maxAutoExposure;
-    public final float unknown7;
+    public final int tex1;
+    public final float weighting1;
+    public final int tex2;
+    public final float weighting2;
 
     public EnvColourGradingSettings(Packet packet) {
-        this.toneMapEnabled = packet.g1() == 1;
-        this.toneMapOperator = packet.g1();
-        this.minBlackLum = packet.gFloat();
-        this.maxWhiteLum = packet.gFloat();
-        this.exposureKey = packet.gFloat();
-        this.maxAutoExposure = packet.gFloat();
-        this.unknown7 = packet.gFloat();
+        this.tex1 = packet.g2s();
+        this.weighting1 = packet.gFloat();
+        this.tex2 = packet.g2s();
+        this.weighting2 = packet.gFloat();
     }
 }

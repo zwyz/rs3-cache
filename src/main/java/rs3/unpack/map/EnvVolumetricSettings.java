@@ -2,7 +2,7 @@ package rs3.unpack.map;
 
 import rs3.util.Packet;
 
-public class EnvVolumetricsSettings {
+public class EnvVolumetricSettings {
     public final float density;
     public final float inscattering;
     public final float outscattering;
@@ -14,7 +14,7 @@ public class EnvVolumetricsSettings {
     public final int litFogColour;
     public final int unlitFogColour;
 
-    public EnvVolumetricsSettings(Packet packet) {
+    public EnvVolumetricSettings(Packet packet) {
         this.density = packet.gFloat();
         this.inscattering = packet.gFloat();
         this.outscattering = packet.gFloat();

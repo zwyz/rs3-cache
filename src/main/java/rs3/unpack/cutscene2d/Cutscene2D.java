@@ -10,7 +10,7 @@ public class Cutscene2D {
     public int width;
     public int height;
     public int text;
-    public List<Cutscene2DFrame> frames = new ArrayList<>();
+    public List<Cutscene2DScene> scenes = new ArrayList<>();
 
     public Cutscene2D(Packet packet) {
         version = packet.g1();
@@ -26,7 +26,7 @@ public class Cutscene2D {
         var count = packet.g1();
 
         for (var i = 0; i < count; i++) {
-            frames.add(new Cutscene2DFrame(packet));
+            scenes.add(new Cutscene2DScene(packet));
         }
     }
 }

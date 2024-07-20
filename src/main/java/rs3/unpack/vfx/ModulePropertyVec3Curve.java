@@ -6,10 +6,10 @@ import rs3.util.Packet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VFXKeyedVector3 {
+public class ModulePropertyVec3Curve {
     public List<KeyFrame> keyframes = new ArrayList<>();
 
-    public VFXKeyedVector3(Packet packet, int version) {
+    public ModulePropertyVec3Curve(Packet packet, int version) {
         var count = packet.g1();
 
         if (count == 1) {

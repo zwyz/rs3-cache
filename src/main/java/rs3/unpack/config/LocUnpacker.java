@@ -319,11 +319,11 @@ public class LocUnpacker {
             });
 
             case 197 -> lines.add("unknown197=" + packet.g1());
-            case 198 -> lines.add("unknown198=yes");
+            case 198 -> lines.add("runetek5only=yes");
             case 199 -> lines.add("unknown199=no");
-            case 200 -> lines.add("unknown200=yes");
-            case 201 -> lines.add("clickbox=" + packet.gSmart1or2s() + "," + packet.gSmart1or2s() + "," + packet.gSmart1or2s() + "," + packet.gSmart1or2s() + "," + packet.gSmart1or2s() + "," + packet.gSmart1or2s());
-            case 202 -> lines.add("unknown202=" + packet.gSmart1or2());
+            case 200 -> lines.add("highdetailonly=yes");
+            case 201 -> lines.add("custombounding=" + packet.gSmart1or2s() + "," + packet.gSmart1or2s() + "," + packet.gSmart1or2s() + "," + packet.gSmart1or2s() + "," + packet.gSmart1or2s() + "," + packet.gSmart1or2s());
+            case 202 -> lines.add("highlightoverride=" + packet.gSmart1or2());
             case 203 -> lines.add("unknown203=yes");
 
             case 204 -> {

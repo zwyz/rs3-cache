@@ -3,13 +3,14 @@ package rs3.unpack.vfx;
 import rs3.util.Packet;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class VFX {
     public int version;
     public String name;
     public int unknown2;
-    public List<VFXEmitter> emitters = new ArrayList<>();
+    public List<ModularParticleEmitter> emitters = new ArrayList<>();
 
     public VFX(Packet packet) {
         version = packet.g1();
@@ -19,7 +20,7 @@ public class VFX {
         var count = packet.g1();
 
         for (var i = 0; i < count; i++) {
-            emitters.add(new VFXEmitter(packet, version));
+            emitters.add(new ModularParticleEmitter(packet, version));
         }
 
         System.out.println(name);
