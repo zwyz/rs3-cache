@@ -3,16 +3,16 @@ package rs3;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import rs3.js4.Jagfile;
-import rs3.js5.Js5ArchiveIndex;
-import rs3.js5.Js5Util;
+import rs3.js5.*;
 import rs3.unpack.*;
 import rs3.unpack.config.TextureUnpacker;
 import rs3.unpack.config.*;
 import rs3.unpack.cutscene2d.Cutscene2D;
 import rs3.unpack.map.MapSquare;
+import rs3.unpack.script.Command;
 import rs3.unpack.script.ScriptUnpacker;
-import rs3.unpack.uianim.Anim;
-import rs3.unpack.uianim.AnimCurve;
+import rs3.unpack.ui_anim.Anim;
+import rs3.unpack.ui_anim.AnimCurve;
 import rs3.unpack.unknown62.AnimatorController;
 import rs3.unpack.vfx.VFXUnpacker;
 import rs3.unpack.worldmap.MapAreaUnpacker;
@@ -27,51 +27,65 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.StructuredTaskScope;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 // todo: clean this up
 public class Unpack {
-    public static final int VERSION = 936;
-    public static final Path BASE_PATH = Path.of(System.getProperty("user.home") + "/.rscache/rs3");
+    public static int VERSION;
+    private static Js5ResourceProvider PROVIDER;
+    private static Js5MasterIndex MASTER_INDEX;
     public static final Gson GSON = new GsonBuilder().serializeSpecialFloatingPointValues().create();
     public static final Gson GSON_PRETTY = new GsonBuilder().serializeSpecialFloatingPointValues().setPrettyPrinting().create();
 
-    public static void main(String[] args) throws IOException {
-        var root = Path.of("unpacked");
+    public static void main(String[] args) throws IOException, InterruptedException {
+//        unpackLive("unpacked/live", 937, 1, 0, "content.runescape.com", 43594, ClientTokenProvider.getClientToken());
+//        unpackOpenRS2("unpacked/2024-06-03", 936, "runescape", 1815);
+        unpackOpenRS2("unpacked/2024-05-28", 935, "runescape", 1806);
+    }
+
+    public static void unpackOpenRS2(String path, int version, String scope, int id) throws IOException {
+        unpack(Path.of(path), version, new MemoryCacheResourceProvider(new FileSystemCacheResourceProvider(
+                Path.of(System.getProperty("user.home") + "/.rscache/rs3"),
+                new OpenRS2Js5ResourceProvider(scope, id))
+        ));
+    }
+
+    public static void unpackLive(String path, int version, int subversion, int language, String host, int port, String token) throws IOException {
+        unpack(Path.of(path), version, new MemoryCacheResourceProvider(new FileSystemCacheResourceProvider(
+                Path.of(System.getProperty("user.home") + "/.rscache/rs3"),
+                new TcpJs5ResourceProvider(host, port, token, version, subversion, language))
+        ));
+    }
+
+    public static void unpack(Path path, int version, Js5ResourceProvider provider) throws IOException {
+        VERSION = version;
+        PROVIDER = provider;
+        MASTER_INDEX = new Js5MasterIndex(Js5Util.decompress(PROVIDER.get(255, 255, false, 0)));
+        Command.reset(); // todo: make non-static
+        Unpacker.reset(); // todo: make non-static
+        ScriptUnpacker.reset(); // todo: make non-static
+
+        if (VERSION < 400) {
+            unpackLegacy(path);
+        } else {
+            unpackCurrent(path);
+        }
+    }
+
+    private static void unpackCurrent(Path root) throws IOException {
         Files.createDirectories(root);
         Files.createDirectories(root.resolve("config"));
         Files.createDirectories(root.resolve("script"));
         Files.createDirectories(root.resolve("interface"));
 
-        if (VERSION < 400) {
-            unpackLegacy(root);
-        } else {
-            unpackCurrent(root);
-        }
-    }
-
-    private static void unpackLegacy(Path root) throws IOException {
-        var config = new Jagfile(Files.readAllBytes(BASE_PATH.resolve("0/2.dat")));
-        unpackLegacyConfig(config, "idk", IDKUnpacker::unpack, root.resolve("config/dump.idk"));
-        unpackLegacyConfig(config, "flo", FloorOverlayUnpacker::unpack, root.resolve("config/dump.flo"));
-        unpackLegacyConfig(config, "loc", LocUnpacker::unpack, root.resolve("config/dump.loc"));
-        unpackLegacyConfig(config, "mesanim", MesAnimUnpacker::unpack, root.resolve("config/dump.mesanim"));
-        unpackLegacyConfig(config, "npc", NPCUnpacker::unpack, root.resolve("config/dump.npc"));
-        unpackLegacyConfig(config, "obj", ObjUnpacker::unpack, root.resolve("config/dump.obj"));
-        unpackLegacyConfig(config, "param", ParamUnpacker::unpack, root.resolve("config/dump.param"));
-        unpackLegacyConfig(config, "seq", SeqUnpacker::unpack, root.resolve("config/dump.seq"));
-        unpackLegacyConfig(config, "spotanim", EffectAnimUnpacker::unpack, root.resolve("config/dump.spotanim"));
-    }
-
-    private static void unpackCurrent(Path root) throws IOException {
         // load names
         loadGroupNamesScriptTrigger(12, Unpacker.SCRIPT_NAMES);
         loadGroupNames(Path.of("data/names/scripts.txt"), 12, Unpacker.SCRIPT_NAMES);
         loadGroupNames(Path.of("data/names/graphics.txt"), 8, Unpacker.GRAPHIC_NAMES);
-
-        // unpack
 
         // things stuff depends on
         if (Unpack.VERSION < 700) {
@@ -85,7 +99,7 @@ public class Unpack {
             unpackConfigGroup(2, 24, VarNpcUnpacker::unpack, root.resolve("config/dump.varn"));
             unpackConfigGroup(2, 25, VarNpcBitUnpacker::unpack, root.resolve("config/dump.varnbit"));
             unpackConfigGroup(2, 47, VarClanUnpacker::unpack, root.resolve("config/dump.varclan"));
-            unpackConfigGroup(2, 54 , VarClanSettingUnpacker::unpack, root.resolve("config/dump.varclansetting"));
+            unpackConfigGroup(2, 54, VarClanSettingUnpacker::unpack, root.resolve("config/dump.varclansetting"));
         } else {
             unpackConfigGroup(2, 60, (id, data) -> VarUnpacker.unpack(VarDomain.PLAYER, id, data), root.resolve("config/dump.varp"));
             unpackConfigGroup(2, 61, (id, data) -> VarUnpacker.unpack(VarDomain.NPC, id, data), root.resolve("config/dump.varn"));
@@ -171,7 +185,7 @@ public class Unpack {
         unpackConfigGroup(2, 49, CategoryUnpacker::unpack, root.resolve("config/dump.category")); // client ignores
         unpackConfigGroup(2, 70, GameLogEventUnpacker::unpack, root.resolve("config/dump.gamelogevent")); // client ignores
         unpackConfigGroup(2, 72, HeadbarUnpacker::unpack, root.resolve("config/dump.headbar"));
-        unpackConfigGroup(2, 73, Config73Unpacker::unpack, root.resolve("config/dump.config73"));
+        unpackConfigGroup(2, 73, BugTemplateUnpacker::unpack, root.resolve("config/dump.config73"));
         unpackConfigGroup(2, 76, WaterUnpacker::unpack, root.resolve("config/dump.water"));
         unpackConfigGroup(2, 77, SeqGroupUnpacker::unpack, root.resolve("config/dump.seqgroup"));
         unpackConfigGroup(2, 83, WorldAreaUnpacker::unpack, root.resolve("config/dump.worldarea"));
@@ -197,7 +211,7 @@ public class Unpack {
         unpackInterfaces(3, InterfaceUnpacker::unpack, root.resolve("interface"));
 
         // materials
-        unpackConfigArchive(9, 0, TextureUnpacker::unpack, Path.of("unpacked/config/dump.texture"));
+        unpackConfigArchive(9, 0, TextureUnpacker::unpack, root.resolve("config/dump.texture"));
 
         // other
         unpackConfigArchive(60, 0, StylesheetUnpacker::unpack, root.resolve("config/dump.stylesheet"));
@@ -214,8 +228,23 @@ public class Unpack {
         unpackArchiveTransformed(66, b -> GSON_PRETTY.toJson(new Cutscene2D(new Packet(b))), root.resolve("cutscene2d"), ".json");
 
         // maps
-        unpackMaps(root);
+//        unpackMaps(root);
         unpackWorldAreaMap(root);
+    }
+
+    public static void unpackLegacy(Path root) throws IOException {
+        Files.createDirectories(root);
+        Files.createDirectories(root.resolve("config"));
+        var config = new Jagfile(PROVIDER.get(0, 2, false, 0));
+        unpackLegacyConfig(config, "idk", IDKUnpacker::unpack, root.resolve("config/dump.idk"));
+        unpackLegacyConfig(config, "flo", FloorOverlayUnpacker::unpack, root.resolve("config/dump.flo"));
+        unpackLegacyConfig(config, "loc", LocUnpacker::unpack, root.resolve("config/dump.loc"));
+        unpackLegacyConfig(config, "mesanim", MesAnimUnpacker::unpack, root.resolve("config/dump.mesanim"));
+        unpackLegacyConfig(config, "npc", NPCUnpacker::unpack, root.resolve("config/dump.npc"));
+        unpackLegacyConfig(config, "obj", ObjUnpacker::unpack, root.resolve("config/dump.obj"));
+        unpackLegacyConfig(config, "param", ParamUnpacker::unpack, root.resolve("config/dump.param"));
+        unpackLegacyConfig(config, "seq", SeqUnpacker::unpack, root.resolve("config/dump.seq"));
+        unpackLegacyConfig(config, "spotanim", EffectAnimUnpacker::unpack, root.resolve("config/dump.spotanim"));
     }
 
     private static void unpackLegacyConfig(Jagfile jagfile, String name, BiFunction<Integer, byte[], List<String>> unpacker, Path path) throws IOException {
@@ -250,13 +279,13 @@ public class Unpack {
     }
 
     private static void loadGroupNames(Path path, int archive, Map<Integer, String> names) throws IOException {
-        if (!Files.exists(BASE_PATH.resolve("255/" + archive + ".dat"))) {
-            return;
+        if (archive >= MASTER_INDEX.getArchiveCount() || MASTER_INDEX.getArchiveData(archive).getCrc() == 0) {
+            return; // empty archives don't get packed
         }
 
         var unhash = new HashMap<Integer, String>();
         generateNames(path, unhash);
-        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
 
         if (archiveIndex.groupNameHash == null) {
             return; // clientscript names disabled in some older revs
@@ -272,23 +301,23 @@ public class Unpack {
     }
 
     private static void loadGroupNamesScriptTrigger(int archive, Map<Integer, String> names) throws IOException {
-        if (!Files.exists(BASE_PATH.resolve("255/" + archive + ".dat"))) {
-            return;
+        if (archive >= MASTER_INDEX.getArchiveCount() || MASTER_INDEX.getArchiveData(archive).getCrc() == 0) {
+            return; // empty archives don't get packed
         }
 
-        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
 
         if (archiveIndex.groupNameHash == null) {
             return; // clientscript names disabled in some older revs
         }
 
-        var archiveIndexConfig = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + 2 + ".dat"))));
-        var archiveIndexInterface = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + 3 + ".dat"))));
+        var archiveIndexConfig = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, 2, false, 0)));
+        var archiveIndexInterface = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, 3, false, 0)));
         var maxMapElement = 0;
         var maxCutscene = 0;
 
         if (archiveIndexConfig.groupMaxFileId.length > 35) {
-            maxCutscene = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + 35 + ".dat")))).groupArraySize;
+            maxCutscene = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, 35, false, 0))).groupArraySize;
         }
 
         if (archiveIndexConfig.groupMaxFileId.length > 36) {
@@ -382,14 +411,15 @@ public class Unpack {
     }
 
     private static void unpackScripts(int archive, Path path) throws IOException {
-        if (!Files.exists(BASE_PATH.resolve("255/" + archive + ".dat"))) {
-            return;
+        if (archive >= MASTER_INDEX.getArchiveCount() || MASTER_INDEX.getArchiveData(archive).getCrc() == 0) {
+            return; // empty archives don't get packed
         }
 
-        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
+        var groups = preloadGroups(archive);
 
         for (var group : archiveIndex.groupId) {
-            var files = Js5Util.unpackGroup(archiveIndex, group, Files.readAllBytes(BASE_PATH.resolve(archive + "/" + group + ".dat")));
+            var files = Js5Util.unpackGroup(archiveIndex, group, groups[group]);
 
             for (var file : files.keySet()) {
                 ScriptUnpacker.load(group, files.get(file));
@@ -403,6 +433,26 @@ public class Unpack {
             lines.addFirst("// " + group);
             Files.write(path.resolve(Unpacker.getScriptName(group) + ".cs2"), lines);
         }
+    }
+
+    private static byte[][] preloadGroups(int id) {
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, id, false, 0)));
+        var groups = new byte[archiveIndex.groupArraySize][];
+
+        try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+            for (int group : archiveIndex.groupId) {
+                scope.fork(() -> {
+                    groups[group] = PROVIDER.get(id, group, false, 0);
+                    return null;
+                });
+            }
+
+            scope.join().throwIfFailed();
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return groups;
     }
 
     private static void unpackMaps(Path root) throws IOException {
@@ -446,15 +496,15 @@ public class Unpack {
     }
 
     private static void unpackArchive(int archive, Path path, String extension) throws IOException {
-        if (!Files.exists(BASE_PATH.resolve("255/" + archive + ".dat"))) {
-            return;
+        if (archive >= MASTER_INDEX.getArchiveCount() || MASTER_INDEX.getArchiveData(archive).getCrc() == 0) {
+            return; // empty archives don't get packed
         }
 
         Files.createDirectories(path);
-        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
 
         for (var group : archiveIndex.groupId) {
-            var files = Js5Util.unpackGroup(archiveIndex, group, Files.readAllBytes(BASE_PATH.resolve(archive + "/" + group + ".dat")));
+            var files = Js5Util.unpackGroup(archiveIndex, group, PROVIDER.get(archive, group, false, 0));
 
             if (files.size() == 1 && files.containsKey(0)) {
                 Files.write(path.resolve(group + extension), files.get(0));
@@ -470,15 +520,15 @@ public class Unpack {
     }
 
     private static void unpackArchiveTransformed(int archive, Function<byte[], String> unpack, Path path, String extension) throws IOException {
-        if (!Files.exists(BASE_PATH.resolve("255/" + archive + ".dat"))) {
-            return;
+        if (archive >= MASTER_INDEX.getArchiveCount() || MASTER_INDEX.getArchiveData(archive).getCrc() == 0) {
+            return; // empty archives don't get packed
         }
 
         Files.createDirectories(path);
-        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
 
         for (var group : archiveIndex.groupId) {
-            var files = Js5Util.unpackGroup(archiveIndex, group, Files.readAllBytes(BASE_PATH.resolve(archive + "/" + group + ".dat")));
+            var files = Js5Util.unpackGroup(archiveIndex, group, PROVIDER.get(archive, group, false, 0));
 
             if (files.size() == 1 && files.containsKey(0)) {
                 Files.writeString(path.resolve(group + extension), unpack.apply(files.get(0)));
@@ -494,32 +544,22 @@ public class Unpack {
     }
 
     private static void iterateArchiveGroups(int archive, BiConsumer<Integer, Map<Integer, byte[]>> unpack) throws IOException {
-        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
 
         for (var group : archiveIndex.groupId) {
-            var files = Js5Util.unpackGroup(archiveIndex, group, Files.readAllBytes(BASE_PATH.resolve(archive + "/" + group + ".dat")));
+            var files = Js5Util.unpackGroup(archiveIndex, group, PROVIDER.get(archive, group, false, 0));
             unpack.accept(group, files);
         }
     }
 
-    private static void unpackGroup(int archive, int group, Path path, String extension) throws IOException {
-        Files.createDirectories(path);
-        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
-        var files = Js5Util.unpackGroup(archiveIndex, group, Files.readAllBytes(BASE_PATH.resolve(archive + "/" + group + ".dat")));
-
-        for (var file : files.keySet()) {
-            Files.write(path.resolve(file + extension), files.get(file));
-        }
-    }
-
     private static void unpackGroupTransformed(int archive, int group, Function<byte[], String> unpack, Path path, String extension) throws IOException {
-        if (!Files.exists(BASE_PATH.resolve("255/" + archive + ".dat"))) {
-            return;
+        if (archive >= MASTER_INDEX.getArchiveCount() || MASTER_INDEX.getArchiveData(archive).getCrc() == 0) {
+            return; // empty archives don't get packed
         }
 
         Files.createDirectories(path);
-        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
-        var files = Js5Util.unpackGroup(archiveIndex, group, Files.readAllBytes(BASE_PATH.resolve(archive + "/" + group + ".dat")));
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
+        var files = Js5Util.unpackGroup(archiveIndex, group, PROVIDER.get(archive, group, false, 0));
 
         for (var file : files.keySet()) {
             Files.writeString(path.resolve(file + extension), unpack.apply(files.get(file)));
@@ -528,10 +568,10 @@ public class Unpack {
 
     private static void iterateArchive(int archive, BiConsumer<Integer, byte[]> unpack) throws IOException {
         var lines = new ArrayList<String>();
-        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
 
         for (var group : archiveIndex.groupId) {
-            var files = Js5Util.unpackGroup(archiveIndex, group, Files.readAllBytes(BASE_PATH.resolve(archive + "/" + group + ".dat")));
+            var files = Js5Util.unpackGroup(archiveIndex, group, PROVIDER.get(archive, group, false, 0));
 
             if (files.size() == 1 && files.containsKey(0)) {
                 unpack.accept(group, files.get(0));
@@ -543,10 +583,10 @@ public class Unpack {
 
     private static void iterateGroup(int archive, BiConsumer<Integer, byte[]> unpack) throws IOException {
         var lines = new ArrayList<String>();
-        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
 
         for (var group : archiveIndex.groupId) {
-            var files = Js5Util.unpackGroup(archiveIndex, group, Files.readAllBytes(BASE_PATH.resolve(archive + "/" + group + ".dat")));
+            var files = Js5Util.unpackGroup(archiveIndex, group, PROVIDER.get(archive, group, false, 0));
 
             if (files.size() == 1 && files.containsKey(0)) {
                 unpack.accept(group, files.get(0));
@@ -557,9 +597,9 @@ public class Unpack {
     }
 
     private static void iterateGroupFiles(int archive, int group, BiConsumer<Integer, byte[]> unpack) throws IOException {
-        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
 
-        var files = Js5Util.unpackGroup(archiveIndex, group, Files.readAllBytes(BASE_PATH.resolve(archive + "/" + group + ".dat")));
+        var files = Js5Util.unpackGroup(archiveIndex, group, PROVIDER.get(archive, group, false, 0));
 
         for (var file : files.keySet()) {
             unpack.accept(file, files.get(file));
@@ -568,17 +608,17 @@ public class Unpack {
 
     private static void unpackConfigGroup(int archive, int group, BiFunction<Integer, byte[], List<String>> unpack, Path result) throws IOException {
         var lines = new ArrayList<String>();
-        if (!Files.exists(BASE_PATH.resolve("255/" + archive + ".dat"))) {
-            return;
+        if (archive >= MASTER_INDEX.getArchiveCount() || MASTER_INDEX.getArchiveData(archive).getCrc() == 0) {
+            return; // empty archives don't get packed
         }
 
-        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
 
-        if (!Files.exists(BASE_PATH.resolve(archive + "/" + group + ".dat"))) {
-            return;
+        if (Arrays.binarySearch(archiveIndex.groupId, group) < 0) {
+            return; // empty groups don't get packed
         }
 
-        var files = Js5Util.unpackGroup(archiveIndex, group, Files.readAllBytes(BASE_PATH.resolve(archive + "/" + group + ".dat")));
+        var files = Js5Util.unpackGroup(archiveIndex, group, PROVIDER.get(archive, group, false, 0));
 
         for (var file : files.keySet()) {
             lines.addAll(unpack.apply(file, files.get(file)));
@@ -591,17 +631,17 @@ public class Unpack {
     private static void unpackDefaults(int archive, int group, BiFunction<Integer, byte[], List<String>> unpack, Path result) throws IOException {
         var lines = new ArrayList<String>();
 
-        if (!Files.exists(BASE_PATH.resolve("255/" + archive + ".dat"))) {
-            return;
+        if (archive >= MASTER_INDEX.getArchiveCount() || MASTER_INDEX.getArchiveData(archive).getCrc() == 0) {
+            return; // empty archives don't get packed
         }
 
-        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
 
-        if (!Files.exists(BASE_PATH.resolve(archive + "/" + group + ".dat"))) {
-            return;
+        if (Arrays.binarySearch(archiveIndex.groupId, group) < 0) {
+            return; // empty groups don't get packed
         }
 
-        var files = Js5Util.unpackGroup(archiveIndex, group, Files.readAllBytes(BASE_PATH.resolve(archive + "/" + group + ".dat")));
+        var files = Js5Util.unpackGroup(archiveIndex, group, PROVIDER.get(archive, group, false, 0));
 
         for (var file : files.keySet()) {
             lines.addAll(unpack.apply(file, files.get(file)));
@@ -612,15 +652,16 @@ public class Unpack {
     }
 
     private static void unpackConfigArchive(int archive, int bits, BiFunction<Integer, byte[], List<String>> unpack, Path result) throws IOException {
-        if (!Files.exists(BASE_PATH.resolve("255/" + archive + ".dat"))) {
-            return;
+        if (archive >= MASTER_INDEX.getArchiveCount() || MASTER_INDEX.getArchiveData(archive).getCrc() == 0) {
+            return; // empty archives don't get packed
         }
 
         var lines = new ArrayList<String>();
-        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
+        var groups = preloadGroups(archive);
 
         for (var group : archiveIndex.groupId) {
-            var files = Js5Util.unpackGroup(archiveIndex, group, Files.readAllBytes(BASE_PATH.resolve(archive + "/" + group + ".dat")));
+            var files = Js5Util.unpackGroup(archiveIndex, group, groups[group]);
 
             for (var file : files.keySet()) {
                 lines.addAll(unpack.apply((group << bits) + file, files.get(file)));
@@ -632,10 +673,11 @@ public class Unpack {
     }
 
     private static void unpackInterfaces(int archive, BiFunction<Integer, byte[], List<String>> unpack, Path result) throws IOException {
-        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
+        var groups = preloadGroups(archive);
 
         for (var group : archiveIndex.groupId) {
-            var files = Js5Util.unpackGroup(archiveIndex, group, Files.readAllBytes(BASE_PATH.resolve(archive + "/" + group + ".dat")));
+            var files = Js5Util.unpackGroup(archiveIndex, group, groups[group]);
             var lines = new ArrayList<String>();
 
             for (var file : files.keySet()) {
@@ -649,10 +691,10 @@ public class Unpack {
 
     private static void unpackArchive(int archive, BiFunction<Integer, byte[], List<String>> unpack, Path result) throws IOException {
         var lines = new ArrayList<String>();
-        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve("255/" + archive + ".dat"))));
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
 
         for (var group : archiveIndex.groupId) {
-            var file = Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve(archive + "/" + group + ".dat")));
+            var file = Js5Util.decompress(PROVIDER.get(archive, group, false, 0));
             lines.addAll(unpack.apply(group, file));
             lines.add("");
         }
@@ -661,6 +703,6 @@ public class Unpack {
     }
 
     private static byte[] get(int archive, int group) throws IOException {
-        return Js5Util.decompress(Files.readAllBytes(BASE_PATH.resolve(archive + "/" + group + ".dat")));
+        return Js5Util.decompress(PROVIDER.get(archive, group, false, 0));
     }
 }

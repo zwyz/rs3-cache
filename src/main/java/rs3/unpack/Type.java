@@ -227,11 +227,13 @@ public enum Type {
     TYPE_SPECIAL_50(-1, '*', null),
     // === 910 end ===
 
+    // unknown id - new
+    UNKNOWN2(-1, 0, BaseVarType.INTEGER), // todo: id
+
     // unknown id - server only
     MESANIM,
     UNDERLAY,
     OVERLAY,
-    CONFIG73,
     LIGHT,
     WATER,
     BILLBOARD,

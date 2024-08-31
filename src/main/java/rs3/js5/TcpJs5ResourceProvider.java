@@ -22,24 +22,22 @@ public class TcpJs5ResourceProvider implements Js5ResourceProvider, AutoCloseabl
     private final int subversion;
     private final String token;
     private final int language;
-    private final int unknown;
     private Socket socket;
     private final Queue<GroupRequest> unsentRequests = new LinkedBlockingQueue<>();
-    private final Map<ArchiveGroup, GroupRequest> responses = new ConcurrentHashMap<>();
-    private boolean connected;
+    private final Map<ArchiveGroup, GroupRequest> sentRequests = new ConcurrentHashMap<>();
     private boolean shutdownRequested = false;
     private final ReentrantReadWriteLock shutdownRequestedLock = new ReentrantReadWriteLock();
+    private long lastResponseTime = Long.MAX_VALUE;
 
-    public TcpJs5ResourceProvider(String host, int port, String token, int version, int subversion, int language, int unknown) {
+    public TcpJs5ResourceProvider(String host, int port, String token, int version, int subversion, int language) {
         this.host = host;
         this.port = port;
         this.token = token;
         this.version = version;
         this.subversion = subversion;
         this.language = language;
-        this.unknown = unknown;
 
-        Thread.ofPlatform().start(() -> {
+        Thread.ofPlatform().daemon().start(() -> {
             try {
                 processRequests();
             } catch (IOException | InterruptedException e) {
@@ -48,21 +46,40 @@ public class TcpJs5ResourceProvider implements Js5ResourceProvider, AutoCloseabl
         });
     }
 
-    public static TcpJs5ResourceProvider create(String host, int port, String token, int version, int subversion, int language, int unknown) {
-        return new TcpJs5ResourceProvider(host, port, token, version, subversion, language, unknown);
+    public static TcpJs5ResourceProvider create(String host, int port, String token, int version, int subversion, int language) {
+        return new TcpJs5ResourceProvider(host, port, token, version, subversion, language);
     }
 
     public void processRequests() throws IOException, InterruptedException {
-        ensureConnected();
+        connect();
 
         while (true) {
-            while (responses.size() < MAX_PENDING_REQUESTS && !unsentRequests.isEmpty()) {
+            if (lastResponseTime < System.currentTimeMillis() - 30000 && (!sentRequests.isEmpty() || !unsentRequests.isEmpty())) {
+                lastResponseTime = System.currentTimeMillis();
+
+                for (var request : sentRequests.values()) {
+                    request.buffer = null;
+                    unsentRequests.add(request);
+                }
+
+                sentRequests.clear();
+                socket.close();
+                connect();
+            }
+
+            while (sentRequests.size() < MAX_PENDING_REQUESTS && !unsentRequests.isEmpty()) {
                 var request = unsentRequests.poll();
-                responses.put(new ArchiveGroup(request.archive, request.group), request);
-                requestUrgent(request.archive, request.group, 0);
+                sentRequests.put(new ArchiveGroup(request.archive, request.group), request);
+
+                if (!request.urgent) {
+                    sendRequestPrefetch(request.archive, request.group, request.priority);
+                } else {
+                    sendRequestUrgent(request.archive, request.group, request.priority);
+                }
             }
 
             if (socket.getInputStream().available() > 0) {
+                lastResponseTime = System.currentTimeMillis();
                 handleResponse();
             }
 
@@ -70,37 +87,34 @@ public class TcpJs5ResourceProvider implements Js5ResourceProvider, AutoCloseabl
         }
     }
 
-    private void ensureConnected() throws IOException {
-        if (!connected) {
-            socket = new Socket(host, port);
-            socket.setTcpNoDelay(true);
-            socket.setReceiveBufferSize(10_000_000);
+    private void connect() throws IOException {
+        socket = new Socket(host, port);
+        socket.setTcpNoDelay(true);
+        socket.setReceiveBufferSize(10_000_000);
 
-            var packet = Packet.create(1 + 1 + 4 + 4 + token.length() + 1 + 1);
-            packet.p1(15);
-            packet.p1(9 + token.length() + 1);
-            packet.p4(version);
-            packet.p4(subversion);
-            packet.pjstr(token);
-            packet.p1(language);
-            send(packet);
+        var packet = Packet.create(1 + 1 + 4 + 4 + token.length() + 1 + 1);
+        packet.p1(15);
+        packet.p1(9 + token.length() + 1);
+        packet.p4(version);
+        packet.p4(subversion);
+        packet.pjstr(token);
+        packet.p1(language);
+        send(packet);
 
-            var status = receive(1).g1();
+        var status = receive(1).g1();
 
-            if (status != 0) {
-                // 6 = client out of date
-                // 48 = wrong param29
-                // 252 = not a content server
-                throw new IOException("failed to connect " + status);
-            }
-
-            sendConnected(5, version);
-            sendLoggedOut();
-            connected = true;
+        if (status != 0) {
+            // 6 = client out of date
+            // 48 = wrong param29
+            // 252 = not a content server
+            throw new IOException("failed to connect " + status);
         }
+
+        sendConnected(5, version);
+        sendLoggedOut();
     }
 
-    private void requestPrefetch(int archive, int group, int priority) throws IOException {
+    private void sendRequestPrefetch(int archive, int group, int priority) throws IOException {
         var request = Packet.create(10);
         request.clear();
         request.p1(0 + (priority << 4));
@@ -109,7 +123,7 @@ public class TcpJs5ResourceProvider implements Js5ResourceProvider, AutoCloseabl
         send(request);
     }
 
-    private void requestUrgent(int archive, int group, int priority) throws IOException {
+    private void sendRequestUrgent(int archive, int group, int priority) throws IOException {
         var request = Packet.create(10);
         request.p1(1 + (priority << 4));
         request.p1(archive);
@@ -153,9 +167,9 @@ public class TcpJs5ResourceProvider implements Js5ResourceProvider, AutoCloseabl
     public void handleResponse() throws IOException {
         var packet = receive(5);
         var archive = packet.g1();
-        var group = packet.g4s();
+        var group = packet.g4s() & 0x7fffffff;
 
-        var response = responses.get(new ArchiveGroup(archive, group));
+        var response = sentRequests.get(new ArchiveGroup(archive, group));
 
         if (response == null) {
             throw new IOException("received a group that wasn't asked for: archive = " + archive + " group = " + group);
@@ -174,7 +188,7 @@ public class TcpJs5ResourceProvider implements Js5ResourceProvider, AutoCloseabl
         response.buffer.put(receive(Math.min(response.buffer.remaining(), BLOCK_SIZE - response.buffer.position() % BLOCK_SIZE)).arr);
 
         if (response.buffer.remaining() == 0) {
-            responses.remove(new ArchiveGroup(archive, group));
+            sentRequests.remove(new ArchiveGroup(archive, group));
             response.future.complete(response.buffer.array());
         }
     }
@@ -195,8 +209,8 @@ public class TcpJs5ResourceProvider implements Js5ResourceProvider, AutoCloseabl
     }
 
     @Override
-    public byte[] get(int archive, int group) {
-        var future = getAsync(archive, group);
+    public byte[] get(int archive, int group, boolean urgent, int priority) {
+        var future = getAsync(archive, group, urgent, priority);
 
         try {
             return future.get();
@@ -207,7 +221,7 @@ public class TcpJs5ResourceProvider implements Js5ResourceProvider, AutoCloseabl
         }
     }
 
-    public CompletableFuture<byte[]> getAsync(int archive, int group) {
+    public CompletableFuture<byte[]> getAsync(int archive, int group, boolean urgent, int priority) {
         shutdownRequestedLock.readLock().lock();
 
         try {
@@ -215,7 +229,7 @@ public class TcpJs5ResourceProvider implements Js5ResourceProvider, AutoCloseabl
                 return CompletableFuture.failedFuture(new IOException("resource provider has been shutdown"));
             } else {
                 var future = new CompletableFuture<byte[]>();
-                unsentRequests.add(new GroupRequest(archive, group, future));
+                unsentRequests.add(new GroupRequest(archive, group, urgent, future, priority));
                 return future;
             }
         } finally {
@@ -237,14 +251,20 @@ public class TcpJs5ResourceProvider implements Js5ResourceProvider, AutoCloseabl
         private final int archive;
         private final int group;
         private final CompletableFuture<byte[]> future;
+        private final boolean urgent;
+        private final int priority;
         private ByteBuffer buffer;
 
-        public GroupRequest(int archive, int group, CompletableFuture<byte[]> future) {
+        public GroupRequest(int archive, int group, boolean urgent, CompletableFuture<byte[]> future, int priority) {
             this.archive = archive;
             this.group = group;
             this.future = future;
+            this.urgent = urgent;
+            this.priority = priority;
         }
     }
 
-    private record ArchiveGroup(int archive, int group) {}
+    private record ArchiveGroup(int archive, int group) {
+
+    }
 }

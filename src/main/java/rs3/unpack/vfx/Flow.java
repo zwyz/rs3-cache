@@ -15,6 +15,7 @@ public class Flow extends Module {
     public float unknown8;
     public float unknown9;
     public float unknown11;
+    public float unknown12;
 
     public Flow(Packet packet, int version) {
         flags = packet.g1();
@@ -27,6 +28,10 @@ public class Flow extends Module {
 
         if (version >= 3) {
             unknown10 = packet.gFloat();
+        }
+
+        if (version >= 7) {
+            unknown12 = packet.gFloat();
         }
 
         lifetimeStart = packet.gFloat();

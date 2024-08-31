@@ -13,8 +13,9 @@ public class FlowShape {
     public float width;
 
     public FlowShape(Packet packet) {
-        int shapeId = packet.g1();
-        kind = switch (shapeId) {
+        int kindID = packet.g1();
+
+        kind = switch (kindID) {
             case 0 -> FlowShapeType.NONE;
             case 1 -> FlowShapeType.LINE;
             case 2 -> FlowShapeType.PLANE;
@@ -23,8 +24,9 @@ public class FlowShape {
             case 5 -> FlowShapeType.CONE;
             case 6 -> FlowShapeType.SPHERE;
             case 7 -> FlowShapeType.HEMISPHERE;
-            default -> throw new IllegalStateException("unknown type " + packet.g1());
+            default -> throw new IllegalStateException("unknown kind " + kindID);
         };
+
         unknown1 = packet.g1() == 1;
         position = new Vector3(packet);
         rotation = new Vector3(packet);

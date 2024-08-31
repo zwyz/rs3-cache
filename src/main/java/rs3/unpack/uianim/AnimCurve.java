@@ -1,4 +1,4 @@
-package rs3.unpack.uianim;
+package rs3.unpack.ui_anim;
 
 import rs3.util.Packet;
 

@@ -23,6 +23,19 @@ public class Unpacker {
     // Unconfirmed exact version due to gap in caches. Synths were converted to vorbis sometime between 754-759
     public static final Type CONFIG_SOUND_TYPE = Unpack.VERSION < 754 ? Type.SYNTH : Type.VORBIS;
 
+    public static void reset() {
+        PARAM_TYPE.clear();
+        DBCOLUMN_TYPE.clear();
+        VAR_TYPE.clear();
+        VARBIT_DOMAIN.clear();
+        ENUM_INPUT_TYPE.clear();
+        ENUM_OUTPUT_TYPE.clear();
+        SCRIPT_NAMES.clear();
+        GRAPHIC_NAMES.clear();
+        WMA_NAMES.clear();
+        STYLESHEET_NAMES.clear();
+    }
+
     public static String format(Type type, int value) {
         return switch (type) {
             case INT -> String.valueOf(value);

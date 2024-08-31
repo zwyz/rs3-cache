@@ -32,7 +32,7 @@
 [command,abs](int $x1)(int)
 [command,easing](int $x1,int $x2,int $x3,int $x4,int $x5,int $x6,int $x7)(int)
 [command,easing_bezier](int $x1,int $x2,int $x3,int $x4,int $x5,int $x6,int $x7,int $x8,int $x9,int $x10)(int)
-[command,easing_animcurve](animcurve $x1,int $x2,int $x3,int $x4,int $x5,int $x6,int $x7)(int)
+[command,easing_animcurve](ui_anim_curve $x1,int $x2,int $x3,int $x4,int $x5,int $x6,int $x7)(int)
 [command,int_to_long](int $x1)(long)
 [command,long_pack](int $x1,int $x2)(long)
 [command,long_unpack](long $x1)(int,int)

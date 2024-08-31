@@ -2,7 +2,7 @@
 [command,seq_param]todo
 [command,seqlength](seq $x1)(int)
 [command,nc_param]todo
-[command,nc_get_multivar](npc $x1)(var_reference_int)
+[command,nc_get_multivar](npc $x1)(var_int)
 [command,lc_param]todo
-[command,lc_get_multivar](loc $x1)(var_reference_int)
+[command,lc_get_multivar](loc $x1)(var_int)
 [command,bas_getanim_ready](bas $x1)(seq)

@@ -21,8 +21,7 @@ public class OpenRS2Js5ResourceProvider implements Js5ResourceProvider {
     }
 
     @Override
-    public byte[] get(int archive, int group) {
-
+    public byte[] get(int archive, int group, boolean urgent, int priority) {
         try {
             semaphore.acquire();
             var response = HTTP.send(HttpRequest.newBuilder(URI.create("https://archive.openrs2.org/caches/" + scope + "/" + id + "/archives/" + archive + "/groups/" + group + ".dat")).build(), HttpResponse.BodyHandlers.ofByteArray());
@@ -39,10 +38,5 @@ public class OpenRS2Js5ResourceProvider implements Js5ResourceProvider {
         } finally {
             semaphore.release();
         }
-    }
-
-    @Override
-    public void close() {
-
     }
 }

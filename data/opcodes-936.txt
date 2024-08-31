@@ -2164,7 +2164,7 @@ cc_hideop_setnamefilter,1576
 cc_hideop_getnamefilter,111
 cc_prioritiseop_reset,959
 cc_prioritiseop_set,772
-cc_prioaritiseop_get,1633
+cc_prioritiseop_get,1633
 cc_prioritiseop_setnamefilter,1896
 cc_prioritiseop_getnamefilter,17
 if_hideop_reset,1053

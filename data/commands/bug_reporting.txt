@@ -1,1 +1,1 @@
-[command,bug_report](int $x1,string $x2,string $x3)
+[command,bug_report](bugtemplate $x1,string $x2,string $x3)

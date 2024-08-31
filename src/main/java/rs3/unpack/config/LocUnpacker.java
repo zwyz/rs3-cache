@@ -297,7 +297,7 @@ public class LocUnpacker {
             case 171 -> lines.add("unknown171=" + packet.gSmart1or2());
             case 173 -> lines.add("bgsoundrate=" + packet.g2() + "," + packet.g2());
             case 177 -> lines.add("unknown177=yes");
-            case 178 -> lines.add("bgsoundsize=" + packet.g1());
+            case 178 -> lines.add("bgsounddropoffrange=" + packet.g1());
             case 179 -> lines.add("unknown179=yes"); // todo: bgsound
             case 186 -> lines.add("unknown186=" + packet.g1());
             case 188 -> lines.add("unknown188=yes");

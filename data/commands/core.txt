@@ -40,4 +40,4 @@
 [command,branch_if_true](unknown_int $x1)
 [command,branch_if_false](unknown_int $x1)
 [command,opcount]()(int)
-[command,var_reference_get](var_reference_int $x1)(int)
+[command,var_reference_get](var_int $x1)(int)
