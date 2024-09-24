@@ -42,9 +42,9 @@ public class Unpack {
     public static final Gson GSON_PRETTY = new GsonBuilder().serializeSpecialFloatingPointValues().setPrettyPrinting().create();
 
     public static void main(String[] args) throws IOException, InterruptedException {
-//        unpackLive("unpacked/live", 937, 1, 0, "content.runescape.com", 43594, ClientTokenProvider.getClientToken());
+        unpackLive("unpacked/live", 938, 1, 0, "content.runescape.com", 43594, ClientTokenProvider.getClientToken());
 //        unpackOpenRS2("unpacked/2024-06-03", 936, "runescape", 1815);
-        unpackOpenRS2("unpacked/2024-05-28", 935, "runescape", 1806);
+//        unpackOpenRS2("unpacked/2024-05-28", 935, "runescape", 1806);
     }
 
     public static void unpackOpenRS2(String path, int version, String scope, int id) throws IOException {

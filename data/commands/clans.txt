@@ -1,4 +1,5 @@
 [command,activeclanchannel_find_affined]()(boolean)
+[command,activeclanchannel_find_affined](int $x1)(boolean) 938
 [command,activeclanchannel_find_listened]()(boolean)
 [command,activeclanchannel_getclanname]()(string)
 [command,activeclanchannel_getrankkick]()(int)
@@ -11,6 +12,7 @@
 [command,activeclanchannel_getuserworld](int $x1)(int)
 [command,activeclanchannel_kickuser](int $x1)
 [command,activeclansettings_find_affined]()(boolean)
+[command,activeclansettings_find_affined](int $x1)(boolean) 938
 [command,activeclansettings_find_listened]()(boolean)
 [command,activeclansettings_getaffinedcount]()(int)
 [command,activeclansettings_getaffineddisplayname](int $x1)(string)
@@ -31,6 +33,8 @@
 [command,activeclansettings_getreplacementowner_slot]()(int)
 [command,activeclansettings_getsortedaffinedslot](int $x1)(int)
 [command,affinedclansettings_addbanned_fromchannel](int $x1)
+[command,affinedclansettings_addbanned_fromchannel](int $x1,int $x2) 938
 [command,affinedclansettings_setmuted_fromchannel](int $x1,boolean $x2)
+[command,affinedclansettings_setmuted_fromchannel](int $x1,int $x2,boolean $x3) 938
 [command,clanforumqfc_tostring](clanforumqfc $x1)(string)
 [command,clanprofile_find]()(boolean)

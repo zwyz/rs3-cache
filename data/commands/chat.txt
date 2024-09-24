@@ -7,6 +7,7 @@
 [command,chat_setfilter](chatfilter $x1,chatfilter $x2,chatfilter $x3)
 [command,chat_gethistory_bytypeandline](chattype $x1,int $x2)(int,string,int,string,string,string,string,int,string,int)
 [command,chat_gethistory_byuid](int $x1)(chattype,string,int,string,string,string,string,chatphrase,string,int)
+[command,chat_gethistory_byuid](int $x1)(chattype,string,int,string,string,string,string,chatphrase,string,int,int) 938
 [command,chat_lastuid]()(int)
 [command,chat_clear]
 [command,chat_gethistorylength]()(int)
@@ -14,12 +15,14 @@
 [command,chat_getnextuid](int $x1)(int)
 [command,chat_getprevuid](int $x1)(int)
 [command,chat_setmode](int $x1)
+[command,chat_setmode_affined_clan](int $x1)
 [command,chat_sendpublic](string $x1)
 [command,chat_sendprivate](string $x1,string $x2)
 [command,chat_sendabusereport](string $x1,int $x2,boolean $x3)
 [command,chat_sendabusereport](string $x1,int $x2,boolean $x3,string $x4) 550
 [command,activechatphrase_prepare](chatphrase $x1)
 [command,activechatphrase_send](int $x1)
+[command,activechatphrase_send] 938
 [command,activechatphrase_sendprivate](string $x1)
 [command,activechatphrase_setdynamicint](int $x1,int $x2)
 [command,activechatphrase_setdynamicobj](int $x1,obj $x2)

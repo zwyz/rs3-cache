@@ -349,9 +349,15 @@ public class CodeFormatter {
                     var arguments = expression.arguments.stream().map(CodeFormatter::format).collect(Collectors.joining(", "));
 
                     if (ScriptUnpacker.FORMAT_HOOKS && expression.command.hasHook()) {
-                        var hookStart = 0;
-                        var hookEnd = expression.arguments.size() - (expression.command.arguments.size() - 1);
-                        arguments = formatHook(expression.arguments.subList(hookStart, hookEnd));
+                        var hookStart = expression.command.arguments.indexOf(Type.HOOK);
+                        var hookEnd = hookStart + expression.arguments.size() - (expression.command.arguments.size() - 1);
+                        arguments = "";
+
+                        if (hookStart != 0) {
+                            arguments += expression.arguments.subList(0, hookStart).stream().map(CodeFormatter::format).collect(Collectors.joining(", ")) + ", ";
+                        }
+
+                        arguments += formatHook(expression.arguments.subList(hookStart, hookEnd));
 
                         if (expression.arguments.size() != hookEnd) {
                             arguments += ", " + expression.arguments.subList(hookEnd, expression.arguments.size()).stream().map(CodeFormatter::format).collect(Collectors.joining(", "));

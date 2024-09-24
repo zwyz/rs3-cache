@@ -37,8 +37,8 @@ public class TypePropagator {
         }
 
         if (expression.command.hasHook()) {
-            var hookStart = 0;
-            var hookEnd = expression.arguments.size() - (expression.command.arguments.size() - 1);
+            var hookStart = expression.command.arguments.indexOf(Type.HOOK);
+            var hookEnd = hookStart + expression.arguments.size() - (expression.command.arguments.size() - 1);
 
             var otherScript = (int) expression.arguments.get(hookStart++).operand;
             var signature = (String) expression.arguments.get(hookEnd-- - 1).operand;
