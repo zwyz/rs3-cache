@@ -1778,7 +1778,7 @@ steam_setachievement,243
 steam_setstat,839
 steam_storestats,1547
 npc_find,1886
-unknown_command_52,55
+loc_find,55
 loc_name,466
 stylesheet_get_value,1119
 stylesheet_has_value,2002

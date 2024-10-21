@@ -19,7 +19,7 @@
 [command,unknown_command_47]()(boolean)
 [command,highlight_set_npc_show_as_important](int $x1)
 [command,highlight_set_loc_show_as_important](int $x1)
-[command,unknown_command_52](int $x1,int $x2)(boolean)
+[command,loc_find](coord $x1,loc $x2)(boolean)
 [command,loc_name]()(string)
 [command,objstack_find](coord $x1,int $x2,int $x3,int $x4)(boolean)
 [command,objstack_findnext]()(boolean)
