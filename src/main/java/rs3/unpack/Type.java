@@ -229,6 +229,7 @@ public enum Type {
 
     // unknown id - new
     UNKNOWN2(-1, 0, BaseVarType.INTEGER), // todo: id
+    VFX(-1, 0, BaseVarType.INTEGER), // todo: id
 
     // unknown id - server only
     MESANIM,

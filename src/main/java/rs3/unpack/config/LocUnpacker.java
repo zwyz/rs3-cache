@@ -330,7 +330,7 @@ public class LocUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("unknown204=" + packet.g2() + "," + packet.g1() + "," + packet.gFloat() + "," + packet.gFloat() + "," + packet.gFloat() + "," + packet.gFloat() + "," + packet.gFloat() + "," + packet.gFloat());
+                    lines.add("vfx=" + Unpacker.format(Type.VFX, packet.g2()) + "," + packet.g1() + "," + packet.gFloat() + "," + packet.gFloat() + "," + packet.gFloat() + "," + packet.gFloat() + "," + packet.gFloat() + "," + packet.gFloat());
                 }
             }
 
