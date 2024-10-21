@@ -773,6 +773,7 @@ public class Unpacker {
         if (table == 293 && column == 2) return List.of(Type.UNKNOWN_INT); // todo not boolean, not int
         if (table == 293 && column == 5) return List.of(Type.INT); // todo
         if (table == 293 && column == 6) return List.of(Type.VAR_INT, Type.INT); // todo
+        if (table == 303 && column == 0) return List.of(Type.INT); // todo
 
         return Objects.requireNonNull(DBCOLUMN_TYPE.get(new Tuple2<>(table, column)));
     }
