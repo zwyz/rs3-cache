@@ -756,7 +756,18 @@ public class Unpacker {
     }
 
     private static List<Type> getDBColumnType(int table, int column) {
-        if (table == 85 && column == 13) return List.of(Type.NPC);
+        var type = DBCOLUMN_TYPE.get(new Tuple2<>(table, column));
+
+        if (type != null) {
+            return type;
+        }
+
+        if (Unpack.VERSION < 939) {
+            if (table == 85 && column == 13) return List.of(Type.NPC);
+        } else {
+            if (table == 85 && column == 14) return List.of(Type.NPC);
+        }
+
         if (table == 88 && column == 0) return List.of(Type.INT);
         if (table == 119 && column == 0) return List.of(Type.INT, Type.INT);
         if (table == 164 && column == 5) return List.of(Type.COMPONENT);
@@ -775,7 +786,7 @@ public class Unpacker {
         if (table == 293 && column == 6) return List.of(Type.VAR_INT, Type.INT); // todo
         if (table == 303 && column == 0) return List.of(Type.INT); // todo
 
-        return Objects.requireNonNull(DBCOLUMN_TYPE.get(new Tuple2<>(table, column)));
+        throw new RuntimeException("missing dbcolumn type");
     }
 
     public static List<Type> getDBColumnTypeTuple(int table, int column, int tuple) {
