@@ -166,6 +166,7 @@ public class SeqUnpacker {
             case 24 -> lines.add("group=" + Unpacker.format(Type.SEQGROUP, packet.g2()));
             case 25 -> lines.add("keyframeset=" + packet.g2());
             case 26 -> lines.add("keyframerange=" + packet.g2() + "," + packet.g2());
+            case 27 -> lines.add("unknown27=" + packet.g1s());
 
             case 249 -> {
                 var count = packet.g1();
