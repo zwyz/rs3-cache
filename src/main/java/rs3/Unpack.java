@@ -185,7 +185,7 @@ public class Unpack {
         unpackConfigGroup(2, 49, CategoryUnpacker::unpack, root.resolve("config/dump.category")); // client ignores
         unpackConfigGroup(2, 70, GameLogEventUnpacker::unpack, root.resolve("config/dump.gamelogevent")); // client ignores
         unpackConfigGroup(2, 72, HeadbarUnpacker::unpack, root.resolve("config/dump.headbar"));
-        unpackConfigGroup(2, 73, BugTemplateUnpacker::unpack, root.resolve("config/dump.config73"));
+        unpackConfigGroup(2, 73, BugTemplateUnpacker::unpack, root.resolve("config/dump.bugtemplate"));
         unpackConfigGroup(2, 76, WaterUnpacker::unpack, root.resolve("config/dump.water"));
         unpackConfigGroup(2, 77, SeqGroupUnpacker::unpack, root.resolve("config/dump.seqgroup"));
         unpackConfigGroup(2, 83, WorldAreaUnpacker::unpack, root.resolve("config/dump.worldarea"));
