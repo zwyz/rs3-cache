@@ -9,10 +9,11 @@ import java.util.stream.Collectors;
 
 public class CommandUpdater {
     private static final int VERSION = 940;
-    private static final int MODE = 0;
+    private static final int MODE = 1;
+    private static boolean MANGLED = true;
 
     public static void main() throws IOException {
-        var groups = new HashMap<>();
+        var groups = new HashMap<String, String>();
 
         for (var path : Files.list(Path.of("data/commands")).toList()) {
             var group = convertCase(path.getFileName().toString().split("\\.")[0]);
@@ -44,7 +45,17 @@ public class CommandUpdater {
                 System.out.println(name + "," + opcode + "," + handler);
             } else if (MODE == 1) {
                 // update idb
-                System.out.println("set_name(" + handler + ", \"jag::opcode::" + groups.getOrDefault(name, "TODO") + "::" + name + "\")");
+                var group = groups.getOrDefault(name, "TODO");
+
+                if (MANGLED) {
+                    var mangled = "_ZN3jag6opcode" + group.length() + group + name.length() + name + "E";
+                    mangled += "PNS_6ClientE"; // jag::Client*
+                    mangled += "PNS_17ClientScriptStateE"; // jag::ClientScriptState*
+                    System.out.println("set_name(" + handler + ", \"" + mangled + "\")");
+                } else {
+                    System.out.println("set_name(" + handler + ", \"jag::opcode::" + groups.getOrDefault(name, "TODO") + "::" + name + "\")");
+                }
+
                 System.out.println("apply_type(" + handler + ", parse_decl(\"__int64 __fastcall f(jag::Client *client, jag::ClientScriptState *state)\", 0), 1)");
             }
         }
