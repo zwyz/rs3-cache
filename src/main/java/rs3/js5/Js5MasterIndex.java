@@ -1,5 +1,6 @@
 package rs3.js5;
 
+import rs3.Unpack;
 import rs3.util.Packet;
 
 public class Js5MasterIndex {
@@ -14,9 +15,19 @@ public class Js5MasterIndex {
         for (var i = 0; i < archiveCount; i++) {
             var crc = packet.g4s();
             var version = packet.g4s();
-            var groupCount = packet.g4s();
-            var unknown = packet.g4s();
-            var whirlpool = packet.gdata(64);
+            var groupCount = 0;
+            var unknown = 0;
+            var whirlpool = (byte[]) null;
+
+            if (Unpack.VERSION >= 800) {
+                groupCount = packet.g4s();
+                unknown = packet.g4s();
+            }
+
+            if (Unpack.VERSION >= 500) {
+                whirlpool = packet.gdata(64);
+            }
+
             archiveInfo[i] = new Js5MasterIndexArchiveData(crc, groupCount, version, unknown, whirlpool);
         }
 
