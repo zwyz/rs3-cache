@@ -23,7 +23,7 @@
 [command,substring](string $x1,int $x2,int $x3)(string)
 [command,removetags](string $x1)(string)
 [command,string_indexof_char](string $x1,char $x2)(int)
-[command,string_indexof_char](string $x1,char $x2,int $x3)(int) 500
+[command,string_indexof_char](string $x1,char $x2,int $x3)(int) 471
 [command,string_indexof_string](string $x1,string $x2,int $x3)(int)
 [command,char_tolowercase](char $x1)(char)
 [command,char_touppercase](char $x1)(char)

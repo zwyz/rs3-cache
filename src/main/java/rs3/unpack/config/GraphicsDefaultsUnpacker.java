@@ -31,7 +31,7 @@ public class GraphicsDefaultsUnpacker {
                 }
             }
 
-            case 2 -> lines.add("performancemetricsmodel=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 2 -> lines.add("performancemetricsmodel=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
 
             case 3 -> {
                 hitmarkcount = packet.g1();

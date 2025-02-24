@@ -18,7 +18,9 @@
 [command,shader_preload_throttle](int $x1)
 [command,playermember]()(boolean)
 [command,userdetail_quickchat]()(boolean)
-[command,userdetail_lobby_membership]()(int,int,boolean)
+[command,userdetail_lobby_membership]()(int)
+[command,userdetail_lobby_membership]()(int,int) 640
+[command,userdetail_lobby_membership]()(int,int,boolean) 643
 [command,userdetail_lobby_recoveryday]()(int)
 [command,userdetail_lobby_unreadmessages]()(int)
 [command,userdetail_lobby_lastloginday]()(int)

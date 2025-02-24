@@ -28,8 +28,8 @@
 [command,detail_customcursors](boolean $x1)
 [command,detailget_removeroofs_option]()(boolean)
 [command,detail_removeroofs_option](boolean $x1)
-[command,detailget_removeroofs_option]()(int) 800
-[command,detail_removeroofs_option](int $x1) 800
+[command,detailget_removeroofs_option]()(int) 859
+[command,detail_removeroofs_option](int $x1) 859
 [command,detail_removeroofs_option_override](int $x1)
 [command,detailcanmod_dof]()(boolean)
 [command,detailcanset_dof](int $x1)(int)
@@ -118,7 +118,7 @@
 [command,detailget_toolkit_default]()(int)
 [command,detailcanset_toolkit_default](int $x1)(int)
 [command,detail_toolkit_default](int $x1)
-[command,detail_toolkit_default](int $x1,boolean $x2) 600
+[command,detail_toolkit_default](int $x1,boolean $x2) 632
 [command,detailget_toolkit]()(int)
 [command,detail_toolkit](int $x1)
 [command,detail_loadingscreentype](int $x1)
@@ -131,7 +131,7 @@
 [command,detailcanset_particles](int $x1)(int)
 [command,detailget_particles]()(int)
 [command,detail_particles](int $x1)(boolean)
-[command,detail_particles](int $x1) 600
+[command,detail_particles](int $x1) 629
 [command,detailcanmod_buildarea]()(boolean)
 [command,detailcanset_buildarea](int $x1)(int)
 [command,detailget_buildarea]()(int)

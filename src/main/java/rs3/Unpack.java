@@ -48,21 +48,24 @@ public class Unpack {
     }
 
     public static void unpackOpenRS2(String path, int version, String scope, int id) throws IOException {
-        unpack(Path.of(path), version, new MemoryCacheResourceProvider(new FileSystemCacheResourceProvider(
+        VERSION = version;
+
+        unpack(Path.of(path), new MemoryCacheResourceProvider(new FileSystemCacheResourceProvider(
                 Path.of(System.getProperty("user.home") + "/.rscache/rs3"),
                 new OpenRS2Js5ResourceProvider(scope, id))
         ));
     }
 
     public static void unpackLive(String path, int version, int subversion, int language, String host, int port, String token) throws IOException {
-        unpack(Path.of(path), version, new MemoryCacheResourceProvider(new FileSystemCacheResourceProvider(
+        VERSION = version;
+
+        unpack(Path.of(path), new MemoryCacheResourceProvider(new FileSystemCacheResourceProvider(
                 Path.of(System.getProperty("user.home") + "/.rscache/rs3"),
                 new TcpJs5ResourceProvider(host, port, token, version, subversion, language))
         ));
     }
 
-    public static void unpack(Path path, int version, Js5ResourceProvider provider) throws IOException {
-        VERSION = version;
+    public static void unpack(Path path, Js5ResourceProvider provider) throws IOException {
         PROVIDER = provider;
         MASTER_INDEX = new Js5MasterIndex(Js5Util.decompress(PROVIDER.get(255, 255, false, 0)));
         Command.reset(); // todo: make non-static
@@ -88,7 +91,7 @@ public class Unpack {
         loadGroupNames(Path.of("data/names/graphics.txt"), 8, Unpacker.GRAPHIC_NAMES);
 
         // things stuff depends on
-        if (Unpack.VERSION < 700) {
+        if (Unpack.VERSION < 800) {
             unpackConfigGroup(2, 14, VarPlayerBitUnpacker::unpack, root.resolve("config/dump.varbit"));
             unpackConfigGroup(2, 15, VarClientStringUnpacker::unpack, root.resolve("config/dump.varcstr"));
             unpackConfigGroup(2, 16, VarPlayerUnpacker::unpack, root.resolve("config/dump.varp"));
@@ -124,7 +127,7 @@ public class Unpack {
         unpackConfigGroup(2, 4, FloorOverlayUnpacker::unpack, root.resolve("config/dump.flo"));
         unpackConfigGroup(2, 5, InvUnpacker::unpack, root.resolve("config/dump.inv"));
 
-        if (Unpack.VERSION < 500) {
+        if (Unpack.VERSION < 488) {
             unpackConfigGroup(2, 6, LocUnpacker::unpack, root.resolve("config/dump.loc"));
         } else {
             unpackConfigArchive(16, 8, LocUnpacker::unpack, root.resolve("config/dump.loc")); // 6
@@ -132,31 +135,31 @@ public class Unpack {
 
         unpackConfigGroup(2, 7, MesAnimUnpacker::unpack, root.resolve("config/dump.mesanim")); // client ignores
 
-        if (Unpack.VERSION < 500) {
+        if (Unpack.VERSION < 488) {
             unpackConfigGroup(2, 8, EnumUnpacker::unpack, root.resolve("config/dump.enum"));
         } else {
             unpackConfigArchive(17, 8, EnumUnpacker::unpack, root.resolve("config/dump.enum")); // 8
         }
 
-        if (Unpack.VERSION < 500) {
+        if (Unpack.VERSION < 488) {
             unpackConfigGroup(2, 9, NPCUnpacker::unpack, root.resolve("config/dump.npc"));
         } else {
             unpackConfigArchive(18, 7, NPCUnpacker::unpack, root.resolve("config/dump.npc")); // 9
         }
 
-        if (Unpack.VERSION < 500) {
+        if (Unpack.VERSION < 488) {
             unpackConfigGroup(2, 10, ObjUnpacker::unpack, root.resolve("config/dump.obj"));
         } else {
             unpackConfigArchive(19, 8, ObjUnpacker::unpack, root.resolve("config/dump.obj")); // 10
         }
 
-        if (Unpack.VERSION < 500) {
+        if (Unpack.VERSION < 488) {
             unpackConfigGroup(2, 12, SeqUnpacker::unpack, root.resolve("config/dump.seq"));
         } else {
             unpackConfigArchive(20, 7, SeqUnpacker::unpack, root.resolve("config/dump.seq")); // 12
         }
 
-        if (Unpack.VERSION < 500) {
+        if (Unpack.VERSION < 488) {
             unpackConfigGroup(2, 13, EffectAnimUnpacker::unpack, root.resolve("config/dump.spotanim"));
         } else {
             unpackConfigArchive(21, 8, EffectAnimUnpacker::unpack, root.resolve("config/dump.spotanim")); // 13
@@ -316,7 +319,7 @@ public class Unpack {
         var maxMapElement = 0;
         var maxCutscene = 0;
 
-        if (archiveIndexConfig.groupMaxFileId.length > 35) {
+        if (MASTER_INDEX.getArchiveCount() > 35 && MASTER_INDEX.getArchiveData(35).getCrc() != 0) {
             maxCutscene = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, 35, false, 0))).groupArraySize;
         }
 

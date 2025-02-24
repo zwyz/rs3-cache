@@ -25,7 +25,7 @@ public class ObjUnpacker {
                 return lines;
             }
 
-            case 1 -> lines.add("model=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 1 -> lines.add("model=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
             case 2 -> lines.add("name=" + packet.gjstr());
             case 3 -> lines.add("desc=" + packet.gjstr());
             case 4 -> lines.add("2dzoom=" + packet.g2());
@@ -51,24 +51,24 @@ public class ObjUnpacker {
             case 16 -> lines.add("members=yes");
 
             case 23 -> {
-                if (Unpack.VERSION < 500) {
+                if (Unpack.VERSION < 501) {
                     lines.add("manwear=" + Unpacker.format(Type.MODEL, packet.g2()) + "," + packet.g1());
                 } else {
-                    lines.add("manwear=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
+                    lines.add("manwear=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
                 }
             }
 
-            case 24 -> lines.add("manwear2=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 24 -> lines.add("manwear2=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
 
             case 25 -> {
-                if (Unpack.VERSION < 500) {
+                if (Unpack.VERSION < 501) {
                     lines.add("womanwear=" + Unpacker.format(Type.MODEL, packet.g2()) + "," + packet.g1());
                 } else {
-                    lines.add("womanwear=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
+                    lines.add("womanwear=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
                 }
             }
 
-            case 26 -> lines.add("womanwear2=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 26 -> lines.add("womanwear2=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
             case 27 -> lines.add("wearpos3=" + Unpacker.formatWearPos(packet.g1()));
             case 30 -> lines.add("op1=" + packet.gjstr());
             case 31 -> lines.add("op2=" + packet.gjstr());
@@ -117,12 +117,12 @@ public class ObjUnpacker {
             case 45 -> lines.add("retexindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
             case 65 -> lines.add("stockmarket=yes");
             case 69 -> lines.add("stockmarketlimit=" + packet.g4s());
-            case 78 -> lines.add("manwear3=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
-            case 79 -> lines.add("womanwear3=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
-            case 90 -> lines.add("manhead=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
-            case 91 -> lines.add("womanhead=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
-            case 92 -> lines.add("manhead2=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
-            case 93 -> lines.add("womanhead2=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 78 -> lines.add("manwear3=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
+            case 79 -> lines.add("womanwear3=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
+            case 90 -> lines.add("manhead=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
+            case 91 -> lines.add("womanhead=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
+            case 92 -> lines.add("manhead2=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
+            case 93 -> lines.add("womanhead2=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
             case 94 -> lines.add("category=" + Unpacker.format(Type.CATEGORY, packet.g2()));
             case 95 -> lines.add("2dzan=" + packet.g2());
             case 96 -> lines.add("dummyitem=" + packet.g1());

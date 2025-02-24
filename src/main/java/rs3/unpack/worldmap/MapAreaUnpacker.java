@@ -18,7 +18,7 @@ public class MapAreaUnpacker {
 
         lines.add("name=" + packet.gjstr());
         lines.add("origin=" + Unpacker.format(Type.COORDGRID, packet.g4s()));
-        lines.add("background=" + Unpacker.formatColour( packet.g4s()));
+        lines.add("background=" + Unpacker.formatColour(packet.g4s()));
         lines.add("unknown5=" + (packet.g1() == 1 ? "yes" : "no"));
         lines.add("zoom=" + packet.g1());
         lines.add("buildarea=" + packet.g1());

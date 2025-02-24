@@ -1,22 +1,22 @@
 [command,stockmarket_getoffertype](int $x1)(int)
-[command,stockmarket_getoffertype](int $x1,int $x2)(int) 800
+[command,stockmarket_getoffertype](int $x1,int $x2)(int) 859
 [command,stockmarket_getofferitem](int $x1)(obj)
-[command,stockmarket_getofferitem](int $x1,int $x2)(obj) 800
+[command,stockmarket_getofferitem](int $x1,int $x2)(obj) 859
 [command,stockmarket_getofferprice](int $x1)(int)
-[command,stockmarket_getofferprice](int $x1,int $x2)(int) 800
+[command,stockmarket_getofferprice](int $x1,int $x2)(int) 859
 [command,stockmarket_getofferprice](int $x1,int $x2)(long) 930
 [command,stockmarket_getoffercount](int $x1)(int)
-[command,stockmarket_getoffercount](int $x1,int $x2)(int) 800
+[command,stockmarket_getoffercount](int $x1,int $x2)(int) 859
 [command,stockmarket_getoffercompletedcount](int $x1)(int)
-[command,stockmarket_getoffercompletedcount](int $x1,int $x2)(int) 800
+[command,stockmarket_getoffercompletedcount](int $x1,int $x2)(int) 859
 [command,stockmarket_getoffercompletedgold](int $x1)(int)
-[command,stockmarket_getoffercompletedgold](int $x1,int $x2)(int) 800
+[command,stockmarket_getoffercompletedgold](int $x1,int $x2)(int) 859
 [command,stockmarket_getoffercompletedgold](int $x1,int $x2)(long) 930
 [command,stockmarket_isofferempty](int $x1)(boolean)
-[command,stockmarket_isofferempty](int $x1,int $x2)(boolean) 800
+[command,stockmarket_isofferempty](int $x1,int $x2)(boolean) 859
 [command,stockmarket_isofferstable](int $x1)(boolean)
-[command,stockmarket_isofferstable](int $x1,int $x2)(boolean) 800
+[command,stockmarket_isofferstable](int $x1,int $x2)(boolean) 859
 [command,stockmarket_isofferfinished](int $x1)(boolean)
-[command,stockmarket_isofferfinished](int $x1,int $x2)(boolean) 800
+[command,stockmarket_isofferfinished](int $x1,int $x2)(boolean) 859
 [command,stockmarket_isofferadding](int $x1)(boolean)
-[command,stockmarket_isofferadding](int $x1,int $x2)(boolean) 800
+[command,stockmarket_isofferadding](int $x1,int $x2)(boolean) 859

@@ -29,7 +29,7 @@ public class NPCUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("model=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
+                    lines.add("model=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
                 }
             }
 
@@ -96,7 +96,7 @@ public class NPCUnpacker {
                 var length = packet.g1();
 
                 for (var i = 0; i < length; i++) {
-                    lines.add("headmodel=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
+                    lines.add("headmodel=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
                 }
             }
 

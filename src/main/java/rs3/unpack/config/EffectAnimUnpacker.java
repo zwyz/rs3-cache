@@ -25,7 +25,7 @@ public class EffectAnimUnpacker {
                 return lines;
             }
 
-            case 1 -> lines.add("model=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 1 -> lines.add("model=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
             case 2 -> lines.add("anim=" + Unpacker.format(Type.SEQ, packet.gSmart2or4null()));
             case 3 -> lines.add("hasalpha=yes");
             case 4 -> lines.add("resizeh=" + packet.g2());
@@ -40,7 +40,7 @@ public class EffectAnimUnpacker {
             case 16 -> lines.add("hillchange=rotate," + packet.g4s());
 
             case 40 -> {
-                if (Unpack.VERSION < 460) {
+                if (Unpack.VERSION < 465) {
                     lines.add("recol1s=" + packet.g2());
                 } else {
                     var count = packet.g1();
@@ -58,7 +58,7 @@ public class EffectAnimUnpacker {
             }
 
             case 41 -> {
-                if (Unpack.VERSION < 460) {
+                if (Unpack.VERSION < 465) {
                     lines.add("recol2s=" + packet.g2());
                 } else {
                     var count = packet.g1();
@@ -74,7 +74,7 @@ public class EffectAnimUnpacker {
             case 43 -> lines.add("recol4s=" + packet.g2());
 
             case 44 -> {
-                if (Unpack.VERSION < 460) {
+                if (Unpack.VERSION < 465) {
                     lines.add("recol5s=" + packet.g2());
                 } else {
                     lines.add("recolindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
@@ -82,7 +82,7 @@ public class EffectAnimUnpacker {
             }
 
             case 45 -> {
-                if (Unpack.VERSION < 460) {
+                if (Unpack.VERSION < 465) {
                     lines.add("recol6s=" + packet.g2());
                 } else {
                     lines.add("retexindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
@@ -90,7 +90,7 @@ public class EffectAnimUnpacker {
             }
 
             case 46 -> {
-                if (Unpack.VERSION < 460) {
+                if (Unpack.VERSION < 465) {
                     lines.add("recol7s=" + packet.g2());
                 } else {
                     lines.add("unknown46=yes");

@@ -26,7 +26,7 @@ public class LocUnpacker {
             }
 
             case 1 -> {
-                if (Unpack.VERSION < 600) {
+                if (Unpack.VERSION < 582) {
                     var count = packet.g1();
 
                     for (var i = 0; i < count; ++i) {
@@ -40,7 +40,7 @@ public class LocUnpacker {
                         var modelCount = packet.g1();
 
                         for (var j = 0; j < modelCount; j++) {
-                            lines.add("model=" + shape + "," + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
+                            lines.add("model=" + shape + "," + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
                         }
                     }
                 }
@@ -50,7 +50,7 @@ public class LocUnpacker {
             case 3 -> lines.add("desc=" + packet.gjstr());
 
             case 5 -> {
-                if (Unpack.VERSION < 600) {
+                if (Unpack.VERSION < 582) {
                     var count = packet.g1();
 
                     for (var i = 0; i < count; ++i) {
@@ -64,7 +64,7 @@ public class LocUnpacker {
                         var modelCount = packet.g1();
 
                         for (var j = 0; j < modelCount; j++) {
-                            lines.add("modela=" + shape + "," + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
+                            lines.add("modela=" + shape + "," + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
                         }
                     }
 
@@ -75,7 +75,7 @@ public class LocUnpacker {
                         var modelCount = packet.g1();
 
                         for (var j = 0; j < modelCount; j++) {
-                            lines.add("modelb=" + shape + "," + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
+                            lines.add("modelb=" + shape + "," + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
                         }
                     }
                 }
@@ -182,7 +182,7 @@ public class LocUnpacker {
                 var count = Unpack.VERSION < 900 ? packet.g1() : packet.gSmart1or2();
 
                 for (var i = 0; i <= count; ++i) {
-                    var multi = Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null();
+                    var multi = Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null();
 
                     if (multi != -1) {
                         lines.add("multiloc=" + i + "," + Unpacker.format(Type.LOC, multi));
@@ -223,7 +223,7 @@ public class LocUnpacker {
                     lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, multivarp));
                 }
 
-                var multidefault = Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null();
+                var multidefault = Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null();
 
                 if (multidefault != -1) {
                     lines.add("multiloc=default," + Unpacker.format(Type.LOC, multidefault));
@@ -232,7 +232,7 @@ public class LocUnpacker {
                 var count = Unpack.VERSION >= 900 ? packet.gSmart1or2() : packet.g1();
 
                 for (var i = 0; i <= count; ++i) {
-                    var multi = Unpack.VERSION < 700 ? packet.g2null() : packet.gSmart2or4null();
+                    var multi = Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null();
 
                     if (multi != -1) {
                         lines.add("multiloc=" + i + "," + Unpacker.format(Type.LOC, multi));
@@ -244,7 +244,7 @@ public class LocUnpacker {
             case 94 -> lines.add("hillchange=ceiling_skew");
 
             case 95 -> {
-                if (Unpack.VERSION < 600) {
+                if (Unpack.VERSION < 596) {
                     lines.add("hillchange=skew_to_fit");
                 } else {
                     lines.add("hillchange=skew_to_fit," + packet.g2());

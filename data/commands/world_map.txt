@@ -1,5 +1,5 @@
 [command,worldmap_3dview_enable](string $x1)
-[command,worldmap_3dview_enable](wma $x1) 550
+[command,worldmap_3dview_enable](wma $x1) 537
 [command,worldmap_3dview_disable]
 [command,worldmap_3dview_setloddistance](int $x1,int $x2)
 [command,worldmap_3dview_setlighting](int $x1,int $x2,int $x3,int $x4,int $x5)
@@ -10,14 +10,14 @@
 [command,worldmap_disabletype](int $x1,int $x2)
 [command,worldmap_setzoom](int $x1)
 [command,worldmap_setmap](string $x1)
-[command,worldmap_setmap](wma $x1) 550
+[command,worldmap_setmap](wma $x1) 537
 [command,worldmap_jumptosourcecoord](coord $x1)
 [command,worldmap_jumptodisplaycoord](coord $x1)
 [command,worldmap_setmap_coord](string $x1,coord $x2)
-[command,worldmap_setmap_coord](wma $x1,coord $x2) 550
+[command,worldmap_setmap_coord](wma $x1,coord $x2) 537
 [command,worldmap_flashelement](int $x1)
 [command,worldmap_setmap_coord_override](string $x1,coord $x2)
-[command,worldmap_setmap_coord_override](wma $x1,coord $x2) 550
+[command,worldmap_setmap_coord_override](wma $x1,coord $x2) 537
 [command,worldmap_disableelements](boolean $x1)
 [command,worldmap_flashelementcategory](category $x1)
 [command,worldmap_disableelementcategory](category $x1,boolean $x2)
@@ -32,23 +32,23 @@
 [command,worldmap_getdisabletype](int $x1)(boolean)
 [command,worldmap_getzoom]()(int)
 [command,worldmap_getmap](coord $x1)(string)
-[command,worldmap_getmap](coord $x1)(wma) 550
+[command,worldmap_getmap](coord $x1)(wma) 537
 [command,worldmap_getmapname](string $x1)(string)
-[command,worldmap_getmapname](wma $x1)(string) 550
+[command,worldmap_getmapname](wma $x1)(string) 537
 [command,worldmap_getsize]()(int,int)
 [command,worldmap_getdisplayposition]()(int,int)
 [command,worldmap_getconfigorigin](string $x1)(coord)
-[command,worldmap_getconfigorigin](wma $x1)(coord) 550
+[command,worldmap_getconfigorigin](wma $x1)(coord) 537
 [command,worldmap_getconfigsize](string $x1)(int,int)
-[command,worldmap_getconfigsize](wma $x1)(int,int) 550
+[command,worldmap_getconfigsize](wma $x1)(int,int) 537
 [command,worldmap_getconfigbounds](string $x1)(int,int,int,int)
-[command,worldmap_getconfigbounds](wma $x1)(int,int,int,int) 550
+[command,worldmap_getconfigbounds](wma $x1)(int,int,int,int) 537
 [command,worldmap_listelement_start]()(mapelement,coord)
 [command,worldmap_listelement_next]()(mapelement,coord)
 [command,worldmap_coordinmap](coord $x1,string $x2)(boolean)
-[command,worldmap_coordinmap](coord $x1,wma $x2)(boolean) 550
-[command,worldmap_getconfigzoom](string $x1)(int)
-[command,worldmap_getconfigzoom](wma $x1)(int) 550
+[command,worldmap_coordinmap](coord $x1,wma $x2)(boolean) 537
+[command,worldmap_getconfigzoom]()(int)
+[command,worldmap_getconfigzoom](wma $x1)(int) 537
 [command,worldmap_isloaded]()(boolean)
 [command,worldmap_getsourceposition]()(int,int)
 [command,worldmap_getdisplaycoord](coord $x1)(int,int)
@@ -57,7 +57,7 @@
 [command,worldmap_getdisableelementcategory](category $x1)(boolean)
 [command,worldmap_getdisableelement](mapelement $x1)(boolean)
 [command,worldmap_getcurrentmap]()(string)
-[command,worldmap_getcurrentmap]()(wma) 550
+[command,worldmap_getcurrentmap]()(wma) 537
 [command,worldmap_findnearestelement](mapelement $x1,coord $x2)
 [command,worldmap_jumptosourcecoord_instant](coord $x1)
 [command,worldmap_jumptodisplaycoord_instant](coord $x1)

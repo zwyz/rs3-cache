@@ -166,7 +166,7 @@ public class Command {
         try {
             var opcodes = new HashMap<String, Integer>();
 
-            for (var line : Files.readAllLines(Path.of("data/opcodes-" + (Unpack.VERSION < 669 ? "unscrambled" : Unpack.VERSION) + ".txt"))) {
+            for (var line : Files.readAllLines(Path.of("data/opcodes-" + (Unpack.VERSION < 685 ? "unscrambled" : Unpack.VERSION) + ".txt"))) {
                 var parts = line.split(",");
 
                 if (parts.length >= 3) {
@@ -208,7 +208,7 @@ public class Command {
                     var id = opcodes.get(name);
 
                     if (id == null) {
-                        System.err.println("no opcode for " + name); // todo: add versions to commands
+//                        System.err.println("no opcode for " + name); // todo: add versions to commands
                         continue;
                     }
 

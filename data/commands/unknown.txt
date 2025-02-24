@@ -14,9 +14,10 @@
 [command,unknown_command_5422](int $x1,string $x2,string $x3)
 [command,unknown_command_5603](int $x1,int $x2,int $x3,int $x4)
 [command,unknown_command_5604](string $x1)
-[command,unknown_command_5605](string $x1,string $x2,int $x3,int $x4,int $x5,int $x6) 500
-[command,unknown_command_5605](string $x1,string $x2,int $x3,int $x4,int $x5,int $x6,string $x7,int $x8,int $x9,int $x10) 550
-[command,unknown_command_5605](string $x1,string $x2,int $x3,int $x4) 600
+[command,unknown_command_5605](string $x1,string $x2,int $x3,int $x4,int $x5,int $x6) 504
+[command,unknown_command_5605](string $x1,string $x2,int $x3,int $x4,int $x5,int $x6,string $x7,int $x8,int $x9,int $x10) 533
+[command,unknown_command_5605](string $x1,string $x2) 596
+[command,unknown_command_5605](string $x1,string $x2,int $x3,int $x4) 629
 [command,unknown_command_5606]
 [command,unknown_command_5610]()(string,string,string,string,string)
 [command,unknown_command_6002](boolean $x1)
@@ -24,6 +25,7 @@
 [command,unknown_command_6009](boolean $x1)
 [command,unknown_command_6010](boolean $x1)
 [command,unknown_command_6011](int $x1)
+[command,unknown_command_6022](boolean $x1)
 [command,unknown_command_6025](int $x1)
 [command,unknown_command_6102]()(boolean)
 [command,unknown_command_6106]()(boolean)
@@ -31,6 +33,7 @@
 [command,unknown_command_6110]()(boolean)
 [command,unknown_command_6111]()(int)
 [command,unknown_command_6121]()(boolean)
+[command,unknown_command_6122]()(boolean)
 [command,unknown_command_6126]()(boolean)
 [command,unknown_command_6133]()(boolean)
 [command,unknown_command_6504](int $x1)()
@@ -49,6 +52,7 @@
 [command,chat_gethistorytype](int $x1)(chattype)
 [command,if_setsidepanel](int $x1)
 [command,unknown_command_5006](int $x1)
+[command,unknown_command_5021](string $x1)
 [command,unknown_command_5025](int $x1)(string)
 [command,unknown_command_3634](int $x1)(boolean)
 [command,unknown_command_5074]
@@ -62,6 +66,7 @@
 [command,unknown_command_6040](int $x0)
 [command,unknown_command_6041](int $x0)
 [command,unknown_command_5612](int $x1)
+[command,unknown_command_5612] 681
 [command,unknown_command_5613]()(int)
 [command,unknown_command_5615](string $x1,string $x2)
 [command,unknown_command_5616]
@@ -69,13 +74,15 @@
 [command,unknown_command_5618](int $x1)
 [command,unknown_command_5619](int $x1)
 [command,unknown_command_5620]()(int)
-[command,unknown_command_5621](int $x1,int $x2,string $x3,string $x4)
+[command,unknown_command_5621](string $x1, string $x2, int $x3, int $x4, int $x5, int $x6, string $x7, int $x8, int $x9, int $x10)
+[command,unknown_command_5621](string $x1, string $x2) 596
 [command,unknown_command_5622]
 [command,unknown_command_5623]()(boolean)
 [command,unknown_command_5624]()(int, int)
 [command,unknown_command_5625]()(boolean)
 [command,unknown_command_5626]
-[command,unknown_command_5627]()(int, int, int)
+[command,unknown_command_5627]()(int, int)
+[command,unknown_command_5627]()(int, int, int) 659
 [command,unknown_command_5628]()(boolean)
 [command,unknown_command_5629]()(int)
 [command,unknown_command_5630]
@@ -88,6 +95,7 @@
 [command,unknown_command_6133]()(boolean)
 [command,unknown_command_6135]()(int)
 [command,unknown_command_6136]()(boolean)
+[command,unknown_command_6137]()(int)
 [command,unknown_command_6138]()(int)
 [command,unknown_command_6139]()(int)
 [command,unknown_command_6142]()(int)
@@ -149,3 +157,21 @@
 [command,boost_advert_launch](string $x1)
 [command,has_signonkey]()(boolean)
 [command,java_version_supported]()(boolean)
+[command,unknown_command_3320]()(int)
+[command,unknown_command_5304]()(int)
+
+[command,unknown_command_5402](string $x1, string $x2)
+[command,unknown_command_5403]()(int)
+[command,unknown_command_5404]()(int)
+[command,unknown_command_5408]()(int)
+[command,unknown_command_5409]
+[command,unknown_command_5412](int $x1, int $x2, int $x3, int $x4)
+[command,unknown_command_5413]()(int)
+[command,unknown_command_5414](string $x1)
+[command,unknown_command_5415]()(int)
+[command,unknown_command_5416](string $x1, string $x2, int $x3, int $x4, int $x5, int $x6)
+[command,unknown_command_5417]()(int)
+[command,unknown_command_5418]()(string, string, string, string, string)
+[command,unknown_command_7008]()(int)
+[command,unknown_command_6140]()(int)
+[command,unknown_command_5547]()(boolean)

@@ -1,7 +1,7 @@
 [command,if_setposition](int $x1,int $x2,component $x3)
-[command,if_setposition](int $x1,int $x2,setposh $x3,setposv $x4,component $x5) 500
+[command,if_setposition](int $x1,int $x2,setposh $x3,setposv $x4,component $x5) 501
 [command,cc_setposition](int $x1,int $x2)
-[command,cc_setposition](int $x1,int $x2,setposh $x3,setposv $x4) 500
+[command,cc_setposition](int $x1,int $x2,setposh $x3,setposv $x4) 501
 [command,if_getx](component $x1)(int)
 [command,cc_getx]()(int)
 [command,if_gety](component $x1)(int)
@@ -11,9 +11,9 @@
 [command,if_unknown2](component $x1)(int)
 [command,cc_unknown2]()(int)
 [command,if_setsize](int $x1,int $x2,component $x3)
-[command,if_setsize](int $x1,int $x2,setsize $x3,setsize $x4,component $x5) 500
+[command,if_setsize](int $x1,int $x2,setsize $x3,setsize $x4,component $x5) 501
 [command,cc_setsize](int $x1,int $x2)
-[command,cc_setsize](int $x1,int $x2,setsize $x3,setsize $x4) 500
+[command,cc_setsize](int $x1,int $x2,setsize $x3,setsize $x4) 501
 [command,if_getwidth](component $x1)(int)
 [command,cc_getwidth]()(int)
 [command,if_getheight](component $x1)(int)
@@ -188,9 +188,9 @@
 [command,if_setrecol](int $x1,int $x2,int $x3,component $x4)
 [command,cc_setrecol](int $x1,int $x2,int $x3)
 [command,if_setretex](int $x1,texture $x2,texture $x3,component $x4)
-[command,if_setretex](int $x1,material $x2,material $x3,component $x4) 800
+[command,if_setretex](int $x1,material $x2,material $x3,component $x4) 859
 [command,cc_setretex](int $x1,texture $x2,texture $x3)
-[command,cc_setretex](int $x1,material $x2,material $x3) 800
+[command,cc_setretex](int $x1,material $x2,material $x3) 859
 [command,if_setnpchead](npc $x1,component $x2)
 [command,cc_setnpchead](npc $x1)
 [command,if_setnpcmodel](npc $x1,component $x2)
@@ -716,9 +716,9 @@
 [command,if_gettext](component $x1)(string)
 [command,cc_gettext]()(string)
 [command,if_settextfont](graphic $x1,component $x2)
-[command,if_settextfont](fontmetrics $x1,component $x2) 800
+[command,if_settextfont](fontmetrics $x1,component $x2) 859
 [command,cc_settextfont](graphic $x1)
-[command,cc_settextfont](fontmetrics $x1) 800
+[command,cc_settextfont](fontmetrics $x1) 859
 [command,if_getfontmetrics](component $x1)(fontmetrics)
 [command,cc_getfontmetrics]()(fontmetrics)
 [command,if_settextalign](settextalignh $x1,settextalignv $x2,int $x3,component $x4)

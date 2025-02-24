@@ -15,7 +15,7 @@ public class InterfaceUnpacker {
         lines.add("[com" + (id & 0xffff) + "]");
         var version = packet.g1();
 
-        if (Unpack.VERSION < 550 && version != 0xff) {
+        if (Unpack.VERSION < 566 && version != 0xff) {
             return lines; // todo if1
         }
 
@@ -49,7 +49,7 @@ public class InterfaceUnpacker {
         var widthmode = 0;
         var heightmode = 0;
 
-        if (Unpack.VERSION >= 500) {
+        if (Unpack.VERSION >= 493) {
             widthmode = packet.g1s();
             heightmode = packet.g1s();
             line(lines, "widthmode=", decodeSizeMode(widthmode), "abs");
@@ -154,7 +154,23 @@ public class InterfaceUnpacker {
         line(lines, "event30=", ((events >>> 30) & 1) != 0 ? "yes" : "no", "no");
         line(lines, "event31=", ((events >>> 31) & 1) != 0 ? "yes" : "no", "no");
 
-        if (Unpack.VERSION >= 550) {
+        if (Unpack.VERSION < 499) {
+            // none
+        } else if (Unpack.VERSION < 530) {
+            var keycount = packet.g1();
+
+            for (var index = 0; index < keycount; index++) {
+                line(lines, "opkey" + (index + 1) + "=", packet.g1s());
+            }
+
+            if (keycount > 0 && Unpack.VERSION >= 509) {
+                var modcount = packet.g1();
+
+                for (var index = 0; index < modcount; index++) {
+                    line(lines, "opkeymod" + (index + 1) + "=", packet.g1s());
+                }
+            }
+        } else {
             var value = packet.g1();
 
             while (value != 0) {
@@ -165,7 +181,7 @@ public class InterfaceUnpacker {
                     rate = -1;
                 }
 
-                line(lines, "opkey" + index + "=", rate + "," + packet.g1s() + "," + packet.g1s()); // if_setopkey
+                line(lines, "opkey" + (index + 1) + "=", rate + "," + packet.g1s() + "," + packet.g1s()); // if_setopkey
                 value = packet.g1();
             }
         }
@@ -189,7 +205,7 @@ public class InterfaceUnpacker {
             line(lines, "opcursor" + packet.g1() + "=", Unpacker.format(Type.CURSOR, packet.g2())); // if_setopcursor
         }
 
-        if (Unpack.VERSION >= 500) {
+        if (Unpack.VERSION >= 537) {
             line(lines, "pausetext=", packet.gjstr(), ""); // if_setpausetext
         }
 
@@ -198,10 +214,10 @@ public class InterfaceUnpacker {
         line(lines, "dragrenderbehaviour=", packet.g1(), 0); // if_setdragrenderbehaviour
         line(lines, "targetverb=", packet.gjstr(), ""); // if_settargetverb
 
-        if (Unpack.VERSION >= 550 && targetmask != 0) {
-            line(lines, "targetcursor0=", Unpacker.format(Type.CURSOR, packet.g2null()), "null"); // if_settargetcursors
+        if (Unpack.VERSION >= 530 && targetmask != 0) {
             line(lines, "targetcursor1=", Unpacker.format(Type.CURSOR, packet.g2null()), "null"); // if_settargetcursors
             line(lines, "targetcursor2=", Unpacker.format(Type.CURSOR, packet.g2null()), "null"); // if_settargetcursors
+            line(lines, "targetcursor3=", Unpacker.format(Type.CURSOR, packet.g2null()), "null"); // if_settargetcursors
         }
 
         if (version >= 0) {
@@ -244,9 +260,14 @@ public class InterfaceUnpacker {
         line(lines, "onhold=", decodeHook(packet), "null"); // if_setonhold
         line(lines, "ondrag=", decodeHook(packet), "null"); // if_setondrag
         line(lines, "ondragcomplete=", decodeHook(packet), "null"); // if_setondragcomplete
+
+        if (Unpack.VERSION < 459) {
+            line(lines, "ondragcancel=", decodeHook(packet), "null");
+        }
+
         line(lines, "onscrollwheel=", decodeHook(packet), "null"); // if_setonscrollwheel
 
-        if (Unpack.VERSION >= 500) {
+        if (Unpack.VERSION >= 506) {
             line(lines, "onvarctransmit=", decodeHook(packet), "null"); // if_setonvarctransmit
             line(lines, "onvarcstrtransmit=", decodeHook(packet), "null"); // if_setonvarcstrtransmit
         }
@@ -261,11 +282,13 @@ public class InterfaceUnpacker {
             line(lines, "onupdated=", decodeHook(packet), "null"); // if_crmview_setonupdated
         }
 
-        line(lines, "onvartransmitlist=", decodeHookTransmitList(packet, Type.VAR_PLAYER), "null");
-        line(lines, "oninvtransmitlist=", decodeHookTransmitList(packet, Type.INV), "null");
-        line(lines, "onstattransmitlist=", decodeHookTransmitList(packet, Type.STAT), "null");
+        if (Unpack.VERSION >= 459) {
+            line(lines, "onvartransmitlist=", decodeHookTransmitList(packet, Type.VAR_PLAYER), "null");
+            line(lines, "oninvtransmitlist=", decodeHookTransmitList(packet, Type.INV), "null");
+            line(lines, "onstattransmitlist=", decodeHookTransmitList(packet, Type.STAT), "null");
+        }
 
-        if (Unpack.VERSION >= 500) {
+        if (Unpack.VERSION >= 506) {
             line(lines, "onvarctransmitlist=", decodeHookTransmitList(packet, Type.VAR_CLIENT), "null");
             line(lines, "onvarcstrtransmitlist=", decodeHookTransmitList(packet, Type.VAR_CLIENT_STRING), "null");
         }
@@ -290,7 +313,7 @@ public class InterfaceUnpacker {
                 default -> throw new IllegalStateException("Unexpected value: " + packet.g1());
             };
 
-            arguments.add(formatHookArgument(value, ScriptUnpacker.SCRIPT_PARAMETERS.get(script).get(i)));
+//            arguments.add(formatHookArgument(value, ScriptUnpacker.SCRIPT_PARAMETERS.get(script).get(i)));
         }
 
         if (arguments.isEmpty()) {
@@ -349,7 +372,7 @@ public class InterfaceUnpacker {
         line(lines, "scrollheight=", packet.g2(), 0); // if_getscrollheight
 
         if (version == -1) {
-            if (Unpack.VERSION >= 500) {
+            if (Unpack.VERSION >= 495) {
                 line(lines, "noclickthrough=", ((packet.g1() == 1) ? "yes" : "no"), "no"); // if_setnoclickthrough
             }
         } else if (version >= 9) {
@@ -364,20 +387,23 @@ public class InterfaceUnpacker {
     }
 
     private static void decodeModel(ArrayList<String> lines, Packet packet, int version, int widthmode, int heightmode) {
-        line(lines, "model=", Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
+        line(lines, "model=", Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
 
-        if (Unpack.VERSION < 600) {
+        if (Unpack.VERSION < 619) {
             line(lines, "modelorigin_x=", packet.g2s()); // if_setmodelorigin
             line(lines, "modelorigin_y=", packet.g2s()); // if_setmodelorigin
             line(lines, "modelangle_x=", packet.g2()); // if_getmodelangle_x
             line(lines, "modelangle_y=", packet.g2()); // if_getmodelangle_y
             line(lines, "modelangle_z=", packet.g2()); // if_getmodelangle_z
             line(lines, "modelzoom=", packet.g2()); // if_setmodelzoom
-            line(lines, "modelanim=", Unpacker.format(Type.SEQ, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()), "null"); // if_setmodelanim
+            line(lines, "modelanim=", Unpacker.format(Type.SEQ, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()), "null"); // if_setmodelanim
             line(lines, "modelorthog=", Unpacker.formatBoolean(packet.g1()), "no"); // if_setmodelorthog
 
-            if (Unpack.VERSION >= 500) {
+            if (Unpack.VERSION >= 493) {
                 line(lines, "unknown100=", packet.g2());
+            }
+
+            if (Unpack.VERSION >= 501) {
                 line(lines, "unknown101=", packet.g2());
                 line(lines, "unknown103=", Unpacker.formatBoolean(packet.g1()), "no");
             }
@@ -409,7 +435,7 @@ public class InterfaceUnpacker {
                 line(lines, "modelzoom=", packet.g2()); // if_setmodelzoom
             }
 
-            line(lines, "modelanim=", Unpacker.format(Type.SEQ, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()), "null"); // if_setmodelanim
+            line(lines, "modelanim=", Unpacker.format(Type.SEQ, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()), "null"); // if_setmodelanim
         }
 
         if (widthmode != 0) {
@@ -435,7 +461,7 @@ public class InterfaceUnpacker {
         line(lines, "linewid=", packet.g1(), 1); // if_setlinewid
         line(lines, "colour=", Unpacker.formatColour(packet.g4s())); // if_setcolour
 
-        if (Unpack.VERSION >= 500) {
+        if (Unpack.VERSION >= 493) {
             line(lines, "linedirection=", (packet.g1() == 1 ? "yes" : "no"), "no"); // if_setlinedirection
         }
     }
@@ -618,7 +644,7 @@ public class InterfaceUnpacker {
 
     private static void decodeTextPart(String prefix, ArrayList<String> lines, Packet packet, int version, int defaultAlignH, int defaultAlignV, String defaultTextShadow) {
         if (Unpack.VERSION < 800) {
-            line(lines, prefix + "textfont=", Unpacker.format(Type.GRAPHIC, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()), "null"); // if_settextfont
+            line(lines, prefix + "textfont=", Unpacker.format(Type.GRAPHIC, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()), "null"); // if_settextfont
         } else {
             line(lines, prefix + "textfont=", Unpacker.format(Type.FONTMETRICS, packet.gSmart2or4null()), "null"); // if_settextfont
         }
@@ -634,7 +660,7 @@ public class InterfaceUnpacker {
         line(lines, prefix + "textshadow=", (packet.g1() == 1 ? "yes" : "no"), defaultTextShadow); // if_settextshadow
         line(lines, prefix + "colour=", Unpacker.formatColour(packet.g4s()), "0xffffff"); // if_setcolour
 
-        if (Unpack.VERSION >= 600) {
+        if (Unpack.VERSION >= 582) {
             line(lines, prefix + "trans=", packet.g1(), 0); // if_settrans
         }
 
@@ -655,7 +681,7 @@ public class InterfaceUnpacker {
         line(lines, prefix + "vflip=", (packet.g1() == 1 ? "yes" : "no"), "no"); // if_setvflip
         line(lines, prefix + "hflip=", (packet.g1() == 1 ? "yes" : "no"), "no"); // if_sethflip
 
-        if (Unpack.VERSION >= 550) {
+        if (Unpack.VERSION >= 537) {
             line(lines, prefix + "colour=", Unpacker.formatColour(packet.g4s()), defaultColour); // if_setcolour
         }
 

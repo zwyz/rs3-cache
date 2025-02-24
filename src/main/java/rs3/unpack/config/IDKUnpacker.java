@@ -31,14 +31,14 @@ public class IDKUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; ++i) {
-                    lines.add("model=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
+                    lines.add("model=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
                 }
             }
 
             case 3 -> lines.add("disable=yes");
 
             case 40 -> {
-                if (Unpack.VERSION < 460) {
+                if (Unpack.VERSION < 465) {
                     lines.add("recol1s=" + packet.g2());
                 } else {
                     var count = packet.g1();
@@ -56,7 +56,7 @@ public class IDKUnpacker {
             }
 
             case 41 -> {
-                if (Unpack.VERSION < 460) {
+                if (Unpack.VERSION < 465) {
                     lines.add("recol2d=" + packet.g2());
                 } else {
                     var count = packet.g1();
@@ -72,7 +72,7 @@ public class IDKUnpacker {
             case 43 -> lines.add("recol4s=" + packet.g2());
 
             case 44 -> {
-                if (Unpack.VERSION < 460) {
+                if (Unpack.VERSION < 465) {
                     lines.add("recol5s=" + packet.g2());
                 } else {
                     lines.add("recolindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
@@ -80,7 +80,7 @@ public class IDKUnpacker {
             }
 
             case 45 -> {
-                if (Unpack.VERSION < 460) {
+                if (Unpack.VERSION < 465) {
                     lines.add("recol6s=" + packet.g2());
                 } else {
                     lines.add("retexindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
@@ -103,16 +103,17 @@ public class IDKUnpacker {
             case 58 -> lines.add("recol9d=" + packet.g2());
             case 59 -> lines.add("recol10d=" + packet.g2());
 
-            case 60 -> lines.add("head1=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
-            case 61 -> lines.add("head2=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
-            case 62 -> lines.add("head3=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
-            case 63 -> lines.add("head4=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
-            case 64 -> lines.add("head5=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
-            case 65 -> lines.add("head6=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
-            case 66 -> lines.add("head7=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
-            case 67 -> lines.add("head8=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
-            case 68 -> lines.add("head9=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
-            case 69 -> lines.add("head10=" + Unpacker.format(Type.MODEL, Unpack.VERSION <= 700 ? packet.g2null() : packet.gSmart2or4null()));
+            case 60 -> lines.add("head1=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
+            case 61 -> lines.add("head2=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
+            case 62 -> lines.add("head3=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
+            case 63 -> lines.add("head4=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
+            case 64 -> lines.add("head5=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
+            case 65 -> lines.add("head6=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
+            case 66 -> lines.add("head7=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
+            case 67 -> lines.add("head8=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
+            case 68 -> lines.add("head9=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
+            case 69 -> lines.add("head10=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
+
             default -> throw new IllegalStateException("unknown opcode");
         }
     }

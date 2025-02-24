@@ -22,12 +22,12 @@ public class CompiledScript {
         var packet = new Packet(data);
         var headerSize = 12;
 
-        if (Unpack.VERSION > 600) {
+        if (Unpack.VERSION >= 642) {
             headerSize += 2;
             headerSize += 2;
         }
 
-        if (Unpack.VERSION > 500) {
+        if (Unpack.VERSION >= 488) {
             packet.pos = packet.arr.length - 2;
             headerSize += 2 + packet.g2();
         }
@@ -41,21 +41,21 @@ public class CompiledScript {
         script.localCountInt = packet.g2();
         script.localCountObject = packet.g2();
 
-        if (Unpack.VERSION > 600) {
+        if (Unpack.VERSION >= 642) {
             script.localCountLong = packet.g2();
         }
 
         script.argumentCountInt = packet.g2();
         script.argumentCountObject = packet.g2();
 
-        if (Unpack.VERSION > 600) {
+        if (Unpack.VERSION >= 642) {
             script.argumentCountLong = packet.g2();
         }
 
         int[][] switchValue = null;
         int[][] switchOffset = null;
 
-        if (Unpack.VERSION > 500) {
+        if (Unpack.VERSION >= 488) {
             var switchCount = packet.g1();
             switchValue = new int[switchCount][];
             switchOffset = new int[switchCount][];
@@ -74,7 +74,7 @@ public class CompiledScript {
 
         packet.pos = 0;
 
-        if (Unpack.VERSION >= 460) {
+        if (Unpack.VERSION >= 459) {
             script.name = packet.gjstrnull();
         }
 

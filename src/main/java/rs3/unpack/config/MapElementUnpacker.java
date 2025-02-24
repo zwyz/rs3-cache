@@ -58,7 +58,7 @@ public class MapElementUnpacker {
                     lines.add("unknown15a=" + packet.g2s());
                 }
 
-                if (Unpack.VERSION < 600) {
+                if (Unpack.VERSION < 629) {
                     lines.add("unknown15b=" + packet.g4s());
                     lines.add("unknown15c=" + packet.g4s());
                 } else {

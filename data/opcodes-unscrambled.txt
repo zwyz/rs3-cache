@@ -49,11 +49,11 @@ push_varclansettingbit,113
 push_varclansetting_long,114
 push_varclansetting_string,115
 cc_create,100
-cc_create,150,600
+cc_create,150,642
 cc_delete,101
-cc_delete,151,600
+cc_delete,151,642
 cc_deleteall,102
-cc_deleteall,152,600
+cc_deleteall,152,642
 cc_find,200
 if_find,201
 if_sendtofront,202
@@ -144,6 +144,7 @@ cc_setonop,1409
 cc_setondragcomplete,1410
 cc_setonclickrepeat,1411
 cc_setonmouserepeat,1412
+cc_setondragcancel,1413
 cc_setoninvtransmit,1414
 cc_setonstattransmit,1415
 cc_setontargetenter,1416
@@ -188,7 +189,8 @@ cc_getmodelyof,1611
 cc_getgraphic,1612
 cc_param,1613
 cc_get2dangle,1614
-cc_getfontgraphic,1618
+cc_getfontgraphic,1617
+cc_getfontmetrics,1618
 cc_getinvobject,1700
 cc_getinvcount,1701
 cc_getid,1702
@@ -275,6 +277,7 @@ if_setonop,2409
 if_setondragcomplete,2410
 if_setonclickrepeat,2411
 if_setonmouserepeat,2412
+if_setondragcancel,1413
 if_setoninvtransmit,2414
 if_setonstattransmit,2415
 if_setontargetenter,2416
@@ -319,6 +322,7 @@ if_getmodelyof,2611
 if_getgraphic,2612
 if_get2dangle,2613
 if_getmodel,2614
+if_getfontmetrics,2617
 if_getfontgraphic,2618
 if_getinvobject,2700
 if_getinvcount,2701
@@ -333,7 +337,7 @@ mes,3100
 anim,3101
 if_setsidepanel,3102
 mes_typed,3102,500
-mes_typed,3114,600
+mes_typed,3114,594
 if_close,3103
 resume_countdialog,3104
 resume_namedialog,3105
@@ -377,6 +381,7 @@ invother_total,3315
 staffmodlevel,3316
 reboottimer,3317
 map_world,3318
+unknown_command_3320,3320
 runenergy_visible,3321
 runweight_visible,3322
 playermod,3323
@@ -568,12 +573,13 @@ chat_gethistoryname,5010
 chat_gethistoryclan,5011
 chat_gethistoryphrase,5012
 chat_playername,5015
-chat_playername_unfiltered,5015,600
+chat_playername_unfiltered,5015,594
 chat_getfilter_trade,5016
 chat_gethistorylength,5017
 unknown_command_5018,5018
 unknown_command_5019,5019
-chat_playername,5020,600
+chat_playername,5020,594
+unknown_command_5021,5021
 chat_getnextuid,5023
 chat_getprevuid,5024
 unknown_command_5025,5025
@@ -642,6 +648,7 @@ fullscreen_enter,5300
 fullscreen_exit,5301
 fullscreen_modecount,5302
 fullscreen_getmode,5303
+unknown_command_5304,5304
 fullscreen_lastmode,5305
 getwindowmode,5306
 setwindowmode,5307
@@ -652,7 +659,19 @@ setclientpalette,5401
 spline_new,5405
 spline_addpoint,5406
 spline_length,5407
+unknown_command_5402,5402
+unknown_command_5403,5403
+unknown_command_5404,5404
+unknown_command_5408,5408
+unknown_command_5409,5409
 quit,5411
+unknown_command_5412,5412
+unknown_command_5413,5413
+unknown_command_5414,5414
+unknown_command_5415,5415
+unknown_command_5416,5416
+unknown_command_5417,5417
+unknown_command_5418,5418
 lastlogin,5419
 unknown_command_5420,5420
 openurl_nologin,5421
@@ -683,6 +702,7 @@ cam_inc_y,5509
 cam_dec_y,5510
 cam_followcoord,5511
 cam_smoothreset,5512
+unknown_command_5547,5547
 login_request,5600
 login_continue,5601
 login_resetreply,5602
@@ -735,6 +755,7 @@ detail_soundvol,6018
 detail_musicvol,6019
 detail_bgsoundvol,6020
 detail_removeroofs_option_override,6021
+unknown_command_6022,6022
 detail_particles,6023
 detail_antialiasing_default,6024
 detail_buildarea,6025
@@ -772,6 +793,7 @@ detailget_soundvol,6118
 detailget_musicvol,6119
 detailget_bgsoundvol,6120
 unknown_command_6121,6121
+unknown_command_6122,6122
 detailget_particles,6123
 detailget_antialiasing_default,6124
 detailget_buildarea,6125
@@ -785,8 +807,10 @@ detailget_toolkit_default,6132
 unknown_command_6133,6133
 detailget_cpuusage,6135
 detailget_texturing,6136
+unknown_command_6137,6137
 detailget_performance_metric,6138
 detailget_maxscreensize,6139
+unknown_command_6140,6140
 detailget_speechvol,6142
 detailget_loginvol,6143
 detailget_safemode,6144
@@ -850,6 +874,7 @@ autosetup_setmin,7004
 autosetup_setcustom,7005
 autosetup_blackflaglast,7006
 autosetup_getlevel,7007
+unknown_command_7008,7008
 unknown_command_7202,7202
 unknown_command_7203,7203
 unknown_command_7204,7204

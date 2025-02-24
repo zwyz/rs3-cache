@@ -24,6 +24,8 @@
 [command,cc_setonmouseleave](hook $x1)
 [command,if_setonmouserepeat](hook $x1,component $x2)
 [command,cc_setonmouserepeat](hook $x1)
+[command,if_setondragcancel](hook $x1,component $x2)
+[command,cc_setondragcancel](hook $x1)
 [command,if_setonclick](hook $x1,component $x2)
 [command,cc_setonclick](hook $x1)
 [command,if_setonrelease](hook $x1,component $x2)
