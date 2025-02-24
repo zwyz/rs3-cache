@@ -313,7 +313,7 @@ public class InterfaceUnpacker {
                 default -> throw new IllegalStateException("Unexpected value: " + packet.g1());
             };
 
-//            arguments.add(formatHookArgument(value, ScriptUnpacker.SCRIPT_PARAMETERS.get(script).get(i)));
+            arguments.add(formatHookArgument(value, ScriptUnpacker.SCRIPT_PARAMETERS.get(script).get(i)));
         }
 
         if (arguments.isEmpty()) {
