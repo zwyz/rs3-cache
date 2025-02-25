@@ -340,7 +340,7 @@ public enum Type {
     }
 
     public static Type byID(int id) {
-        if (Unpack.VERSION < 800) {
+        if (Unpack.VERSION < 803) {
             return byChar(id);
         }
 

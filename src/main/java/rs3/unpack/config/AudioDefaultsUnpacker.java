@@ -23,7 +23,7 @@ public class AudioDefaultsUnpacker {
                 return lines;
             }
 
-            case 1 -> lines.add("titlescreensong=" + Unpacker.format(Type.MIDI, Unpack.VERSION >= 920 ? packet.g4s() : packet.g2()));
+            case 1 -> lines.add("titlescreensong=" + Unpacker.format(Type.MIDI, Unpack.VERSION >= 912 ? packet.g4s() : packet.g2()));
 
             default -> throw new IllegalStateException("unknown opcode");
         }

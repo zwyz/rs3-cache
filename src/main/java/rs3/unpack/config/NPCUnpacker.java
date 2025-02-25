@@ -109,7 +109,7 @@ public class NPCUnpacker {
             case 101 -> lines.add("contrast=" + packet.g1s());
 
             case 102 -> {
-                if (Unpack.VERSION < 800) {
+                if (Unpack.VERSION < 809) {
                     lines.add("headicon=" + packet.g2());
                 } else {
                     var filter = packet.g1();
@@ -137,7 +137,7 @@ public class NPCUnpacker {
                     lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, multivarp));
                 }
 
-                var count = Unpack.VERSION >= 900 ? packet.gSmart1or2() : packet.g1();
+                var count = Unpack.VERSION >= 910 ? packet.gSmart1or2() : packet.g1();
 
                 for (var i = 0; i <= count; ++i) {
                     var multi = packet.g2null();
@@ -174,7 +174,7 @@ public class NPCUnpacker {
                     lines.add("multinpc=default," + Unpacker.format(Type.NPC, multidefault));
                 }
 
-                var count = Unpack.VERSION >= 900 ? packet.gSmart1or2() : packet.g1();
+                var count = Unpack.VERSION >= 910 ? packet.gSmart1or2() : packet.g1();
 
                 for (var i = 0; i <= count; ++i) {
                     var multi = packet.g2null();

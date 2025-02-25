@@ -91,7 +91,7 @@ public class Unpack {
         loadGroupNames(Path.of("data/names/graphics.txt"), 8, Unpacker.GRAPHIC_NAMES);
 
         // things stuff depends on
-        if (Unpack.VERSION < 800) {
+        if (Unpack.VERSION < 742) {
             unpackConfigGroup(2, 14, VarPlayerBitUnpacker::unpack, root.resolve("config/dump.varbit"));
             unpackConfigGroup(2, 15, VarClientStringUnpacker::unpack, root.resolve("config/dump.varcstr"));
             unpackConfigGroup(2, 16, VarPlayerUnpacker::unpack, root.resolve("config/dump.varp"));
@@ -167,7 +167,7 @@ public class Unpack {
 
         unpackConfigGroup(2, 18, AreaUnpacker::unpack, root.resolve("config/dump.area")); // client ignores
 
-        if (Unpack.VERSION < 800) {
+        if (Unpack.VERSION < 763) {
             unpackConfigGroup(2, 26, StructUnpacker::unpack, root.resolve("config/dump.struct"));
         } else {
             unpackConfigArchive(22, 5, StructUnpacker::unpack, root.resolve("config/dump.struct")); // 26

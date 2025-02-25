@@ -31,7 +31,7 @@ public class Js5MasterIndex {
                 version = packet.g4s();
             }
 
-            if (Unpack.VERSION >= 800) {
+            if (Unpack.VERSION >= 818) {
                 groupCount = packet.g4s();
                 unknown = packet.g4s();
             }

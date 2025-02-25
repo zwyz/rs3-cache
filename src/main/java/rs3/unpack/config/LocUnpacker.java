@@ -179,7 +179,7 @@ public class LocUnpacker {
                     lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, multivarp));
                 }
 
-                var count = Unpack.VERSION < 900 ? packet.g1() : packet.gSmart1or2();
+                var count = Unpack.VERSION >= 910 ? packet.gSmart1or2() : packet.g1();
 
                 for (var i = 0; i <= count; ++i) {
                     var multi = Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null();
@@ -229,7 +229,7 @@ public class LocUnpacker {
                     lines.add("multiloc=default," + Unpacker.format(Type.LOC, multidefault));
                 }
 
-                var count = Unpack.VERSION >= 900 ? packet.gSmart1or2() : packet.g1();
+                var count = Unpack.VERSION >= 910 ? packet.gSmart1or2() : packet.g1();
 
                 for (var i = 0; i <= count; ++i) {
                     var multi = Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null();
