@@ -8,6 +8,7 @@ import rs3.unpack.*;
 import rs3.unpack.config.TextureUnpacker;
 import rs3.unpack.config.*;
 import rs3.unpack.cutscene2d.Cutscene2D;
+import rs3.unpack.font.FontMetrics;
 import rs3.unpack.map.MapSquare;
 import rs3.unpack.script.Command;
 import rs3.unpack.script.ScriptUnpacker;
@@ -223,6 +224,7 @@ public class Unpack {
 //        unpackArchiveTransformed(47, b -> GSON.toJson(new Model(new Packet(b))), root.resolve("model"), ".json");
 //        iterateArchive(54, TextureUnpacker::unpack);
         unpackArchive(10, root.resolve("binary"), ".dat");
+        unpackArchiveTransformed(58, b -> GSON_PRETTY.toJson(new FontMetrics(new Packet(b))), root.resolve("fontmetrics"), ".json");
         unpackArchive(59, root.resolve("ttf"), ".ttf");
         unpackArchiveTransformed(61, VFXUnpacker::unpack, root.resolve("vfx"), ".json");
         unpackArchiveTransformed(62, b -> GSON_PRETTY.toJson(AnimatorController.decode(new Packet(b))), root.resolve("animator"), ".json");
