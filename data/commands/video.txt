@@ -1,5 +1,5 @@
 [command,video_advert_force_remove]
 [command,video_advert_play]()(boolean)
-[command,video_advert_play](int $x1)(boolean) 742
+[command,video_advert_play](int $x1)(boolean) 718
 [command,video_advert_allow_skip]
 [command,video_advert_has_finished]()(boolean)
