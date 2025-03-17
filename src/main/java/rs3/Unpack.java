@@ -5,8 +5,8 @@ import com.google.gson.GsonBuilder;
 import rs3.js4.Jagfile;
 import rs3.js5.*;
 import rs3.unpack.*;
-import rs3.unpack.config.TextureUnpacker;
 import rs3.unpack.config.*;
+import rs3.unpack.config.TextureUnpacker;
 import rs3.unpack.cutscene2d.Cutscene2D;
 import rs3.unpack.font.FontMetrics;
 import rs3.unpack.map.MapSquare;
@@ -37,6 +37,7 @@ import java.util.function.Function;
 // todo: clean this up
 public class Unpack {
     public static int VERSION;
+    public static int ID;
     private static Js5ResourceProvider PROVIDER;
     private static Js5MasterIndex MASTER_INDEX;
     public static final Gson GSON = new GsonBuilder().serializeSpecialFloatingPointValues().create();
@@ -46,10 +47,32 @@ public class Unpack {
         unpackLive("unpacked/live", 940, 1, 0, "content.runescape.com", 43594, ClientTokenProvider.getClientToken());
 //        unpackOpenRS2("unpacked/2024-06-03", 936, "runescape", 1815);
 //        unpackOpenRS2("unpacked/2024-05-28", 935, "runescape", 1806);
+
+//        unpackRS2(711, 298);
+//        unpackRS2(712, 299);
+//        unpackRS2(717, 301);
+//        unpackRS2(718, 302);
+//        unpackRS2(722, 305);
+//        unpackRS2(723, 306);
+//        unpackRS2(724, 307);
+//        unpackRS2(725, 308);
+//        unpackRS2(727, 309);
+//        unpackRS2(728, 310);
+//        unpackRS2(729, 311);
+//        unpackRS2(731, 312);
+//        unpackRS2(736, 313);
+//        unpackRS2(741, 1468);
+//        unpackRS2(742, 466);
+//        unpackRS2(742, 544);
+    }
+
+    private static void unpackRS2(int rev, int id) throws IOException {
+        unpackOpenRS2("unpacked/" + rev + "-" + id, rev, "runescape", id);
     }
 
     public static void unpackOpenRS2(String path, int version, String scope, int id) throws IOException {
         VERSION = version;
+        ID = id;
 
         unpack(Path.of(path), new MemoryCacheResourceProvider(new FileSystemCacheResourceProvider(
                 Path.of(System.getProperty("user.home") + "/.rscache/rs3"),
@@ -59,6 +82,7 @@ public class Unpack {
 
     public static void unpackLive(String path, int version, int subversion, int language, String host, int port, String token) throws IOException {
         VERSION = version;
+        ID = -1;
 
         unpack(Path.of(path), new MemoryCacheResourceProvider(new FileSystemCacheResourceProvider(
                 Path.of(System.getProperty("user.home") + "/.rscache/rs3"),
@@ -215,11 +239,15 @@ public class Unpack {
         unpackInterfaces(3, InterfaceUnpacker::unpack, root.resolve("interface"));
 
         // materials
-        unpackConfigArchive(9, 0, TextureUnpacker::unpack, root.resolve("config/dump.texture"));
+        if (Unpack.VERSION < 600) { // broken in rs2
+            unpackConfigArchive(9, 0, TextureUnpacker::unpack, root.resolve("config/dump.texture"));
+        }
 
         // other
         unpackConfigArchive(60, 0, StylesheetUnpacker::unpack, root.resolve("config/dump.stylesheet"));
-        unpackConfigArchive(26, 0, MaterialUnpacker::unpack, root.resolve("config/dump.material"));
+        if (Unpack.VERSION > 742) { // skip rs2 for now
+            unpackConfigArchive(26, 0, MaterialUnpacker::unpack, root.resolve("config/dump.material"));
+        }
 //        iterateArchive(8, SpriteUnpacker::unpack);
 //        unpackArchiveTransformed(47, b -> GSON.toJson(new Model(new Packet(b))), root.resolve("model"), ".json");
 //        iterateArchive(54, TextureUnpacker::unpack);
@@ -234,7 +262,9 @@ public class Unpack {
 
         // maps
 //        unpackMaps(root);
-        unpackWorldAreaMap(root);
+        if (Unpack.VERSION > 742) {
+            unpackWorldAreaMap(root);
+        }
     }
 
     public static void unpackLegacy(Path root) throws IOException {

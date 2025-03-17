@@ -11,6 +11,7 @@
 [command,friend_test](string $x1)(boolean)
 [command,friend_getworldname](int $x1)(string)
 [command,friend_platform](int $x1)(int)
+[command,friend_sameplatform](int $x1)(boolean)
 [command,friend_is_referrer](int $x1)(boolean)
 [command,friend_is_referred](int $x1)(boolean)
 [command,friend_getslotfromname](string $x1)(int)
