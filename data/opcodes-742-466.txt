@@ -210,7 +210,6 @@ cc_getopbase,469
 cc_callonresize,594
 cc_getcharindexatpos,1012
 cc_getcharposatindex,589
-cc_setmodernsprites,1046
 if_setposition,843
 if_setsize,617
 if_sethide,902
@@ -608,9 +607,9 @@ lc_param,242
 struct_param,235
 seq_param,363
 bas_getanim_ready,720
-aclass445_4525,312
-aclass445_5107,857
-aclass445_5108,10
+unknown_command_95,312
+unknown_command_96,857
+unknown_command_97,10
 chat_getfilter_public,254
 chat_setfilter,42
 chat_sendabusereport,718

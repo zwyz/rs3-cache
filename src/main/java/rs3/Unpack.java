@@ -37,6 +37,7 @@ import java.util.function.Function;
 // todo: clean this up
 public class Unpack {
     public static int VERSION;
+    public static int ID;
     private static Js5ResourceProvider PROVIDER;
     private static Js5MasterIndex MASTER_INDEX;
     public static final Gson GSON = new GsonBuilder().serializeSpecialFloatingPointValues().create();
@@ -50,6 +51,7 @@ public class Unpack {
 
     public static void unpackOpenRS2(String path, int version, String scope, int id) throws IOException {
         VERSION = version;
+        ID = id;
 
         unpack(Path.of(path), new MemoryCacheResourceProvider(new FileSystemCacheResourceProvider(
                 Path.of(System.getProperty("user.home") + "/.rscache/rs3"),
@@ -59,6 +61,7 @@ public class Unpack {
 
     public static void unpackLive(String path, int version, int subversion, int language, String host, int port, String token) throws IOException {
         VERSION = version;
+        ID = -1;
 
         unpack(Path.of(path), new MemoryCacheResourceProvider(new FileSystemCacheResourceProvider(
                 Path.of(System.getProperty("user.home") + "/.rscache/rs3"),
