@@ -16,7 +16,7 @@ import rs3.unpack.ui_anim.Anim;
 import rs3.unpack.ui_anim.AnimCurve;
 import rs3.unpack.unknown62.AnimatorController;
 import rs3.unpack.vfx.VFXUnpacker;
-import rs3.unpack.worldmap.MapAreaUnpacker;
+import rs3.unpack.worldmap.WorldMapUnpacker;
 import rs3.util.Packet;
 
 import javax.imageio.ImageIO;
@@ -38,8 +38,8 @@ import java.util.function.Function;
 public class Unpack {
     public static int VERSION;
     public static int ID;
-    private static Js5ResourceProvider PROVIDER;
-    private static Js5MasterIndex MASTER_INDEX;
+    public static Js5ResourceProvider PROVIDER;
+    public static Js5MasterIndex MASTER_INDEX;
     public static final Gson GSON = new GsonBuilder().serializeSpecialFloatingPointValues().create();
     public static final Gson GSON_PRETTY = new GsonBuilder().serializeSpecialFloatingPointValues().setPrettyPrinting().create();
 
@@ -224,7 +224,8 @@ public class Unpack {
         unpackConfigGroup(29, 0, BillboardUnpacker::unpack, root.resolve("config/dump.billboard"));
         unpackConfigGroup(24, 0, QuickChatCatUnpacker::unpack, root.resolve("config/dump.quickchatcat"));
         unpackConfigGroup(24, 1, QuickChatPhraseUnpacker::unpack, root.resolve("config/dump.quickchatphrase"));
-        unpackConfigGroup(23, 0, MapAreaUnpacker::unpack, root.resolve("config/dump.wma")); // worldmapdata details
+
+        WorldMapUnpacker.unpack(root.resolve("worldmap"));
 
         // defaults
         unpackDefaults(28, 3, GraphicsDefaultsUnpacker::unpack, root.resolve("config/graphics.defaults"));
@@ -240,7 +241,7 @@ public class Unpack {
         unpackInterfaces(3, InterfaceUnpacker::unpack, root.resolve("interface"));
 
         // materials
-        if (Unpack.VERSION < 600) { // broken in rs2
+        if (Unpack.VERSION < 474) { // broken in rs2
             unpackConfigArchive(9, 0, TextureUnpacker::unpack, root.resolve("config/dump.texture"));
         }
 
