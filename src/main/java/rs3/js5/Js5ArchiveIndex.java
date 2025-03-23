@@ -1,5 +1,6 @@
 package rs3.js5;
 
+import rs3.unpack.StylesheetUnpacker;
 import rs3.util.Packet;
 
 public class Js5ArchiveIndex {
@@ -200,5 +201,31 @@ public class Js5ArchiveIndex {
                 }
             }
         }
+    }
+
+    public int findGroup(String groupName) {
+        if (groupNameHash == null) {
+            return -1;
+        }
+        int name32 = StylesheetUnpacker.hash(groupName);
+        for (int i = 0; i < groupCount; i++) {
+            if (groupNameHash[groupId[i]] == name32) {
+                return groupId[i];
+            }
+        }
+        return -1;
+    }
+
+    public int findFile(int group, String fileName) {
+        if (groupFileNames == null) {
+            return -1;
+        }
+        int name32 = StylesheetUnpacker.hash(fileName);
+        for (int i = 0; i < groupMaxFileId[group]; i++) {
+            if (groupFileNames[group][i] == name32) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

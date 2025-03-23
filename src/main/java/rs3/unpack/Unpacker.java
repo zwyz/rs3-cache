@@ -17,6 +17,7 @@ public class Unpacker {
     public static final Map<Integer, Type> ENUM_OUTPUT_TYPE = new HashMap<>();
     public static final Map<Integer, String> SCRIPT_NAMES = new HashMap<>();
     public static final Map<Integer, String> GRAPHIC_NAMES = new HashMap<>();
+    public static final Map<Integer, String> OTHER_NAMES = new HashMap<>();
     public static final Map<Integer, String> WMA_NAMES = new HashMap<>();
     public static final Map<Integer, String> STYLESHEET_NAMES = new HashMap<>();
 

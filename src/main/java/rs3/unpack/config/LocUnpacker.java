@@ -105,7 +105,7 @@ public class LocUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; ++i) {
-                    if (Unpack.VERSION < 500) {
+                    if (Unpack.VERSION < 430) {
                         lines.add("recol" + (i + 1) + "s=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
                         lines.add("recol" + (i + 1) + "d=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
                     } else {

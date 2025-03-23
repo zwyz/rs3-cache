@@ -16,7 +16,7 @@ import rs3.unpack.ui_anim.Anim;
 import rs3.unpack.ui_anim.AnimCurve;
 import rs3.unpack.unknown62.AnimatorController;
 import rs3.unpack.vfx.VFXUnpacker;
-import rs3.unpack.worldmap.MapAreaUnpacker;
+import rs3.unpack.worldmap.WorldMapUnpacker;
 import rs3.util.Packet;
 
 import javax.imageio.ImageIO;
@@ -38,8 +38,8 @@ import java.util.function.Function;
 public class Unpack {
     public static int VERSION;
     public static int ID;
-    private static Js5ResourceProvider PROVIDER;
-    private static Js5MasterIndex MASTER_INDEX;
+    public static Js5ResourceProvider PROVIDER;
+    public static Js5MasterIndex MASTER_INDEX;
     public static final Gson GSON = new GsonBuilder().serializeSpecialFloatingPointValues().create();
     public static final Gson GSON_PRETTY = new GsonBuilder().serializeSpecialFloatingPointValues().setPrettyPrinting().create();
 
@@ -114,6 +114,7 @@ public class Unpack {
         loadGroupNamesScriptTrigger(12, Unpacker.SCRIPT_NAMES);
         loadGroupNames(Path.of("data/names/scripts.txt"), 12, Unpacker.SCRIPT_NAMES);
         loadGroupNames(Path.of("data/names/graphics.txt"), 8, Unpacker.GRAPHIC_NAMES);
+        loadOtherNames(Path.of("data/names/other.txt"), Unpacker.OTHER_NAMES);
 
         // things stuff depends on
         if (Unpack.VERSION < 742) {
@@ -223,7 +224,8 @@ public class Unpack {
         unpackConfigGroup(29, 0, BillboardUnpacker::unpack, root.resolve("config/dump.billboard"));
         unpackConfigGroup(24, 0, QuickChatCatUnpacker::unpack, root.resolve("config/dump.quickchatcat"));
         unpackConfigGroup(24, 1, QuickChatPhraseUnpacker::unpack, root.resolve("config/dump.quickchatphrase"));
-        unpackConfigGroup(23, 0, MapAreaUnpacker::unpack, root.resolve("config/dump.wma")); // worldmapdata details
+
+        WorldMapUnpacker.unpack(root.resolve("worldmap"));
 
         // defaults
         unpackDefaults(28, 3, GraphicsDefaultsUnpacker::unpack, root.resolve("config/graphics.defaults"));
@@ -239,7 +241,7 @@ public class Unpack {
         unpackInterfaces(3, InterfaceUnpacker::unpack, root.resolve("interface"));
 
         // materials
-        if (Unpack.VERSION < 600) { // broken in rs2
+        if (Unpack.VERSION < 474) { // broken in rs2
             unpackConfigArchive(9, 0, TextureUnpacker::unpack, root.resolve("config/dump.texture"));
         }
 
@@ -311,6 +313,10 @@ public class Unpack {
         }
 
         Files.write(path, lines);
+    }
+
+    private static void loadOtherNames(Path path, Map<Integer, String> names) throws IOException {
+        generateNames(path, names);
     }
 
     private static void loadGroupNames(Path path, int archive, Map<Integer, String> names) throws IOException {
@@ -400,7 +406,7 @@ public class Unpack {
         }
     }
 
-    private static void generateNames(Path path, HashMap<Integer, String> names) throws IOException {
+    private static void generateNames(Path path, Map<Integer, String> names) throws IOException {
         for (var name : Files.readAllLines(path)) {
             generateNames(name, names);
         }
@@ -539,16 +545,38 @@ public class Unpack {
         var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
 
         for (var group : archiveIndex.groupId) {
+            String groupName = null;
+            if (archiveIndex.groupNameHash != null && archiveIndex.groupNameHash[group] != -1) {
+                groupName = Unpacker.OTHER_NAMES.get(archiveIndex.groupNameHash[group]);
+            }
+            if (groupName == null) {
+                groupName = String.valueOf(group);
+            }
+
             var files = Js5Util.unpackGroup(archiveIndex, group, PROVIDER.get(archive, group, false, 0));
 
             if (files.size() == 1 && files.containsKey(0)) {
-                Files.write(path.resolve(group + extension), files.get(0));
+                String name = null;
+                if (archiveIndex.groupFileNames != null && archiveIndex.groupFileNames[group][0] != -1) {
+                    name = Unpacker.OTHER_NAMES.get(archiveIndex.groupFileNames[group][0]);
+                }
+                if (name == null) {
+                    name = group + extension;
+                }
+                Files.write(path.resolve(name), files.get(0));
             } else {
-                var groupDirectory = path.resolve(String.valueOf(group));
+                var groupDirectory = path.resolve(groupName);
                 Files.createDirectories(groupDirectory);
 
                 for (var file : files.keySet()) {
-                    Files.write(groupDirectory.resolve(file + extension), files.get(file));
+                    String name = null;
+                    if (archiveIndex.groupFileNames != null) {
+                        name = Unpacker.OTHER_NAMES.get(archiveIndex.groupFileNames[group][file]);
+                    }
+                    if (name == null) {
+                        name = file + extension;
+                    }
+                    Files.write(groupDirectory.resolve(name), files.get(file));
                 }
             }
         }
@@ -566,13 +594,29 @@ public class Unpack {
             var files = Js5Util.unpackGroup(archiveIndex, group, PROVIDER.get(archive, group, false, 0));
 
             if (files.size() == 1 && files.containsKey(0)) {
-                Files.writeString(path.resolve(group + extension), unpack.apply(files.get(0)));
+                String name = null;
+                if (archiveIndex.groupNameHash != null && archiveIndex.groupNameHash[group] != -1) {
+                    name = Unpacker.OTHER_NAMES.get(archiveIndex.groupNameHash[group]);
+                } else if (archiveIndex.groupFileNames != null && archiveIndex.groupFileNames[group][0] != -1) {
+                    name = Unpacker.OTHER_NAMES.get(archiveIndex.groupFileNames[group][0]);
+                }
+                if (name == null) {
+                    name = group + extension;
+                }
+                Files.writeString(path.resolve(name), unpack.apply(files.get(0)));
             } else {
                 var groupDirectory = path.resolve(String.valueOf(group));
                 Files.createDirectories(groupDirectory);
 
                 for (var file : files.keySet()) {
-                    Files.writeString(groupDirectory.resolve(file + extension), unpack.apply(files.get(file)));
+                    String name = null;
+                    if (archiveIndex.groupFileNames != null) {
+                        name = Unpacker.OTHER_NAMES.get(archiveIndex.groupFileNames[group][file]);
+                    }
+                    if (name == null) {
+                        name = file + extension;
+                    }
+                    Files.writeString(groupDirectory.resolve(name), unpack.apply(files.get(file)));
                 }
             }
         }
