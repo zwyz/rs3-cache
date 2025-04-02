@@ -41,8 +41,6 @@
 [command,activechatphrase_sendclan]
 [command,activechatphrase_sendpublic]
 [command,anim](seq $x1,int $x2)
-[command,cc_setdraggablebehavior](int $x1)
-[command,if_setdraggablebehavior](int $x1,component $x2)
 [command,oc_findreset]
 [command,stat_xp](stat $x1)(int)
 [command,chat_gethistoryclan](int $x1)(string)

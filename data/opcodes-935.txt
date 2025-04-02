@@ -1790,8 +1790,8 @@ if_deleteallnested,1052
 if_createchild,1999
 if_createnested,1878
 if_getnextcategorysubid,18
-cc_getdynamiclayer,653
-cc_getstaticlayer,399
+cc_find_parent,653
+cc_find_layer,399
 if_exists,104
 cc_findbycategory,435
 ui_getdynid,1345
