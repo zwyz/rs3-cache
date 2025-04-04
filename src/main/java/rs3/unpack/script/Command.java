@@ -166,7 +166,15 @@ public class Command {
         try {
             var opcodes = new HashMap<String, Integer>();
 
-            for (var line : Files.readAllLines(Path.of("data/opcodes-" + (Unpack.VERSION < 685 ? "unscrambled" : Unpack.VERSION + (Unpack.ID != -1 ? "-" + Unpack.ID : "")) + ".txt"))) {
+            var commandsPath = Path.of("data/opcodes-unscrambled.txt");
+            if (Unpack.VERSION >= 685) {
+                commandsPath = Path.of("data/opcodes-" + Unpack.VERSION + "-" + Unpack.ID + ".txt");
+                if (!Files.exists(commandsPath)) {
+                    commandsPath = Path.of("data/opcodes-" + Unpack.VERSION + ".txt");
+                }
+            }
+
+            for (var line : Files.readAllLines(commandsPath)) {
                 var parts = line.split(",");
 
                 if (parts.length >= 3) {
