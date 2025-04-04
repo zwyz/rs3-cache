@@ -40,6 +40,7 @@ public class Unpack {
     public static int ID;
     public static Js5ResourceProvider PROVIDER;
     public static Js5MasterIndex MASTER_INDEX;
+    public static int CONFIG_VERSION;
     public static final Gson GSON = new GsonBuilder().serializeSpecialFloatingPointValues().create();
     public static final Gson GSON_PRETTY = new GsonBuilder().serializeSpecialFloatingPointValues().setPrettyPrinting().create();
 
@@ -93,6 +94,7 @@ public class Unpack {
     public static void unpack(Path path, Js5ResourceProvider provider) throws IOException {
         PROVIDER = provider;
         MASTER_INDEX = new Js5MasterIndex(Js5Util.decompress(PROVIDER.get(255, 255, false, 0)));
+        CONFIG_VERSION = MASTER_INDEX.getArchiveData(Js5Archive.JS5_CONFIG.id).getVersion();
         Command.reset(); // todo: make non-static
         Unpacker.reset(); // todo: make non-static
         ScriptUnpacker.reset(); // todo: make non-static

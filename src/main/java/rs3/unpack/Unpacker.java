@@ -763,7 +763,7 @@ public class Unpacker {
             return type;
         }
 
-        if (Unpack.VERSION < 939) {
+        if (Unpack.CONFIG_VERSION < 1732267126) {
             if (table == 85 && column == 13) return List.of(Type.NPC);
         } else {
             if (table == 85 && column == 14) return List.of(Type.NPC);
@@ -787,7 +787,7 @@ public class Unpacker {
         if (table == 293 && column == 6) return List.of(Type.VAR_INT, Type.INT); // todo
         if (table == 303 && column == 0) return List.of(Type.INT); // todo
 
-        throw new RuntimeException("missing dbcolumn type");
+        throw new RuntimeException("missing dbcolumn type: " + table + ", " + column + ", config version: " + Unpack.CONFIG_VERSION);
     }
 
     public static List<Type> getDBColumnTypeTuple(int table, int column, int tuple) {
