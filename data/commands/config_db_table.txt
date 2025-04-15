@@ -9,7 +9,7 @@
 [command,db_getrowtable](dbrow $x1)(dbtable)
 [command,db_filter_find](dbfilter $x1,dbcolumn $x2,boolean $x3,int $x4,int $x5)(int)
 [command,unknown_command_77](dbfilter $x1,dbcolumn $x2,boolean $x3)
-[command,db_filter_value](dbcolumn $x1,int $x2,filterop $x3,int $x4)(dbfilter)
+[command,db_filter_value]todo
 [command,db_filter_unknown](dbfilter $x1)(dbfilter)
 [command,db_filter_combine](dbfilter $x1,dbfilter $x2)(dbfilter)
 [command,unknown_command_79]todo signature

@@ -390,6 +390,13 @@ public class SyntaxBuilder {
             buildCommand(code, index, command, operand, argumentTypes, returnTypes);
             return;
         }
+        if (command == DB_FILTER_VALUE) {
+            var column = (int) stack.get(stack.size() - 4).operand;
+            var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column), Type.INT_FILTEROP, Type.INT);
+            var returnTypes = List.of(Type.DBFILTER);
+            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
+            return;
+        }
 
         if (command == DB_FIND) {
             if (Unpack.VERSION < 920) {

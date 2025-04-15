@@ -29,9 +29,14 @@ public class WorldMapUnpacker {
     }
 
     private static void unpack(Js5ArchiveIndex index, Path root) throws IOException {
-        var detailsId = index.findGroup("details");
-        if (detailsId == -1) {
-            throw new IllegalArgumentException("Group not found: details");
+        int detailsId;
+        if (Unpack.VERSION > 742) {
+            detailsId = 0;
+        } else {
+            detailsId = index.findGroup("details");
+            if (detailsId == -1) {
+                throw new IllegalArgumentException("Group not found: details");
+            }
         }
         var files = Js5Util.unpackGroup(index, detailsId, Unpack.PROVIDER.get(23, detailsId, false, 0));
         var lines = new ArrayList<String>();
