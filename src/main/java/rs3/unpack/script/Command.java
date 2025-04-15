@@ -154,6 +154,7 @@ public class Command {
     public static Command DB_FIND_WITH_COUNT;
     public static Command DB_FIND_REFINE;
     public static Command DB_GETFIELD;
+    public static Command DB_FILTER_VALUE;
     public static Command RUNJAVASCRIPT;
 
     // load commands
@@ -315,6 +316,7 @@ public class Command {
         DB_FIND_WITH_COUNT = findCommand("db_find_with_count");
         DB_FIND_REFINE = findCommand("db_find_refine");
         DB_GETFIELD = findCommand("db_getfield");
+        DB_FILTER_VALUE = findCommand("db_filter_value");
         RUNJAVASCRIPT = findCommand("runjavascript");
     }
 
