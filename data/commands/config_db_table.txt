@@ -18,3 +18,4 @@
 [command,db_filter_column](dbcolumn $x1,dbcolumn $x2,filterop $op)(dbfilter)
 [command,unknown_command_80]todo signature
 [command,unknown_command_81](int $x1)(int)
+[command,unknown_command_99](int $x1,string $x2)

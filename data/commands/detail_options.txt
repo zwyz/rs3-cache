@@ -189,7 +189,7 @@
 [command,autosetup_setmedium]
 [command,autosetup_setlow]
 [command,autosetup_setmin]
-[command,autosetup_setunknown]
+[command,autosetup_setpowersave]
 [command,autosetup_setcustom]
 [command,autosetup_blackflaglast]
 [command,autosetup_getlevel]()(int)

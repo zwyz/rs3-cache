@@ -6,6 +6,7 @@
 [command,platformtype]()(platformtype)
 [command,unknown_command_1]
 [command,unknown_command_2]
+[command,os_64bit]()(boolean)
 [command,hsvtorgb](int $x1)(int)
 [command,is_gamescreen_state]()(boolean)
 [command,quit]

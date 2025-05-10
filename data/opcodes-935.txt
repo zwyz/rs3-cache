@@ -1814,7 +1814,7 @@ if_grid_getcellwidth,669
 if_grid_getcellheight,317
 if_grid_getnumrows,1459
 if_grid_getnumcolumns,1740
-autosetup_setunknown,12
+autosetup_setpowersave,12
 console_enablesnow,265
 cc_crmview_init,122
 cc_crmview_getstring,457
