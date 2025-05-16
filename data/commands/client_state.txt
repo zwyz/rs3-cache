@@ -44,7 +44,7 @@
 [command,playermod]()(int)
 [command,playermodlevel]()(int)
 [command,baseidkit](int $x1,idkit $x2)
-[command,basecolour](int $x1,rgb $x2)
+[command,basecolour](int $x1,int $x2)
 [command,basematerial](int $x1,material $x2)
 [command,setgender](int $x1)
 [command,setobj](int $x1,obj $x2)
