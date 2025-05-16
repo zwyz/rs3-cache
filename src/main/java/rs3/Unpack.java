@@ -120,7 +120,11 @@ public class Unpack {
 
         // things stuff depends on
         if (Unpack.VERSION < 742) {
-            unpackConfigGroup(2, 14, VarPlayerBitUnpacker::unpack, root.resolve("config/dump.varbit"));
+            if (Unpack.VERSION < 488) {
+                unpackConfigGroup(2, 14, VarPlayerBitUnpacker::unpack, root.resolve("config/dump.varbit"));
+            } else {
+                unpackConfigArchive(22, 10, VarPlayerBitUnpacker::unpack, root.resolve("config/dump.varbit"));
+            }
             unpackConfigGroup(2, 15, VarClientStringUnpacker::unpack, root.resolve("config/dump.varcstr"));
             unpackConfigGroup(2, 16, VarPlayerUnpacker::unpack, root.resolve("config/dump.varp"));
             unpackConfigGroup(2, 19, VarClientUnpacker::unpack, root.resolve("config/dump.varc"));
