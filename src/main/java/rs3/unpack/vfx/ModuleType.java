@@ -12,4 +12,11 @@ public enum ModuleType {
     FLIPBOOK,
     ACCELERATION,
     LIGHTING,
+    UNKNOWN11,
+    UNKNOWN12,
+    UNKNOWN13,
+    UNKNOWN14,
+    UNKNOWN15,
+    UNKNOWN16,
+    UNKNOWN17,
 }

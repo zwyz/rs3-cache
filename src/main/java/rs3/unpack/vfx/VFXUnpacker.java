@@ -33,6 +33,13 @@ public class VFXUnpacker {
                     case FLIPBOOK -> context.deserialize(json, Flipbook.class);
                     case ACCELERATION -> context.deserialize(json, Acceleration.class);
                     case LIGHTING -> context.deserialize(json, Lighting.class);
+                    case UNKNOWN11 -> context.deserialize(json, Unknown11.class);
+                    case UNKNOWN12 -> context.deserialize(json, Unknown12.class);
+                    case UNKNOWN13 -> context.deserialize(json, Unknown13.class);
+                    case UNKNOWN14 -> context.deserialize(json, Unknown14.class);
+                    case UNKNOWN15 -> context.deserialize(json, Unknown15.class);
+                    case UNKNOWN16 -> context.deserialize(json, Unknown16.class);
+                    case UNKNOWN17 -> context.deserialize(json, Unknown17.class);
                 };
             })
             .setPrettyPrinting()

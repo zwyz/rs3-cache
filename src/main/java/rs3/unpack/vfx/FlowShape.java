@@ -6,8 +6,8 @@ import rs3.util.Packet;
 public class FlowShape {
     public FlowShapeType kind;
     public boolean unknown1;
-    public Vector3 position; // position?
-    public Vector3 rotation; // angle
+    public Vector3 position;
+    public Vector3 rotation;
     public float length;
     public float height;
     public float width;

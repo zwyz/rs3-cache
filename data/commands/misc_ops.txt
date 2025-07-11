@@ -49,3 +49,8 @@
 [command,error](string $x1)
 [command,unknown_command_53](boolean $x1)
 [command,ping]()(int)
+[command,picking_setmaxdistance](int $x1)
+[command,picking_setmaxdistance]()(int)
+[command,unknown_command_102]()(boolean)
+[command,gl_version_major]()(int)
+[command,gl_version_minor]()(int)

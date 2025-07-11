@@ -4,12 +4,12 @@ import rs3.util.Packet;
 
 public class Attractor extends Module {
 
-    public ModulePropertyVec3Curve position;
-    public ModulePropertyFloatCurve strength;
+    public Vec3Curve position;
+    public FloatCurve strength;
 
     public Attractor(Packet packet, int version) {
-        position = new ModulePropertyVec3Curve(packet, version);
-        strength = new ModulePropertyFloatCurve(packet, version);
+        position = new Vec3Curve(packet, version);
+        strength = new FloatCurve(packet, version);
     }
 
     @Override

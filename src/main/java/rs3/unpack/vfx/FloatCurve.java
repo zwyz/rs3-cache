@@ -5,10 +5,10 @@ import rs3.util.Packet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModulePropertyFloatCurve {
+public class FloatCurve {
     private List<KeyFrame> keyframes = new ArrayList<>();
 
-    public ModulePropertyFloatCurve(Packet packet, int version) {
+    public FloatCurve(Packet packet, int version) {
         var frames = packet.g1();
 
         if (frames == 1) {

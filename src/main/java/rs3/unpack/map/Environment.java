@@ -1,5 +1,6 @@
 package rs3.unpack.map;
 
+import rs3.Unpack;
 import rs3.util.Packet;
 
 public class Environment {
@@ -7,7 +8,8 @@ public class Environment {
     public final EnvFogSettings fog;
     public final EnvScatteringSettings scattering;
     public final EnvVolumetricSettings volumetrics;
-    public final EnvToneMapSettings colourGrading;
+    public final float unknown;
+    public final EnvToneMapSettings toneMap;
     public final EnvBloomSettings unknown6;
     public final EnvSkySettings skybox;
     public final EnvColourGradingSettings colourRemap;
@@ -18,7 +20,8 @@ public class Environment {
         this.fog = new EnvFogSettings(packet);
         this.scattering = new EnvScatteringSettings(packet);
         this.volumetrics = new EnvVolumetricSettings(packet);
-        this.colourGrading = new EnvToneMapSettings(packet);
+        this.unknown = Unpack.VERSION >= 942 ? packet.gFloat() : (1.0F - 512.0F) * 10.0F;
+        this.toneMap = new EnvToneMapSettings(packet);
         this.unknown6 = new EnvBloomSettings(packet);
         this.skybox = new EnvSkySettings(packet);
         // g2s, g1 for reflection

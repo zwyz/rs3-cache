@@ -22,7 +22,11 @@ public class Flow extends Module {
         // 0x2 = single burst spawn
         shape1 = new FlowShape(packet);
         shape2 = new FlowShape(packet);
-        unknown3 = packet.gFloat();
+
+        if (version < 8) {
+            unknown3 = packet.gFloat();
+        }
+
         spawnRateNum = packet.gFloat();
         spawnRateDenom = packet.gFloat();
 
