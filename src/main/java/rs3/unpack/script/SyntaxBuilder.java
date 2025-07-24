@@ -417,12 +417,12 @@ public class SyntaxBuilder {
         if (command == DB_FIND_WITH_COUNT) {
             if (Unpack.VERSION < 920) {
                 var column = (int) stack.get(stack.size() - 2).operand;
-                var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column));
+                var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTuple(column).getFirst());
                 var returnTypes = List.of(Type.INT_INT);
                 buildCommand(code, index, command, operand, argumentTypes, returnTypes);
             } else {
                 var column = (int) stack.get(stack.size() - 3).operand;
-                var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column), Type.BASEVARTYPE);
+                var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTuple(column).getFirst(), Type.BASEVARTYPE);
                 var returnTypes = List.of(Type.INT_INT);
                 buildCommand(code, index, command, operand, argumentTypes, returnTypes);
             }
