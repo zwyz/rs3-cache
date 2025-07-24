@@ -302,6 +302,14 @@ public class SyntaxBuilder {
             return;
         }
 
+        if (command == ENUM_GETREVERSEINDEX_STRING) {
+            var inputType = Type.byID((int) stack.get(stack.size() - 4).operand);
+            var argumentTypes = List.of(Type.TYPE, Type.ENUM, Type.STRING, Type.INT_INT);
+            var returnTypes = List.of(inputType);
+            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
+            return;
+        }
+
         if (command == LC_PARAM) {
             var paramType = Unpacker.getParamType((int) stack.get(stack.size() - 1).operand);
             var argumentTypes = List.of(Type.LOC, Type.PARAM);
