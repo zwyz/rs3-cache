@@ -38,10 +38,10 @@ public class FloorOverlayUnpacker {
             case 6 -> lines.add("debugname=" + packet.gjstr());
             case 7 -> lines.add("mapcolour=0x" + Integer.toHexString(packet.g3()));
             case 8 -> lines.add("unknown8=yes");
-            case 9 -> lines.add("materialscale=" + packet.g2());
+            case 9 -> lines.add("texturescale=" + packet.g2());
             case 10 -> lines.add("hardshadow=no");
             case 11 -> lines.add("priority=" + packet.g1());
-            case 12 -> lines.add("blend=yes");
+            case 12 -> lines.add("smoothedges=yes");
             case 13 -> lines.add("waterfogcolour=0x" + Integer.toHexString(packet.g3()));
             case 14 -> lines.add("waterfogscale=" + packet.g1());
             case 15 -> lines.add("unknown15=" + packet.g2()); // todo

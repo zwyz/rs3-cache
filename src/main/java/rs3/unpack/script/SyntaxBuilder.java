@@ -302,6 +302,14 @@ public class SyntaxBuilder {
             return;
         }
 
+        if (command == ENUM_GETREVERSEINDEX_STRING) {
+            var inputType = Type.byID((int) stack.get(stack.size() - 4).operand);
+            var argumentTypes = List.of(Type.TYPE, Type.ENUM, Type.STRING, Type.INT_INT);
+            var returnTypes = List.of(inputType);
+            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
+            return;
+        }
+
         if (command == LC_PARAM) {
             var paramType = Unpacker.getParamType((int) stack.get(stack.size() - 1).operand);
             var argumentTypes = List.of(Type.LOC, Type.PARAM);
@@ -399,7 +407,7 @@ public class SyntaxBuilder {
         }
 
         if (command == DB_FIND) {
-            if (Unpack.VERSION < 920) {
+            if (Unpack.VERSION < 919) {
                 var column = (int) stack.get(stack.size() - 2).operand;
                 var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column));
                 var returnTypes = List.<Type>of();
@@ -415,14 +423,14 @@ public class SyntaxBuilder {
         }
 
         if (command == DB_FIND_WITH_COUNT) {
-            if (Unpack.VERSION < 920) {
+            if (Unpack.VERSION < 919) {
                 var column = (int) stack.get(stack.size() - 2).operand;
-                var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column));
+                var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTuple(column).getFirst());
                 var returnTypes = List.of(Type.INT_INT);
                 buildCommand(code, index, command, operand, argumentTypes, returnTypes);
             } else {
                 var column = (int) stack.get(stack.size() - 3).operand;
-                var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column), Type.BASEVARTYPE);
+                var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTuple(column).getFirst(), Type.BASEVARTYPE);
                 var returnTypes = List.of(Type.INT_INT);
                 buildCommand(code, index, command, operand, argumentTypes, returnTypes);
             }

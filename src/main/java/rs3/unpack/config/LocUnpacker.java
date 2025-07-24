@@ -287,9 +287,9 @@ public class LocUnpacker {
 
             case 162 -> lines.add("hillchange=rotate," + packet.g4s());
             case 163 -> lines.add("tint=" + packet.g1s() + "," + packet.g1s() + "," + packet.g1s() + "," + packet.g1s());
-            case 164 -> lines.add("unknown164=" + packet.g2s());
-            case 165 -> lines.add("unknown165=" + packet.g2s());
-            case 166 -> lines.add("unknown166=" + packet.g2s());
+            case 164 -> lines.add("postoffsetx=" + packet.g2s());
+            case 165 -> lines.add("postoffsety=" + packet.g2s());
+            case 166 -> lines.add("postoffsetz=" + packet.g2s());
             case 167 -> lines.add("unknown167=" + packet.g2());
             case 168 -> lines.add("unknown168=yes");
             case 169 -> lines.add("unknown169=yes");
@@ -309,7 +309,7 @@ public class LocUnpacker {
             case 194 -> lines.add("cursor5=" + Unpacker.format(Type.CURSOR, packet.g2()));
             case 195 -> lines.add("cursor6=" + Unpacker.format(Type.CURSOR, packet.g2()));
 
-            case 196 -> lines.add("forcelod=" + switch (packet.g1()) {
+            case 196 -> lines.add("minimumlodleveloverride=" + switch (packet.g1()) {
                 case 0 -> "max";
                 case 1 -> "high";
                 case 2 -> "medium";
@@ -318,7 +318,7 @@ public class LocUnpacker {
                 default -> throw new AssertionError();
             });
 
-            case 197 -> lines.add("unknown197=" + packet.g1());
+            case 197 -> lines.add("indoorsoverride=" + packet.g1());
             case 198 -> lines.add("runetek5only=yes");
             case 199 -> lines.add("unknown199=no");
             case 200 -> lines.add("highdetailonly=yes");
@@ -424,12 +424,12 @@ public class LocUnpacker {
             }
 
             case 250 -> lines.add("bgsoundshape=" + packet.g1());
-            case 251 -> lines.add("unknown251=" + Unpacker.formatBoolean(packet.g1()));
-            case 252 -> lines.add("unknown252=" + packet.g2() + "," + packet.g2() + "," + packet.g2());
+            case 251 -> lines.add("bgsounddistancefiltered=" + Unpacker.formatBoolean(packet.g1()));
+            case 252 -> lines.add("bgsounddistancefilterparams=" + packet.g2() + "," + packet.g2() + "," + packet.g2()); //hzhigh,hzlow,q
 
             case 253 -> lines.add("randomsoundshape=" + packet.g1());
-            case 254 -> lines.add("unknown254=" + Unpacker.formatBoolean(packet.g1()));
-            case 255 -> lines.add("unknown255=" + packet.g2() + "," + packet.g2() + "," + packet.g2());
+            case 254 -> lines.add("randomsounddistancefiltered=" + Unpacker.formatBoolean(packet.g1()));
+            case 255 -> lines.add("randomsounddistancefilterparams=" + packet.g2() + "," + packet.g2() + "," + packet.g2());
 
             default -> throw new IllegalStateException("unknown opcode");
         }
