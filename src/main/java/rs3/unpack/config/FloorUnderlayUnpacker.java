@@ -24,7 +24,7 @@ public class FloorUnderlayUnpacker {
 
             case 1 -> lines.add("colour=0x" + Integer.toHexString(packet.g3()));
             case 2 -> lines.add("material=" + Unpacker.format(Type.MATERIAL, packet.g2null()));
-            case 3 -> lines.add("materialscale=" + packet.g2());
+            case 3 -> lines.add("texturescale=" + packet.g2());
             case 4 -> lines.add("hardshadow=no");
             case 5 -> lines.add("occlude=no");
             default -> throw new IllegalStateException("unknown opcode");
