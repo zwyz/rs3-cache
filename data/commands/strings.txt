@@ -2,7 +2,7 @@
 [command,append](string $x1,string $x2)(string)
 [command,append_signnum](string $x1,int $x2)(string)
 [command,tostring](anyint $x1)(string)
-[command,tostring](anyint $x1,int $x2)(string) 930
+[command,tostring](anyint $x1,int $x2)(string) 919
 [command,tostring_long](long $x1)(string)
 [command,tostring_long](long $x1,int $x2)(string) 936
 [command,unknown_command_54](long $x1)(string)

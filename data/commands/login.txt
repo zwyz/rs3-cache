@@ -43,7 +43,7 @@
 [command,login_request_social_network](int $x1,string $x2,int $x3)
 [command,lobby_enterlobby_social_network](socialnetwork $x1)
 [command,lobby_enterlobby_social_network](socialnetwork $x1,string $x2,boolean $x3) 859
-[command,lobby_enterlobby_social_network](socialnetwork $x1,string $x2,boolean $x3,int $x4) 930
+[command,lobby_enterlobby_social_network](socialnetwork $x1,string $x2,boolean $x3,int $x4) 919
 [command,federated_login](socialnetwork $x1,int $x2)
 [command,federated_login_status]()(int)
 [command,openstore](int $x1,string $x2)

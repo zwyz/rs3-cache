@@ -407,7 +407,7 @@ public class SyntaxBuilder {
         }
 
         if (command == DB_FIND) {
-            if (Unpack.VERSION < 920) {
+            if (Unpack.VERSION < 919) {
                 var column = (int) stack.get(stack.size() - 2).operand;
                 var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column));
                 var returnTypes = List.<Type>of();
@@ -423,7 +423,7 @@ public class SyntaxBuilder {
         }
 
         if (command == DB_FIND_WITH_COUNT) {
-            if (Unpack.VERSION < 920) {
+            if (Unpack.VERSION < 919) {
                 var column = (int) stack.get(stack.size() - 2).operand;
                 var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTuple(column).getFirst());
                 var returnTypes = List.of(Type.INT_INT);

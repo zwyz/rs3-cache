@@ -763,7 +763,9 @@ public class Unpacker {
             return type;
         }
 
-        if (Unpack.CONFIG_VERSION < 1732267126) {
+        if (Unpack.CONFIG_VERSION <= 1626364203) {
+            if (table == 85 && column == 12) return List.of(Type.NPC);
+        } else if (Unpack.CONFIG_VERSION < 1732267126) {
             if (table == 85 && column == 13) return List.of(Type.NPC);
         } else {
             if (table == 85 && column == 14) return List.of(Type.NPC);
