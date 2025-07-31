@@ -100,6 +100,7 @@ public class SyntaxBuilder {
                         case INTEGER -> Type.UNKNOWN_INT;
                         case LONG -> Type.UNKNOWN_LONG;
                         case OBJECT -> Type.UNKNOWN_OBJECT;
+                        case ARRAY -> throw new AssertionError();
                     });
 
                     case null -> argumentTypes.add(Type.UNKNOWN); // discards can pop stacks in different order
@@ -259,189 +260,10 @@ public class SyntaxBuilder {
             return;
         }
 
-        if (command == ENUM) {
-            var inputType = Type.byID((int) stack.get(stack.size() - 4).operand);
-            var outputType = Type.byID((int) stack.get(stack.size() - 3).operand);
-            var argumentTypes = List.of(Type.TYPE, Type.TYPE, Type.ENUM, inputType);
-            var returnTypes = List.of(outputType);
-            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            return;
-        }
-
-        if (command == ENUM_STRING) {
-            var inputType = Unpacker.getEnumInputType((int) stack.get(stack.size() - 2).operand);
-            var outputType = Type.STRING;
-            var argumentTypes = List.of(Type.ENUM, inputType);
-            var returnTypes = List.of(outputType);
-            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            return;
-        }
-
-        if (command == ENUM_HASOUTPUT) {
-            var type = Type.byID((int) stack.get(stack.size() - 3).operand);
-            var argumentTypes = List.of(Type.TYPE, Type.ENUM, type);
-            var returnTypes = List.of(Type.BOOLEAN);
-            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            return;
-        }
-
-        if (command == ENUM_GETREVERSECOUNT) {
-            var type = Type.byID((int) stack.get(stack.size() - 3).operand);
-            var argumentTypes = List.of(Type.TYPE, Type.ENUM, type);
-            var returnTypes = List.of(Type.INT_INT);
-            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            return;
-        }
-
-        if (command == ENUM_GETREVERSEINDEX) {
-            var outputType = Type.byID((int) stack.get(stack.size() - 5).operand);
-            var inputType = Type.byID((int) stack.get(stack.size() - 4).operand);
-            var argumentTypes = List.of(Type.TYPE, Type.TYPE, Type.ENUM, outputType, Type.INT_INT);
-            var returnTypes = List.of(inputType);
-            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            return;
-        }
-
-        if (command == ENUM_GETREVERSEINDEX_STRING) {
-            var inputType = Type.byID((int) stack.get(stack.size() - 4).operand);
-            var argumentTypes = List.of(Type.TYPE, Type.ENUM, Type.STRING, Type.INT_INT);
-            var returnTypes = List.of(inputType);
-            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            return;
-        }
-
-        if (command == LC_PARAM) {
-            var paramType = Unpacker.getParamType((int) stack.get(stack.size() - 1).operand);
-            var argumentTypes = List.of(Type.LOC, Type.PARAM);
-            var returnTypes = List.of(paramType);
-            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            return;
-        }
-
-        if (command == NC_PARAM) {
-            var paramType = Unpacker.getParamType((int) stack.get(stack.size() - 1).operand);
-            var argumentTypes = List.of(Type.NPC, Type.PARAM);
-            var returnTypes = List.of(paramType);
-            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            return;
-        }
-
-        if (command == OC_PARAM) {
-            var paramType = Unpacker.getParamType((int) stack.get(stack.size() - 1).operand);
-            var argumentTypes = List.of(Type.OBJ, Type.PARAM);
-            var returnTypes = List.of(paramType);
-            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            return;
-        }
-
-        if (command == SEQ_PARAM) {
-            var paramType = Unpacker.getParamType((int) stack.get(stack.size() - 1).operand);
-            var argumentTypes = List.of(Type.SEQ, Type.PARAM);
-            var returnTypes = List.of(paramType);
-            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            return;
-        }
-
-        if (command == STRUCT_PARAM) {
-            var paramType = Unpacker.getParamType((int) stack.get(stack.size() - 1).operand);
-            var argumentTypes = List.of(Type.STRUCT, Type.PARAM);
-            var returnTypes = List.of(paramType);
-            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            return;
-        }
-
-        if (command == MEC_PARAM) {
-            var paramType = Unpacker.getParamType((int) stack.get(stack.size() - 1).operand);
-            var argumentTypes = List.of(Type.MAPELEMENT, Type.PARAM);
-            var returnTypes = List.of(paramType);
-            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            return;
-        }
-
-        if (command == QUEST_PARAM) {
-            var paramType = Unpacker.getParamType((int) stack.get(stack.size() - 1).operand);
-            var argumentTypes = List.of(Type.QUEST, Type.PARAM);
-            var returnTypes = List.of(paramType);
-            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            return;
-        }
-
-        if (command == CC_PARAM) {
-            var paramType = Unpacker.getParamType((int) stack.get(stack.size() - 1).operand);
-            var argumentTypes = List.of(Type.PARAM);
-            var returnTypes = List.of(paramType);
-            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            return;
-        }
-
-        if (command == CC_SETPARAM) {
-            var paramType = Unpacker.getParamType((int) stack.get(stack.size() - 2).operand);
-            var argumentTypes = List.of(Type.PARAM, paramType);
-            var returnTypes = List.<Type>of();
-            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            return;
-        }
-
-        if (command == PLAYER_GROUP_MEMBER_GET_SAME_WORLD_VAR) {
-            var kind = (int) stack.get(stack.size() - 2).operand == 1;
-            var id = (int) stack.get(stack.size() - 1).operand;
-            var argumentTypes = List.of(Type.INT_INT, Type.BOOLEAN, kind ? Type.VAR_PLAYER : Type.VARBIT);
-            var returnTypes = List.of(kind ? Unpacker.getVarType(VarDomain.PLAYER, id) : Type.INT_INT);
-            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            return;
-        }
-
         if (command == DB_GETFIELD) {
             var column = (int) stack.get(stack.size() - 2).operand;
             var argumentTypes = List.of(Type.DBROW, Type.DBCOLUMN, Type.INT_INT);
             var returnTypes = Unpacker.getDBColumnTypeTuple(column);
-            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            return;
-        }
-        if (command == DB_FILTER_VALUE) {
-            var column = (int) stack.get(stack.size() - 4).operand;
-            var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column), Type.INT_FILTEROP, Type.INT);
-            var returnTypes = List.of(Type.DBFILTER);
-            buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            return;
-        }
-
-        if (command == DB_FIND) {
-            if (Unpack.VERSION < 919) {
-                var column = (int) stack.get(stack.size() - 2).operand;
-                var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column));
-                var returnTypes = List.<Type>of();
-                buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            } else {
-                var column = (int) stack.get(stack.size() - 3).operand;
-                var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column), Type.BASEVARTYPE);
-                var returnTypes = List.<Type>of();
-                buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            }
-
-            return;
-        }
-
-        if (command == DB_FIND_WITH_COUNT) {
-            if (Unpack.VERSION < 919) {
-                var column = (int) stack.get(stack.size() - 2).operand;
-                var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTuple(column).getFirst());
-                var returnTypes = List.of(Type.INT_INT);
-                buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            } else {
-                var column = (int) stack.get(stack.size() - 3).operand;
-                var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTuple(column).getFirst(), Type.BASEVARTYPE);
-                var returnTypes = List.of(Type.INT_INT);
-                buildCommand(code, index, command, operand, argumentTypes, returnTypes);
-            }
-
-            return;
-        }
-
-        if (command == DB_FIND_REFINE) {
-            var column = (int) stack.get(stack.size() - 3).operand;
-            var argumentTypes = List.of(Type.DBCOLUMN, Unpacker.getDBColumnTypeTupleAssertSingle(column), Type.BASEVARTYPE);
-            var returnTypes = List.of(Type.INT_INT);
             buildCommand(code, index, command, operand, argumentTypes, returnTypes);
             return;
         }
@@ -534,13 +356,13 @@ public class SyntaxBuilder {
                     var expectedType = remainingTypes.removeLast();
 
                     if (expectedType != currentType) {
-                        var meet = Type.meet(expectedType, currentType);
+                        var meet = Type.LATTICE.meet(expectedType, currentType);
 
-                        if (meet != null) {
-                            expressionTypes.set(i, meet); // propagate down
-                        } else if (!Type.subtype(currentType, expectedType)) { // incomparable types
+                        if (ScriptUnpacker.ERROR_ON_TYPE_CONFLICT && meet == Type.CONFLICT) {
                             throw new IllegalStateException("type mismatch in script " + currentScript + ", assigning " + expectedType + " to " + currentType + ", context: " + List.of(code).subList(0, index + 1));
                         }
+
+                        expressionTypes.set(i, meet); // propagate down
                     }
                 }
             }

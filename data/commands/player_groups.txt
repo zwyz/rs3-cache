@@ -1,6 +1,6 @@
 [command,player_group_find]()(boolean)
 [command,player_group_member_count]()(int)
-[command,player_group_member_get_same_world_var]todo
+[command,player_group_member_get_same_world_var](int $x1, boolean $x2, unknown_int $x3)(unknown_int)
 [command,player_group_member_get_rank](int $x1)(int)
 [command,player_group_member_get_team](int $x1)(int)
 [command,player_group_member_get_last_seen_node_id](int $x1)(int)

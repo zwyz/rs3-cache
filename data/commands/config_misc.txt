@@ -1,8 +1,8 @@
-[command,struct_param]todo
-[command,seq_param]todo
+[command,struct_param](struct $x1, param $x2)(unknown)
+[command,seq_param](seq $x1, param $x2)(unknown)
 [command,seqlength](seq $x1)(int)
-[command,nc_param]todo
+[command,nc_param](npc $x1, param $x2)(unknown)
 [command,nc_get_multivar](npc $x1)(var_int)
-[command,lc_param]todo
+[command,lc_param](loc $x1, param $x2)(unknown)
 [command,lc_get_multivar](loc $x1)(var_int)
 [command,bas_getanim_ready](bas $x1)(seq)

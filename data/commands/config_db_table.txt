@@ -1,21 +1,23 @@
 [command,db_listall](dbtable $x1)(int)
-[command,db_find]todo
-[command,db_find_with_count]todo
+[command,db_find](dbcolumn $x1, unknown $x2)
+[command,db_find](dbcolumn $x1, unknown $x2, basevartype $x3) 919
+[command,db_find_with_count](dbcolumn $x1, unknown $x2)(int)
+[command,db_find_with_count](dbcolumn $x1, unknown $x2, basevartype $x3)(int) 919
 [command,db_findnext]()(dbrow)
-[command,db_getfield]todo
-[command,db_getfieldcount](dbrow $x1,dbcolumn $x2)(int)
-[command,db_find_refine]todo
+[command,db_getfield]
+[command,db_getfieldcount](dbrow $x1, dbcolumn $x2)(int)
+[command,db_find_refine](dbcolumn $x1, unknown $x2, basevartype $x3)(int)
 [command,db_find_get](int $x1)(dbrow)
 [command,db_getrowtable](dbrow $x1)(dbtable)
-[command,db_filter_find](dbfilter $x1,dbcolumn $x2,boolean $x3,int $x4,int $x5)(int)
-[command,unknown_command_77](dbfilter $x1,dbcolumn $x2,boolean $x3)
-[command,db_filter_value]todo
+[command,db_filter_find](dbfilter $x1, dbcolumn $x2, boolean $x3, int $x4, int $x5)(int)
+[command,unknown_command_77](dbfilter $x1, dbcolumn $x2, boolean $x3)
+[command,db_filter_value](dbcolumn $x1, unknown $x2, filterop $x3, int $x4)(dbfilter)
 [command,db_filter_unknown](dbfilter $x1)(dbfilter)
-[command,db_filter_combine](dbfilter $x1,dbfilter $x2)(dbfilter)
+[command,db_filter_combine](dbfilter $x1, dbfilter $x2)(dbfilter)
 [command,unknown_command_79]todo signature
 [command,unknown_command_62]todo signature
-[command,db_filter_substring](dbcolumn $x1,string $x2,int $x3)(dbfilter)
-[command,db_filter_column](dbcolumn $x1,dbcolumn $x2,filterop $op)(dbfilter)
+[command,db_filter_substring](dbcolumn $x1, string $x2, int $x3)(dbfilter)
+[command,db_filter_column](dbcolumn $x1, dbcolumn $x2, filterop $op)(dbfilter)
 [command,unknown_command_80]todo signature
 [command,unknown_command_81](int $x1)(int)
-[command,unknown_command_99](int $x1,string $x2)
+[command,unknown_command_99](int $x1, string $x2)

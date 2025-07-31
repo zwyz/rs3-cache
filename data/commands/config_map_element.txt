@@ -2,4 +2,4 @@
 [command,mec_sprite](mapelement $x1)(graphic)
 [command,mec_textsize](mapelement $x1)(int)
 [command,mec_category](mapelement $x1)(category)
-[command,mec_param]todo
+[command,mec_param](mapelement $x1, param $x2)(unknown)

@@ -13,7 +13,7 @@
 [command,oc_wearpos2](obj $x1)(int)
 [command,oc_wearpos3](obj $x1)(int)
 [command,oc_members](obj $x1)(int)
-[command,oc_param]todo
+[command,oc_param](obj $x1, param $x2)(unknown)
 [command,oc_icursor](obj $x1,int $x2)(cursor)
 [command,oc_minimenu_colour_overridden](obj $x1)(boolean)
 [command,oc_minimenu_colour](obj $x1)(rgb)

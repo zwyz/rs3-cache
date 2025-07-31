@@ -38,143 +38,140 @@ public class Unpacker {
     }
 
     public static String format(Type type, int value) {
-        return switch (type) {
-            case INT -> String.valueOf(value);
-
-            case BOOLEAN -> switch (value) {
+        if (type == Type.INT) {
+            return String.valueOf(value);
+        } else if (type == Type.BOOLEAN) {
+            return switch (value) {
                 case -1 -> "null";
                 case 0 -> "false";
                 case 1 -> "true";
                 default -> throw new IllegalArgumentException("invalid boolean");
             };
-
-            case CHAR -> {
-                if (value == -1) {
-                    yield "null";
-                }
-
-                if (value == 39) yield "'\\''";
-                if (value == 92) yield "'\\\\'";
-                yield "'" + CP1252.decode(value) + "'";
+        } else if (type == Type.CHAR) {
+            if (value == -1) {
+                return "null";
             }
 
-            case COORDGRID -> {
-                if (value == -1) {
-                    yield "null";
-                }
-
-                var level = value >>> 28;
-                var x = value >>> 14 & 16383;
-                var z = value & 16383;
-                yield level + "_" + (x / 64) + "_" + (z / 64) + "_" + (x % 64) + "_" + (z % 64);
+            if (value == 39) return "'\\''";
+            if (value == 92) return "'\\\\'";
+            return "'" + CP1252.decode(value) + "'";
+        } else if (type == Type.COORDGRID) {
+            if (value == -1) {
+                return "null";
             }
 
-            case TYPE -> Type.byID(value).name;
-
-            case TOPLEVELINTERFACE, OVERLAYINTERFACE, CLIENTINTERFACE -> format(Type.INTERFACE, value);
-
-            case COMPONENT -> {
-                if (value == -1) {
-                    yield "null";
-                }
-
-                yield "interface_" + (value >> 16) + ":com" + (value & 0xffff);
+            var level = value >>> 28;
+            var x = value >>> 14 & 16383;
+            var z = value & 16383;
+            return level + "_" + x / 64 + "_" + z / 64 + "_" + x % 64 + "_" + z % 64;
+        } else if (type == Type.TYPE) {
+            return Type.byID(value).name;
+        } else if (type == Type.TOPLEVELINTERFACE || type == Type.OVERLAYINTERFACE || type == Type.CLIENTINTERFACE) {
+            return format(Type.INTERFACE, value);
+        } else if (type == Type.COMPONENT) {
+            if (value == -1) {
+                return "null";
             }
 
-            case DBCOLUMN -> {
-                int table;
-                int column;
-                int tuple;
-                if (Unpack.VERSION < 911) {
-                    table = value >>> 8;
-                    column = value & 0xFF;
-                    tuple = -1;
-                } else {
-                    table = value >>> 12;
-                    column = (value >>> 4) & 255;
-                    tuple = (value & 15) - 1;
-                }
-
-                if (tuple == -1) {
-                    yield format(Type.DBTABLE, table) + ":col" + column;
-                } else {
-                    yield format(Type.DBTABLE, table) + ":col" + column + ":" + tuple;
-                }
+            return "interface_" + (value >> 16) + ":com" + (value & 0xffff);
+        } else if (type == Type.DBCOLUMN) {
+            int table;
+            int column;
+            int tuple;
+            if (Unpack.VERSION < 911) {
+                table = value >>> 8;
+                column = value & 0xFF;
+                tuple = -1;
+            } else {
+                table = value >>> 12;
+                column = value >>> 4 & 255;
+                tuple = (value & 15) - 1;
             }
 
-            case MAPAREA -> {
-                if (value == -1) {
-                    yield "null";
-                }
-
-                yield WMA_NAMES.getOrDefault(value, "maparea_" + value);
+            if (tuple == -1) {
+                return format(Type.DBTABLE, table) + ":col" + column;
+            } else {
+                return format(Type.DBTABLE, table) + ":col" + column + ":" + tuple;
+            }
+        } else if (type == Type.MAPAREA) {
+            if (value == -1) {
+                return "null";
             }
 
-            case STYLESHEET -> {
-                if (value == -1) {
-                    yield "null";
-                }
-
-                yield STYLESHEET_NAMES.getOrDefault(value, "stylesheet_" + value);
+            return WMA_NAMES.getOrDefault(value, "maparea_" + value);
+        } else if (type == Type.STYLESHEET) {
+            if (value == -1) {
+                return "null";
             }
 
-            case GRAPHIC -> {
-                if (value == -1) {
-                    yield "null";
-                }
-
-                var name = GRAPHIC_NAMES.getOrDefault(value, "graphic_" + value);
-
-                if (name.contains(",")) {
-                    name = "\"" + name + "\"";
-                }
-
-                yield name;
+            return STYLESHEET_NAMES.getOrDefault(value, "stylesheet_" + value);
+        } else if (type == Type.GRAPHIC) {
+            if (value == -1) {
+                return "null";
             }
 
-            case FONTMETRICS -> {
-                if (value == -1) {
-                    yield "null";
-                }
+            var name = GRAPHIC_NAMES.getOrDefault(value, "graphic_" + value);
 
-                // TODO figure out when fonts were reworked
-                if (Unpack.VERSION < 917) {
-                    yield GRAPHIC_NAMES.getOrDefault(value, "fontmetrics_" + value);
-                } else {
-                    yield "fontmetrics_" + value;
-                }
+            if (name.contains(",")) {
+                name = "\"" + name + "\"";
             }
 
-            case VAR_INT -> {
-                if (value == -1) {
-                    yield "null";
-                }
-
-                if ((value & 0xff000000) != 0) {
-                    yield formatVarBit(value & 0xffff);
-                } else {
-                    yield formatVar(VarDomain.byID((value >> 16) & 0xff), value & 0xffff);
-                }
+            return name;
+        } else if (type == Type.FONTMETRICS) {
+            if (value == -1) {
+                return "null";
             }
 
-            case VARBIT -> formatVarBit(value);
-            case VAR_PLAYER -> formatVar(VarDomain.PLAYER, value);
-            case VAR_PLAYER_BIT -> "varplayerbit_" + value;
-            case VAR_NPC -> formatVar(VarDomain.NPC, value);
-            case VAR_NPC_BIT -> "varnpcbit_" + value;
-            case VAR_CLIENT -> formatVar(VarDomain.CLIENT, value);
-            case VAR_CLIENT_STRING -> "varclientstring_" + value;
-            case VAR_WORLD -> formatVar(VarDomain.WORLD, value);
-            case VAR_WORLD_STRING -> "varworldstring_" + value;
-            case VAR_REGION -> formatVar(VarDomain.REGION, value);
-            case VAR_OBJECT -> formatVar(VarDomain.OBJECT, value);
-            case VAR_CLAN -> formatVar(VarDomain.CLAN, value);
-            case VAR_CLAN_SETTING -> formatVar(VarDomain.CLAN_SETTING, value);
-            case VAR_CONTROLLER -> formatVar(VarDomain.CONTROLLER, value);
-            case VAR_PLAYER_GROUP -> formatVar(VarDomain.PLAYER_GROUP, value);
-            case VAR_GLOBAL -> formatVar(VarDomain.GLOBAL, value);
+            // TODO figure out when fonts were reworked
+            if (Unpack.VERSION < 917) {
+                return GRAPHIC_NAMES.getOrDefault(value, "fontmetrics_" + value);
+            } else {
+                return "fontmetrics_" + value;
+            }
+        } else if (type == Type.VAR_INT) {
+            if (value == -1) {
+                return "null";
+            }
 
-            case MOVESPEED -> switch (value) {
+            if ((value & 0xff000000) != 0) {
+                return formatVarBit(value & 0xffff);
+            } else {
+                return formatVar(VarDomain.byID(value >> 16 & 0xff), value & 0xffff);
+            }
+        } else if (type == Type.VARBIT) {
+            return formatVarBit(value);
+        } else if (type == Type.VAR_PLAYER) {
+            return formatVar(VarDomain.PLAYER, value);
+        } else if (type == Type.VAR_PLAYER_BIT) {
+            return "varplayerbit_" + value;
+        } else if (type == Type.VAR_NPC) {
+            return formatVar(VarDomain.NPC, value);
+        } else if (type == Type.VAR_NPC_BIT) {
+            return "varnpcbit_" + value;
+        } else if (type == Type.VAR_CLIENT) {
+            return formatVar(VarDomain.CLIENT, value);
+        } else if (type == Type.VAR_CLIENT_STRING) {
+            return "varclientstring_" + value;
+        } else if (type == Type.VAR_WORLD) {
+            return formatVar(VarDomain.WORLD, value);
+        } else if (type == Type.VAR_WORLD_STRING) {
+            return "varworldstring_" + value;
+        } else if (type == Type.VAR_REGION) {
+            return formatVar(VarDomain.REGION, value);
+        } else if (type == Type.VAR_OBJECT) {
+            return formatVar(VarDomain.OBJECT, value);
+        } else if (type == Type.VAR_CLAN) {
+            return formatVar(VarDomain.CLAN, value);
+        } else if (type == Type.VAR_CLAN_SETTING) {
+            return formatVar(VarDomain.CLAN_SETTING, value);
+        } else if (type == Type.VAR_CONTROLLER) {
+            return formatVar(VarDomain.CONTROLLER, value);
+        } else if (type == Type.VAR_PLAYER_GROUP) {
+            return formatVar(VarDomain.PLAYER_GROUP, value);
+        } else if (type == Type.VAR_GLOBAL) {
+            return formatVar(VarDomain.GLOBAL, value);
+        } else if (type == Type.MOVESPEED) {
+            return switch (value) {
                 case -1 -> "stationary";
                 case 0 -> "crawl";
                 case 1 -> "walk";
@@ -182,8 +179,8 @@ public class Unpacker {
                 case 3 -> "instant";
                 default -> throw new IllegalArgumentException("invalid movespeed");
             };
-
-            case LOC_SHAPE -> switch (value) {
+        } else if (type == Type.LOC_SHAPE) {
+            return switch (value) {
                 case 0 -> "1";
                 case 1 -> "2";
                 case 2 -> "3";
@@ -209,8 +206,8 @@ public class Unpacker {
                 case 22 -> "0";
                 default -> throw new IllegalArgumentException("" + value);
             };
-
-            case CLIENT_TYPE -> switch (value) {
+        } else if (type == Type.CLIENT_TYPE) {
+            return switch (value) {
                 case -1 -> "null";
                 case 1 -> "java";
                 case 2 -> "android";
@@ -222,8 +219,8 @@ public class Unpacker {
                 case 10 -> "enhanced_linux";
                 default -> "client_type_" + value;
             };
-
-            case SOCIAL_NETWORK -> switch (value) {
+        } else if (type == Type.SOCIAL_NETWORK) {
+            return switch (value) {
                 case -1 -> "null";
                 case 0 -> "facebook";
                 case 4 -> "google";
@@ -234,8 +231,8 @@ public class Unpacker {
                 case 10 -> "steam";
                 default -> "social_network_" + value;
             };
-
-            case STAT -> switch (value) {
+        } else if (type == Type.STAT) {
+            return switch (value) {
                 case -1 -> "null";
                 case 0 -> "attack";
                 case 1 -> "defence";
@@ -268,8 +265,8 @@ public class Unpacker {
                 case 28 -> "necromancy";
                 default -> "stat_" + value;
             };
-
-            case NPC_STAT -> switch (value) {
+        } else if (type == Type.NPC_STAT) {
+            return switch (value) {
                 case -1 -> "null";
                 case 0 -> "attack";
                 case 1 -> "defence";
@@ -280,43 +277,41 @@ public class Unpacker {
                 case 6 -> "necromancy";
                 default -> "npc_stat_" + value;
             };
-
-            case CLIENTSCRIPT -> {
-                if (value == -1) {
-                    yield "null";
-                }
-
-                var name = getScriptName(value);
-                name = name.substring(1, name.length() - 1);
-                name = name.split(",")[1];
-                yield name;
+        } else if (type == Type.CLIENTSCRIPT) {
+            if (value == -1) {
+                return "null";
             }
 
-            case TWITCH_EVENT -> switch (value) {
+            var name = getScriptName(value);
+            name = name.substring(1, name.length() - 1);
+            name = name.split(",")[1];
+            return name;
+        } else if (type == Type.TWITCH_EVENT) {
+            return switch (value) {
                 case 0 -> "report";
                 case 1 -> "result";
                 case 2 -> "chat_message";
                 case 3 -> "webcam_device_info";
                 default -> throw new IllegalArgumentException("" + value);
             };
-
-            case MINIMENU_EVENT -> switch (value) {
+        } else if (type == Type.MINIMENU_EVENT) {
+            return switch (value) {
                 case 0 -> "open";
                 case 1 -> "close";
                 case 2 -> "click";
                 default -> throw new IllegalArgumentException("" + value);
             };
-
-            case INT_INT -> String.valueOf(value);
-
-            case INT_BOOLEAN -> switch (value) {
+        } else if (type == Type.INT_INT) {
+            return String.valueOf(value);
+        } else if (type == Type.INT_BOOLEAN) {
+            return switch (value) {
                 case -1 -> "null";
                 case 0 -> "^false";
                 case 1 -> "^true";
                 default -> "" + value;
             };
-
-            case INT_CHATFILTER -> switch (value) {
+        } else if (type == Type.INT_CHATFILTER) {
+            return switch (value) {
                 case -1 -> "null";
                 case 0 -> "^chatfilter_on";
                 case 1 -> "^chatfilter_friends";
@@ -325,8 +320,8 @@ public class Unpacker {
                 case 4 -> "^chatfilter_autochat";
                 default -> "^chatfilter_" + value;
             };
-
-            case INT_CHATTYPE -> switch (value) { // https://twitter.com/TheCrazy0neTv/status/1100567742602756096
+        } else if (type == Type.INT_CHATTYPE) {
+            return switch (value) { // https://twitter.com/TheCrazy0neTv/status/1100567742602756096
                 case -1 -> "null";
                 case 0 -> "^chattype_gamemessage";
                 case 1 -> "^chattype_modchat";
@@ -365,8 +360,8 @@ public class Unpacker {
                 case 115 -> "^chattype_mesbox";
                 default -> "^chattype_" + value;
             };
-
-            case INT_PLATFORMTYPE -> switch (value) {
+        } else if (type == Type.INT_PLATFORMTYPE) {
+            return switch (value) {
                 case -1 -> "null";
                 case 0 -> "^platformtype_default";
                 case 1 -> "^platformtype_steam";
@@ -375,8 +370,8 @@ public class Unpacker {
                 case 5 -> "^platformtype_jagex";
                 default -> "^platformtype_" + value;
             };
-
-            case INT_IFTYPE -> switch (value) {
+        } else if (type == Type.INT_IFTYPE) {
+            return switch (value) {
                 case -1 -> "null";
                 case 0 -> "^iftype_layer";
                 case 3 -> "^iftype_rectangle";
@@ -404,8 +399,8 @@ public class Unpacker {
                 case 28 -> "^iftype_modelgroup";
                 default -> "^iftype_" + value;
             };
-
-            case INT_KEY -> switch (value) {
+        } else if (type == Type.INT_KEY) {
+            return switch (value) {
                 case -1 -> "null";
                 case 0 -> "0";
                 case 1 -> "^key_f1";
@@ -493,8 +488,8 @@ public class Unpacker {
                 case 105 -> "^key_page_down";
                 default -> "^key_" + value;
             };
-
-            case INT_SETPOSH -> switch (value) {
+        } else if (type == Type.INT_SETPOSH) {
+            return switch (value) {
                 case -1 -> "null";
                 case 0 -> "^setposh_abs_left";
                 case 1 -> "^setposh_abs_centre";
@@ -504,8 +499,8 @@ public class Unpacker {
                 case 5 -> "^setposh_proportion_right";
                 default -> "^setposh_" + value;
             };
-
-            case INT_SETPOSV -> switch (value) {
+        } else if (type == Type.INT_SETPOSV) {
+            return switch (value) {
                 case -1 -> "null";
                 case 0 -> "^setposv_abs_top";
                 case 1 -> "^setposv_abs_centre";
@@ -515,8 +510,8 @@ public class Unpacker {
                 case 5 -> "^setposv_proportion_bottom";
                 default -> "^setposv_" + value;
             };
-
-            case INT_SETSIZE -> switch (value) {
+        } else if (type == Type.INT_SETSIZE) {
+            return switch (value) {
                 case -1 -> "null";
                 case 0 -> "^setsize_abs";
                 case 1 -> "^setsize_minus";
@@ -525,8 +520,8 @@ public class Unpacker {
                 case 4 -> "^setsize_aspect";
                 default -> "^setsize_" + value;
             };
-
-            case INT_SETTEXTALIGNH -> switch (value) {
+        } else if (type == Type.INT_SETTEXTALIGNH) {
+            return switch (value) {
                 case -1 -> "null";
                 case 0 -> "^settextalignh_left";
                 case 1 -> "^settextalignh_centre";
@@ -534,16 +529,16 @@ public class Unpacker {
                 case 3 -> "^settextalignh_justified";
                 default -> "^settextalignh_" + value;
             };
-
-            case INT_SETTEXTALIGNV -> switch (value) {
+        } else if (type == Type.INT_SETTEXTALIGNV) {
+            return switch (value) {
                 case -1 -> "null";
                 case 0 -> "^settextalignv_top";
                 case 1 -> "^settextalignv_centre";
                 case 2 -> "^settextalignv_bottom";
                 default -> "^settextalignv_" + value;
             };
-
-            case INT_WINDOWMODE -> switch (value) { // tfu
+        } else if (type == Type.INT_WINDOWMODE) {
+            return switch (value) { // tfu
                 case -1 -> "null";
                 case 0 -> "0";
                 case 1 -> "^windowmode_small";
@@ -551,8 +546,8 @@ public class Unpacker {
                 case 3 -> "^windowmode_fullscreen";
                 default -> "^windowmode_" + value;
             };
-
-            case INT_RGB -> switch (value) {
+        } else if (type == Type.INT_RGB) {
+            return switch (value) {
                 case -1 -> "null";
                 case 0xff0000 -> "^red";
                 case 0x00ff00 -> "^green";
@@ -564,8 +559,8 @@ public class Unpacker {
                 case 0x000000 -> "^black";
                 default -> "0x" + Integer.toHexString(value);
             };
-
-            case INT_CLIENTOPTION -> switch (value) {
+        } else if (type == Type.INT_CLIENTOPTION) {
+            return switch (value) {
                 case -1 -> "null";
                 case 0 -> "^clientoption_ambient_occlusion";
                 case 1 -> "^clientoption_anisotropic_filtering";
@@ -608,8 +603,8 @@ public class Unpacker {
                 case 38 -> "^clientoption_volume_master";
                 default -> "^clientoption_" + value;
             };
-
-            case INT_FILTEROP -> switch (value) {
+        } else if (type == Type.INT_FILTEROP) {
+            return switch (value) {
                 case -1 -> "null";
                 case 1 -> "^filterop_lt";
                 case 2 -> "^filterop_lte";
@@ -618,29 +613,25 @@ public class Unpacker {
                 case 5 -> "^filterop_gt";
                 default -> "^windowmode_" + value;
             };
+        }
 
-            default -> {
-                if (value == -1) {
-                    yield "null";
-                }
+        if (value == -1) {
+            return "null";
+        }
 
-                yield type.name + "_" + value;
-            }
-        };
+        return type.name + "_" + value;
     }
 
     public static String format(Type type, long value) {
-        return switch (type) {
-            case LONG -> String.valueOf(value);
+        if (type == Type.LONG) {
+            return String.valueOf(value);
+        }
 
-            default -> {
-                if (value == -1) {
-                    yield "null";
-                }
+        if (value == -1) {
+            return "null";
+        }
 
-                yield type.name + "_" + value;
-            }
-        };
+        return type.name + "_" + value;
     }
 
     public static String format(Type type, String value) {
@@ -807,7 +798,7 @@ public class Unpacker {
         if (Unpack.VERSION < 911) {
             return getDBColumnTypeTuple(column >>> 8, column & 255, -1);
         } else {
-            return getDBColumnTypeTuple(column >>> 12, (column >>> 4) & 255, (column & 15) - 1);
+            return getDBColumnTypeTuple(column >>> 12, column >>> 4 & 255, (column & 15) - 1);
         }
     }
 
@@ -910,7 +901,7 @@ public class Unpacker {
         var list = new ArrayList<Integer>();
 
         for (var i = 0; i < 16; i++) {
-            if ((value & (1 << i)) != 0) {
+            if ((value & 1 << i) != 0) {
                 list.add(i + 1);
             }
         }
@@ -960,12 +951,16 @@ public class Unpacker {
     }
 
     public static String getScriptName(int id) {
-        var name = "[" + (ScriptUnpacker.CLIENTSCRIPT.contains(id) ? "clientscript" : "proc") + ",script" + id + "]";
-
         if (SCRIPT_NAMES.containsKey(id)) {
-            name = SCRIPT_NAMES.get(id);
+            return SCRIPT_NAMES.get(id);
         }
 
-        return name;
+        var trigger = ScriptUnpacker.SCRIPT_TRIGGERS.get(id);
+
+        if (trigger == null) {
+            trigger = !ScriptUnpacker.CALLED.contains(id) && ScriptUnpacker.getReturnTypes(id).isEmpty() ? ScriptTrigger.CLIENTSCRIPT : ScriptTrigger.PROC;
+        }
+
+        return "[" + trigger.name().toLowerCase() + ",script" + id + "]";
     }
 }

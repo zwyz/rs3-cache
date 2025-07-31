@@ -1,9 +1,9 @@
-[command,enum_string]todo
-[command,enum]todo
-[command,enum_hasoutput]todo
-[command,enum_hasoutput_string](enum $x1,string $x2)(boolean)
-[command,enum_getoutputcount](enum $x1)(int)
-[command,enum_getreversecount]todo
-[command,enum_getreversecount_string](enum $x1, string $x2)(int)
-[command,enum_getreverseindex]todo
-[command,enum_getreverseindex_string]todo
+[command,enum_string](enum $x1, unknown $x2)(string)
+[command,enum](type $inputtype, type $outputtype, enum $enum, unknown $key)(unknown)
+[command,enum_hasoutput](type $inputtype, enum $enum, unknown $key)(boolean)
+[command,enum_hasoutput_string](enum $enum, string $key)(boolean)
+[command,enum_getoutputcount](enum $enum)(int)
+[command,enum_getreversecount](type $inputtype, enum $enum, unknown $value)(int)
+[command,enum_getreversecount_string](enum $enum, string $value)(int)
+[command,enum_getreverseindex](type $outputtype, type $inputtype, enum $enum, unknown $value, int $index)(unknown)
+[command,enum_getreverseindex_string](type $inputtype, enum $enum, string $value, int $index)(unknown)

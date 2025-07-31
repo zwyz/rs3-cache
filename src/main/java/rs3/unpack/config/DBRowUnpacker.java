@@ -41,7 +41,7 @@ public class DBRowUnpacker {
                         var sb = new StringBuilder("data=col" + column);
 
                         for (var type : types) {
-                            sb.append(",").append(switch (type.baseType) {
+                            sb.append(",").append(switch (type.base) {
                                 case INTEGER -> Unpacker.format(type, packet.g4s());
                                 case LONG -> Unpacker.format(type, packet.g8s());
                                 case STRING -> Unpacker.format(type, packet.gjstr());

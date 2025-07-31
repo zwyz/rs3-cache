@@ -46,7 +46,7 @@ public class DBTableUnpacker {
                             var sb = new StringBuilder("default=col" + column);
 
                             for (var type : types) {
-                                sb.append(",").append(switch (type.baseType) {
+                                sb.append(",").append(switch (type.base) {
                                     case INTEGER -> Unpacker.format(type, packet.g4s());
                                     case LONG -> Unpacker.format(type, packet.g8s());
                                     case STRING -> Unpacker.format(type, packet.gjstr());
@@ -90,7 +90,7 @@ public class DBTableUnpacker {
                                 for (int tup = 0; tup < tupleLength; tup++) {
                                     var type = columnType[col][def];
 
-                                    sb.append(",").append(switch (type.baseType) {
+                                    sb.append(",").append(switch (type.base) {
                                         case INTEGER -> Unpacker.format(type, packet.g4s());
                                         case LONG -> Unpacker.format(type, packet.g8s());
                                         case STRING -> Unpacker.format(type, packet.gjstr());

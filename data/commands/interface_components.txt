@@ -56,7 +56,7 @@
 [command,cc_setnoclickthrough](boolean $x1)
 [command,if_setpausetext](string $x1,component $x2)
 [command,cc_setpausetext](string $x1)
-[command,cc_setparam]todo
+[command,cc_setparam](param $x1, unknown $x2)
 [command,if_setparam_int](param $x1,int $x2,component $x3)
 [command,cc_setparam_int](param $x1,int $x2)
 [command,if_setparam_string](param $x1,string $x2,component $x3)
@@ -633,7 +633,7 @@
 [command,cc_unknown4](string $x1)
 [command,if_triggerop](component $x1,int $x2,int $x3)
 [command,cc_triggerop](int $x1)
-[command,cc_param]todo
+[command,cc_param](param $x1)(unknown)
 [command,if_gettop]()(toplevelinterface)
 [command,cc_setopkey](int $x1,key $x2,int $x3,key $x4,int $x5,key $x6,int $x7,key $x8,int $x9,key $x10,int $x11)
 [command,if_setopkey](int $x1,key $x2,int $x3,component $x4)

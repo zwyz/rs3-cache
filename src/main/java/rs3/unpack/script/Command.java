@@ -224,8 +224,8 @@ public class Command {
                     if (missingTypes) {
                         defineCommand(name, id, null, null);
                     } else {
-                        var arguments = matcher.group("arguments") == null ? List.<Type>of() : Arrays.stream(matcher.group("arguments").split(",")).map(s -> parseType(s.trim().split(" ")[0])).toList();
-                        var returns = matcher.group("returns") == null ? List.<Type>of() : Arrays.stream(matcher.group("returns").split(",")).map(s -> parseType(s.trim())).toList();
+                        var arguments = matcher.group("arguments") == null ? List.<Type>of() : Arrays.stream(matcher.group("arguments").split(",")).map(s -> Type.byName(s.trim().split(" ")[0])).toList();
+                        var returns = matcher.group("returns") == null ? List.<Type>of() : Arrays.stream(matcher.group("returns").split(",")).map(s -> Type.byName(s.trim())).toList();
                         defineCommand(name, id, arguments, returns);
                     }
                 }
@@ -320,22 +320,6 @@ public class Command {
         RUNJAVASCRIPT = findCommand("runjavascript");
     }
 
-    private static Type parseType(String name) {
-        if (name.equals("anyint")) {
-            return Type.INT;
-        }
-
-        for (var type : Type.values()) {
-            if (type == Type.INT) continue; // subdivided, int refers to int_int
-
-            if (Objects.equals(type.name, name)) {
-                return type;
-            }
-        }
-
-        throw new IllegalStateException("invalid type: " + name);
-    }
-
     public boolean hasHook() {
         return arguments != null && arguments.contains(Type.HOOK);
     }
@@ -393,6 +377,6 @@ public class Command {
     }
 
     public enum LocalDomain {
-        INTEGER, LONG, OBJECT
+        INTEGER, LONG, OBJECT, ARRAY
     }
 }

@@ -1,5 +1,6 @@
 package rs3.unpack.script;
 
+import rs3.unpack.ScriptTrigger;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 
@@ -9,7 +10,6 @@ import static rs3.unpack.script.Command.*;
 
 public class ScriptUnpacker {
     public static final boolean DISASSEMBLE_ONLY = false;
-    public static final boolean PROPAGATE_TYPES = true;
     public static final boolean KEEP_LABELS = false;
     public static final boolean ASSUME_UNKNOWN_TYPES_ARE_BASE = true;
     public static final boolean OUTPUT_TYPE_ALIASES = false;
@@ -17,14 +17,17 @@ public class ScriptUnpacker {
     public static final boolean FORMAT_HOOKS = true;
     public static final boolean CHECK_NONEMPTY_STACK = true;
     public static final boolean CHECK_EMPTY_ARGUMENT = true;
-    private static final Map<Integer, CompiledScript> SCRIPTS = new HashMap<>();
-    private static final Map<Integer, List<Expression>> SCRIPTS_DECOMPILED = new HashMap<>();
-    private static final Map<Integer, Integer> SCRIPT_PARAMETER_COUNT = new HashMap<>();
-    private static final Map<Integer, List<Type>> SCRIPT_RETURN_TYPES = new HashMap<>();
+    public static final boolean ERROR_ON_TYPE_CONFLICT = true;
+    public static final Map<Integer, CompiledScript> SCRIPTS = new HashMap<>();
+    public static final Map<Integer, List<Expression>> SCRIPTS_DECOMPILED = new HashMap<>();
+    public static final Map<Integer, Integer> SCRIPT_PARAMETER_COUNT = new HashMap<>();
+    public static final Map<Integer, List<Type>> SCRIPT_RETURN_TYPES = new HashMap<>();
     public static final Map<Integer, List<Type>> SCRIPT_PARAMETERS = new HashMap<>();
     public static final Map<Integer, List<Type>> SCRIPT_RETURNS = new HashMap<>();
+    public static final Map<Integer, Integer> SCRIPT_LEGACY_ARRAY_PARAMETER = new HashMap<>();
+    public static final Map<Integer, Map<LocalReference, Type>> SCRIPT_LOCALS = new HashMap<>();
     public static final Set<Integer> CALLED = new LinkedHashSet<>();
-    public static final Set<Integer> CLIENTSCRIPT = new LinkedHashSet<>();
+    public static final Map<Integer, ScriptTrigger> SCRIPT_TRIGGERS = new LinkedHashMap<>();
 
     public static void reset() {
         SCRIPTS.clear();
@@ -34,7 +37,7 @@ public class ScriptUnpacker {
         SCRIPT_PARAMETERS.clear();
         SCRIPT_RETURNS.clear();
         CALLED.clear();
-        CLIENTSCRIPT.clear();
+        SCRIPT_TRIGGERS.clear();
     }
 
     public static void load(int id, byte[] data) {
@@ -51,6 +54,7 @@ public class ScriptUnpacker {
             case INTEGER -> SCRIPTS.get(script).argumentCountInt;
             case LONG -> SCRIPTS.get(script).argumentCountLong;
             case OBJECT -> SCRIPTS.get(script).argumentCountObject;
+            case ARRAY -> 0;
         };
     }
 
@@ -101,16 +105,15 @@ public class ScriptUnpacker {
         }
 
         // propagate types
-        if (PROPAGATE_TYPES) {
-            var propagation = new TypePropagator();
+        new LegacyArrayParameterInference().run(SCRIPTS_DECOMPILED.keySet());
+        var propagator = new TypePropagator();
 
-            for (var id : SCRIPTS_DECOMPILED.keySet()) {
-                var script = SCRIPTS_DECOMPILED.get(id);
-                propagation.run(id, script);
-            }
-
-            propagation.finish(SCRIPTS_DECOMPILED.keySet());
+        for (var id : SCRIPTS_DECOMPILED.keySet()) {
+            var script = SCRIPTS_DECOMPILED.get(id);
+            propagator.run(id, script);
         }
+
+        propagator.finish(SCRIPTS_DECOMPILED.keySet());
     }
 
     public static List<String> unpack(int id) {
@@ -120,17 +123,22 @@ public class ScriptUnpacker {
             return List.of();
         }
 
-        return CodeFormatter.formatScript(Unpacker.getScriptName(id), SCRIPT_PARAMETERS.get(id), SCRIPT_RETURNS.get(id), script).lines().toList();
+        return CodeFormatter.formatScript(Unpacker.getScriptName(id), SCRIPT_PARAMETERS.get(id), SCRIPT_RETURNS.get(id), SCRIPT_LOCALS.get(id), script).lines().toList();
     }
 
     public static Type chooseDisplayType(Type type) {
         if (ASSUME_UNKNOWN_TYPES_ARE_BASE) {
             if (type == Type.UNKNOWN_INT) return Type.INT_INT; // todo: could assume boolean
             if (type == Type.UNKNOWN_INT_NOTINT) return Type.BOOLEAN;
-            if (type == Type.UNKNOWN_INT_NOTINT_NOTBOOLEAN) return Type.INT_INT; // todo: can format this specially
             if (type == Type.UNKNOWN_INT_NOTBOOLEAN) return Type.INT_INT;
-            if (type == Type.UNKNOWN_LONG) type = Type.LONG;
-            if (type == Type.UNKNOWN_OBJECT) type = Type.STRING;
+            if (type == Type.UNKNOWN_INT_NOTINT_NOTBOOLEAN) return Type.INT_INT; // todo: can format this specially
+            if (type == Type.UNKNOWN_LONG) return Type.LONG;
+            if (type == Type.UNKNOWN_OBJECT) return Type.STRING;
+            if (type == Type.UNKNOWN_INTARRAY) return Type.INTARRAY;
+            if (type == Type.UNKNOWN_INT_NOTINTARRAY) return Type.INTARRAY;
+            if (type == Type.UNKNOWN_INT_NOTBOOLEANARRAY) return Type.INTARRAY;
+            if (type == Type.UNKNOWN_INT_NOTINT_NOTBOOLEANARRAY) return Type.INTARRAY;
+            if (type == Type.UNKNOWNARRAY) return Type.INTARRAY;
         }
 
         return type;
