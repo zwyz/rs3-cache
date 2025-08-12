@@ -33,6 +33,7 @@ public class VarUnpacker {
             case 5 -> lines.add("transmitlevel=" + Unpacker.formatTransmitLevel(packet.g1()));
             case 110 -> lines.add("clientcode=" + packet.g2());
             case 7 -> lines.add("domaindefault=no");
+            case 8 -> lines.add("wikisync=yes");
 
             default -> throw new IllegalStateException("unknown opcode");
         }
