@@ -36,7 +36,7 @@ public class VarBitUnpacker {
                     lines.add("endbit=" + packet.g1());
                 }
 
-                case 3 -> lines.add("wikisync=yes");
+                case 16 -> lines.add("wikisync=yes");
 
                 default -> throw new IllegalStateException("unknown opcode");
             }

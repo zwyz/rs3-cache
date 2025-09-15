@@ -48,7 +48,7 @@
 [command,long_not](long $x1)(long)
 [command,long_and](long $x1,long $x2)(long)
 [command,long_bitcount](long $x1)(int)
-[command,long_getbit](long $x1,int $x2)(boolean)
+[command,long_getbit](long $x1,int $x2)(intbool)
 [command,long_togglebit](long $x1,int $x2)(long)
 [command,long_setbit](long $x1,int $x2)(long)
 [command,long_setbit_range](long $x1,int $x2,int $x3)(long)

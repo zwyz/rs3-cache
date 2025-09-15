@@ -14,8 +14,8 @@
 [command,db_filter_value](dbcolumn $x1, unknown $x2, filterop $x3, int $x4)(dbfilter)
 [command,db_filter_unknown](dbfilter $x1)(dbfilter)
 [command,db_filter_combine](dbfilter $x1, dbfilter $x2)(dbfilter)
-[command,unknown_command_79]todo signature
-[command,unknown_command_62]todo signature
+[command,unknown_command_79](dbfilter $x1, dbfilter $x2)(dbfilter)
+[command,unknown_command_62](dbcolumn $x1, unknown $x2, int $x3, basevartype $x4)(dbfilter)
 [command,db_filter_substring](dbcolumn $x1, string $x2, int $x3)(dbfilter)
 [command,db_filter_column](dbcolumn $x1, dbcolumn $x2, filterop $op)(dbfilter)
 [command,unknown_command_80]todo signature
