@@ -62,7 +62,7 @@ public class NPCUnpacker {
                 var length = packet.g1();
 
                 for (var i = 0; i < length; ++i) {
-                    if (Unpack.VERSION < 430) {
+                    if (Unpack.VERSION < 469) {
                         lines.add("recol" + (i + 1) + "s=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
                         lines.add("recol" + (i + 1) + "d=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
                     } else {
