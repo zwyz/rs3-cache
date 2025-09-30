@@ -1,6 +1,7 @@
 package rs3.unpack;
 
 import rs3.Unpack;
+import rs3.util.CP1252;
 import rs3.util.Lattice;
 
 import java.util.*;
@@ -137,6 +138,7 @@ public class Type {
     public static final Type TELEMETRY_INTERVAL = new Type("telemetry_interval", BaseVarType.INTEGER);
     // === 865 end ===
     public static final Type WORLD_AREA = new Type("worldarea", BaseVarType.INTEGER);
+    public static final Type TYPE_128 = new Type("type_128", BaseVarType.INTEGER);
     public static final Type DBTABLE = new Type("dbtable", BaseVarType.INTEGER);
     // === 910 end ===
     // === 915 end ===
@@ -574,6 +576,7 @@ public class Type {
     }
 
     public static Type byChar(int id) {
+        id = CP1252.decode(id);
         return switch (id) {
             case 'i' -> INT;
             case '1' -> BOOLEAN;
