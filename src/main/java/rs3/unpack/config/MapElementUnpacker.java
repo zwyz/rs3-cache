@@ -75,7 +75,7 @@ public class MapElementUnpacker {
                 }
             }
 
-            case 16 -> lines.add("unknown16=yes");
+            case 16 -> lines.add("listable=no");
             case 17 -> lines.add("opbase=" + packet.gjstr());
             case 18 -> lines.add("unknown18=" + packet.gSmart2or4null());
             case 19 -> lines.add("category=" + Unpacker.format(Type.CATEGORY, packet.g2()));

@@ -35,6 +35,7 @@ public class LocUnpacker {
                 } else {
                     var shapeCount = packet.g1();
 
+                    // note: unknown how multiple shapes with multiple models actually are defined
                     for (var i = 0; i < shapeCount; ++i) {
                         var shape = Unpacker.format(Type.LOC_SHAPE, packet.g1s());
                         var modelCount = packet.g1();
@@ -51,10 +52,12 @@ public class LocUnpacker {
 
             case 5 -> {
                 if (Unpack.VERSION < 582) {
+                    // https://www.youtube.com/watch?v=vZ7oG1IDz1w 5:05:36
                     var count = packet.g1();
 
-                    for (var i = 0; i < count; ++i) {
-                        lines.add("model=" + Unpacker.format(Type.MODEL, packet.g2())); // https://www.youtube.com/watch?v=vZ7oG1IDz1w 2:09:30
+                    lines.add("model=" + Unpacker.format(Type.MODEL, packet.g2()));
+                    for (var i = 1; i < count; ++i) {
+                        lines.add("model" + (i + 1) + "=" + Unpacker.format(Type.MODEL, packet.g2()));
                     }
                 } else {
                     var shapeCount1 = packet.g1();
@@ -254,8 +257,8 @@ public class LocUnpacker {
             case 96 -> lines.add("unknown96=yes");
             case 97 -> lines.add("msirotate=yes");
             case 98 -> lines.add("unknown98=yes");
-            case 99 -> lines.add("unknown99=" + packet.g1() + "," + packet.g2()); // gone in nxt
-            case 100 -> lines.add("unknown100=" + packet.g1() + "," + packet.g2()); // gone in nxt
+            case 99 -> lines.add("cursor1=" + (packet.g1() + 1) + "," + Unpacker.format(Type.CURSOR, packet.g2()));
+            case 100 -> lines.add("cursor2=" + (packet.g1() + 1) + "," + Unpacker.format(Type.CURSOR, packet.g2()));
             case 101 -> lines.add("msiangle=" + packet.g1());
             case 102 -> lines.add("msi=" + Unpacker.format(Type.MAPSCENEICON, packet.g2()));
             case 103 -> lines.add("occlude=no");

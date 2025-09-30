@@ -73,8 +73,14 @@ public class SeqUnpacker {
 
             case 4 -> lines.add("stretches=yes");
             case 5 -> lines.add("priority=" + packet.g1());
-            case 6 -> lines.add("lefthand=" + packet.g2null());
-            case 7 -> lines.add("righthand=" + packet.g2null());
+            case 6 -> {
+                var value = packet.g2();
+                lines.add("lefthand=" + (value == 0 || value == 65535 ? "hide" : Unpacker.format(Type.OBJ, value - 512)));
+            }
+            case 7 -> {
+                var value = packet.g2();
+                lines.add("righthand=" + (value == 0 || value == 65535 ? "hide" : Unpacker.format(Type.OBJ, value - 512)));
+            }
             case 8 -> lines.add("loopcount=" + packet.g1());
             case 9 -> lines.add("preanim_move=" + Unpacker.formatPreAnimMove(packet.g1()));
             case 10 -> lines.add("postanim_move=" + Unpacker.formatPostAnimMove(packet.g1()));

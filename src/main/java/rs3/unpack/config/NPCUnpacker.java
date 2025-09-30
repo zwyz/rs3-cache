@@ -29,7 +29,7 @@ public class NPCUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("model=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
+                    lines.add("model" + (i + 1) + "=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
                 }
             }
 
@@ -96,7 +96,7 @@ public class NPCUnpacker {
                 var length = packet.g1();
 
                 for (var i = 0; i < length; i++) {
-                    lines.add("headmodel=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
+                    lines.add("head" + (i + 1) + "=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
                 }
             }
 
@@ -202,8 +202,8 @@ public class NPCUnpacker {
             case 127 -> lines.add("bas=" + Unpacker.format(Type.BAS, packet.g2())); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
             case 128 -> lines.add("defaultmovemode=" + Unpacker.format(Type.MOVESPEED, packet.g1())); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
             case 134 -> lines.add("bgsound=" + Unpacker.format(Unpacker.CONFIG_SOUND_TYPE, packet.g2null()) + "," + Unpacker.format(Unpacker.CONFIG_SOUND_TYPE, packet.g2null()) + "," + Unpacker.format(Unpacker.CONFIG_SOUND_TYPE, packet.g2null()) + "," + Unpacker.format(Unpacker.CONFIG_SOUND_TYPE, packet.g2null()) + "," + packet.g1());
-            case 135 -> lines.add("unknown135=" + packet.g1() + "," + packet.g2()); // gone in nxt
-            case 136 -> lines.add("unknown136=" + packet.g1() + "," + packet.g2()); // gone in nxt
+            case 135 -> lines.add("cursor1=" + (packet.g1() + 1) + "," + Unpacker.format(Type.CURSOR, packet.g2()));
+            case 136 -> lines.add("cursor2=" + (packet.g1() + 1) + "," + Unpacker.format(Type.CURSOR, packet.g2()));
             case 137 -> lines.add("cursorattack=" + Unpacker.format(Type.CURSOR, packet.g2()));
             case 138 -> lines.add("covermarker=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
             case 139 -> lines.add("unknown139=" + packet.gSmart2or4null());

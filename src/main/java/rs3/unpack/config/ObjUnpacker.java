@@ -148,10 +148,10 @@ public class ObjUnpacker {
             case 122 -> lines.add("lenttemplate=" + Unpacker.format(Type.OBJ, packet.g2()));
             case 125 -> lines.add("manwearoff=" + packet.g1s() + "," + packet.g1s() + "," + packet.g1s());
             case 126 -> lines.add("womanwearoff=" + packet.g1s() + "," + packet.g1s() + "," + packet.g1s());
-            case 127 -> lines.add("unknown127=" + packet.g1() + "," + packet.g2()); // gone in nxt
-            case 128 -> lines.add("unknown128=" + packet.g1() + "," + packet.g2()); // gone in nxt
-            case 129 -> lines.add("unknown129=" + packet.g1() + "," + packet.g2()); // gone in nxt
-            case 130 -> lines.add("unknown130=" + packet.g1() + "," + packet.g2()); // gone in nxt
+            case 127 -> lines.add("cursor1=" + (packet.g1() + 1) + "," + Unpacker.format(Type.CURSOR, packet.g2()));
+            case 128 -> lines.add("cursor2=" + (packet.g1() + 1) + "," + Unpacker.format(Type.CURSOR, packet.g2()));
+            case 129 -> lines.add("icursor1=" + (packet.g1() + 1) + "," + Unpacker.format(Type.CURSOR, packet.g2()));
+            case 130 -> lines.add("icursor2=" + (packet.g1() + 1) + "," + Unpacker.format(Type.CURSOR, packet.g2()));
             case 131 -> lines.add("unknown131=" + packet.gjstr());
 
             case 132 -> {
