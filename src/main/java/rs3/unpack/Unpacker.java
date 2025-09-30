@@ -128,6 +128,8 @@ public class Unpacker {
             } else {
                 return "fontmetrics_" + value;
             }
+        } else if (type == Type.NAMEDOBJ) {
+            return format(Type.OBJ, value);
         } else if (type == Type.VAR_INT) {
             if (value == -1) {
                 return "null";
