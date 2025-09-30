@@ -764,13 +764,17 @@ public class Unpack {
         for (var group : archiveIndex.groupId) {
             var files = Js5Util.unpackGroup(archiveIndex, group, groups[group]);
             var lines = new ArrayList<String>();
+            boolean scripted = false;
 
             for (var file : files.keySet()) {
-                lines.addAll(unpack.apply((group << 16) + file, files.get(file)));
+                var data = files.get(file);
+                scripted |= data[0] == -1;
+                lines.addAll(unpack.apply((group << 16) + file, data));
                 lines.add("");
             }
 
-            Files.write(result.resolve(Unpacker.format(Type.INTERFACE, group) + ".if3"), lines);
+            String extension = scripted ? "if3" : "if";
+            Files.write(result.resolve(Unpacker.format(Type.INTERFACE, group) + "." + extension), lines);
         }
     }
 
