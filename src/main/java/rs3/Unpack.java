@@ -192,9 +192,9 @@ public class Unpack {
         }
 
         if (Unpack.VERSION < 488) {
-            unpackConfigGroup(2, 13, EffectAnimUnpacker::unpack, root.resolve("config/dump.spotanim"));
+            unpackConfigGroup(2, 13, EffectAnimUnpacker::unpack, root.resolve("config/dump.spot"));
         } else {
-            unpackConfigArchive(21, 8, EffectAnimUnpacker::unpack, root.resolve("config/dump.spotanim")); // 13
+            unpackConfigArchive(21, 8, EffectAnimUnpacker::unpack, root.resolve("config/dump.spot")); // 13
         }
 
         unpackConfigGroup(2, 18, AreaUnpacker::unpack, root.resolve("config/dump.area")); // client ignores
@@ -287,7 +287,7 @@ public class Unpack {
         unpackLegacyConfig(config, "obj", ObjUnpacker::unpack, root.resolve("config/dump.obj"));
         unpackLegacyConfig(config, "param", ParamUnpacker::unpack, root.resolve("config/dump.param"));
         unpackLegacyConfig(config, "seq", SeqUnpacker::unpack, root.resolve("config/dump.seq"));
-        unpackLegacyConfig(config, "spotanim", EffectAnimUnpacker::unpack, root.resolve("config/dump.spotanim"));
+        unpackLegacyConfig(config, "spotanim", EffectAnimUnpacker::unpack, root.resolve("config/dump.spot"));
     }
 
     private static void unpackLegacyConfig(Jagfile jagfile, String name, BiFunction<Integer, byte[], List<String>> unpacker, Path path) throws IOException {
