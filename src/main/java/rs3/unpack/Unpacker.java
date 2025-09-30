@@ -775,11 +775,21 @@ public class Unpacker {
         if (table == 285 && column == 13) return List.of(Type.INT); // todo
         if (table == 285 && column == 14) return List.of(Type.STRING); // todo
         if (table == 292 && column == 17) return List.of(Type.INT); // todo
-        if (table == 293 && column == 2) return List.of(Type.UNKNOWN_INT); // todo not boolean, not int
-        if (table == 293 && column == 3) return List.of(Type.UNKNOWN_INT);
-        if (table == 293 && column == 5) return List.of(Type.INT); // todo
-        if (table == 293 && column == 6) return List.of(Type.VAR_INT, Type.INT); // todo
+        if (Unpack.CONFIG_VERSION >= 1758896171) {
+            if (table == 293 && column == 2) return List.of(Type.UNKNOWN_INT_NOTINT_NOTBOOLEAN); // todo
+            if (table == 293 && column == 3) return List.of(Type.UNKNOWN_INT_NOTINT_NOTBOOLEAN); // todo
+            if (table == 293 && column == 4) return List.of(Type.UNKNOWN_INT);
+            if (table == 293 && column == 6) return List.of(Type.INT); // todo
+            if (table == 293 && column == 7) return List.of(Type.VAR_INT, Type.INT); // todo
+        } else {
+            if (table == 293 && column == 2) return List.of(Type.UNKNOWN_INT_NOTINT_NOTBOOLEAN); // todo
+            if (table == 293 && column == 3) return List.of(Type.UNKNOWN_INT);
+            if (table == 293 && column == 5) return List.of(Type.INT); // todo
+            if (table == 293 && column == 6) return List.of(Type.VAR_INT, Type.INT); // todo
+        }
         if (table == 303 && column == 0) return List.of(Type.INT); // todo
+        if (table == 340 && column == 3) return List.of(Type.UNKNOWN_INT); // todo
+        if (table == 340 && column == 4) return List.of(Type.UNKNOWN_INT); // todo
 
         throw new RuntimeException("missing dbcolumn type: " + table + ", " + column + ", config version: " + Unpack.CONFIG_VERSION);
     }
