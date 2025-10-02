@@ -138,7 +138,6 @@ public class Type {
     public static final Type TELEMETRY_INTERVAL = new Type("telemetry_interval", BaseVarType.INTEGER);
     // === 865 end ===
     public static final Type WORLD_AREA = new Type("worldarea", BaseVarType.INTEGER);
-    public static final Type TYPE_128 = new Type("type_128", BaseVarType.INTEGER);
     public static final Type DBTABLE = new Type("dbtable", BaseVarType.INTEGER);
     // === 910 end ===
     // === 915 end ===
