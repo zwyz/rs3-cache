@@ -756,44 +756,17 @@ public class Unpacker {
             return type;
         }
 
-        if (Unpack.CONFIG_VERSION <= 1626364203) {
-            if (table == 85 && column == 12) return List.of(Type.NPC);
-        } else if (Unpack.CONFIG_VERSION < 1732267126) {
-            if (table == 85 && column == 13) return List.of(Type.NPC);
-        } else {
-            if (table == 85 && column == 14) return List.of(Type.NPC);
-        }
+        if (table == 119 && column == 0) return List.of(Type.UNKNOWN, Type.UNKNOWN);
 
-        if (table == 88 && column == 0) return List.of(Type.INT);
-        if (table == 119 && column == 0) return List.of(Type.INT, Type.INT);
-        if (table == 164 && column == 5) return List.of(Type.COMPONENT);
-        if (table == 199 && column == 6) return List.of(Type.BOOLEAN);
-        if (table == 199 && column == 7) return List.of(Type.BOOLEAN);
-        if (table == 199 && column == 8) return List.of(Type.INT);
-        if (table == 199 && column == 9) return List.of(Type.BOOLEAN);
-        if (table == 267 && column == 0) return List.of(Type.INT); // todo
-        if (table == 268 && column == 0) return List.of(Type.INT); // todo
-        if (table == 268 && column == 2) return List.of(Type.INT); // todo
-        if (table == 285 && column == 13) return List.of(Type.INT); // todo
-        if (table == 285 && column == 14) return List.of(Type.STRING); // todo
-        if (table == 292 && column == 17) return List.of(Type.INT); // todo
         if (Unpack.CONFIG_VERSION >= 1758896171) {
-            if (table == 293 && column == 2) return List.of(Type.UNKNOWN_INT_NOTINT_NOTBOOLEAN); // todo
-            if (table == 293 && column == 3) return List.of(Type.UNKNOWN_INT_NOTINT_NOTBOOLEAN); // todo
-            if (table == 293 && column == 4) return List.of(Type.UNKNOWN_INT);
-            if (table == 293 && column == 6) return List.of(Type.INT); // todo
-            if (table == 293 && column == 7) return List.of(Type.VAR_INT, Type.INT); // todo
+            if (table == 293 && column == 7) return List.of(Type.UNKNOWN, Type.UNKNOWN);
         } else {
-            if (table == 293 && column == 2) return List.of(Type.UNKNOWN_INT_NOTINT_NOTBOOLEAN); // todo
-            if (table == 293 && column == 3) return List.of(Type.UNKNOWN_INT);
-            if (table == 293 && column == 5) return List.of(Type.INT); // todo
-            if (table == 293 && column == 6) return List.of(Type.VAR_INT, Type.INT); // todo
+            if (table == 293 && column == 6) return List.of(Type.UNKNOWN, Type.UNKNOWN);
         }
-        if (table == 303 && column == 0) return List.of(Type.INT); // todo
-        if (table == 340 && column == 3) return List.of(Type.UNKNOWN_INT); // todo
-        if (table == 340 && column == 4) return List.of(Type.UNKNOWN_INT); // todo
 
-        throw new RuntimeException("missing dbcolumn type: " + table + ", " + column + ", config version: " + Unpack.CONFIG_VERSION);
+        System.out.println("assuming non-tuple type for untransmitted column: dbtable_" + table + ":col" + column);
+        DBCOLUMN_TYPE.put(new Tuple2<>(table, column), List.of(Type.UNKNOWN)); // to not spam the message
+        return List.of(Type.UNKNOWN);
     }
 
     public static List<Type> getDBColumnTypeTuple(int table, int column, int tuple) {
