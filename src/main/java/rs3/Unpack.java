@@ -486,7 +486,7 @@ public class Unpack {
         var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, id, false, 0)));
         var groups = new byte[archiveIndex.groupArraySize][];
 
-        try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+        try (var scope = StructuredTaskScope.open()) {
             for (int group : archiveIndex.groupId) {
                 scope.fork(() -> {
                     groups[group] = PROVIDER.get(id, group, false, 0);
@@ -494,8 +494,8 @@ public class Unpack {
                 });
             }
 
-            scope.join().throwIfFailed();
-        } catch (ExecutionException | InterruptedException e) {
+            scope.join();
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
