@@ -174,3 +174,4 @@
 [command,unknown_command_6140]()(int)
 [command,unknown_command_5547]()(boolean)
 [command,unknown_command_98]()(int)
+[command,setminimapmask](int $mask)

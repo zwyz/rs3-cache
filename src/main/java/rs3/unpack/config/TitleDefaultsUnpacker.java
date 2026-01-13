@@ -23,6 +23,15 @@ public class TitleDefaultsUnpacker {
             }
 
             case 1 -> lines.add("title=" + Unpacker.format(Type.ENUM, packet.gSmart2or4null()) + "," + Unpacker.format(Type.ENUM, packet.gSmart2or4null()));
+
+            case 2 -> {
+                var count = packet.g1();
+
+                for (var i = 0; i < count; i++) {
+                    lines.add("unknown2=" + packet.g1() + "," + packet.g1());
+                }
+            }
+
             default -> throw new IllegalStateException("unknown opcode");
         }
     }

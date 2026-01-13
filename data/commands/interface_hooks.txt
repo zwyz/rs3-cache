@@ -102,5 +102,7 @@
 [command,cc_crmview_setonupdated](hook $x1)
 [command,if_cutscenelayer_setoncutscenefinished](hook $x1,component $x2)
 [command,cc_cutscenelayer_setoncutscenefinished](hook $x1)
+[command,if_setonstoretransmit](hook $x1,component $x2)
+[command,cc_setonstoretransmit](hook $x1)
 [command,if_clearscripthooks](component $x1)
 [command,cc_clearscripthooks]

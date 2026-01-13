@@ -54,3 +54,5 @@
 [command,unknown_command_102]()(boolean)
 [command,gl_version_major]()(int)
 [command,gl_version_minor]()(int)
+[command,unknown_command_111]()(int)
+[command,modewhere]()(int)

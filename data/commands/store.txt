@@ -1,0 +1,3 @@
+[command,store_init](string $catalog)
+[command,store_status]()(int)
+[command,store_lookup](int $currency, string $pos)(boolean,boolean,boolean,long,long,int,long,boolean,int,int,boolean,int,int)
