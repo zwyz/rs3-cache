@@ -250,8 +250,16 @@ public class NPCUnpacker {
 
             case 186 -> {
                 packet.g2();
-                lines.add("multivar=" + Unpacker.format(Type.VARBIT, packet.g2null()));
-                lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, packet.g2null()));
+                var varbit = packet.g2null();
+                var varplayer = packet.g2null();
+
+                if (varbit != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VARBIT, varbit));
+                }
+
+                if (varplayer != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, varplayer));
+                }
 
                 var flags = packet.g1();
 
