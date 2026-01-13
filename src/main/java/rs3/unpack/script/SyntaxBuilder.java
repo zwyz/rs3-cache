@@ -351,7 +351,13 @@ public class SyntaxBuilder {
                 var currentType = expressionTypes.get(i);
 
                 if (remainingTypes.isEmpty()) {
-                    throw new IllegalStateException("argument would overfill command types in script " + currentScript + ", context: " + List.of(code).subList(0, index + 1));
+                    if (ScriptUnpacker.CHECK_PARTIALLY_USED_ARGUMENT && last.command != PUSH_ARRAY_INT_LEAVE_INDEX_ON_STACK) {
+                        throw new IllegalStateException("not all return values of the command's first argument were used in script " + currentScript + ", context: " + List.of(code).subList(0, index + 1));
+                    }
+
+                    // any unused remaining types are left on the stack, so get prepended to the return types
+                    returnTypes = new ArrayList<>(returnTypes);
+                    returnTypes.addFirst(currentType);
                 } else {
                     var expectedType = remainingTypes.removeLast();
 
@@ -378,6 +384,7 @@ public class SyntaxBuilder {
             if (buildPreDecrement()) continue;
             if (buildPostIncrement()) continue;
             if (buildPostDecrement()) continue;
+            if (buildArrayUpdate()) continue;
             if (buildCondition(index)) continue;
             if (buildConditionMerge()) continue;
             if (buildAnd(code, index)) continue;
@@ -461,6 +468,37 @@ public class SyntaxBuilder {
         stack.subList(stack.size() - 2, stack.size()).clear();
         stack.add(new Expression(FLOW_POSTDEC, command1.operand, List.of(Type.INT_INT), List.of()));
         return true;
+    }
+
+    // match: [pop_array_int(op(push_array_int_leave_index_on_stack(...), ...))]
+    // replace: [array_update_{op}(..., ...)]
+    private boolean buildArrayUpdate() {
+        if (stack.size() < 1) return false;
+        var command = stack.get(stack.size() - 1);
+        if (command.command != POP_ARRAY_INT) return false;
+        if (command.arguments.size() != 1) return false;
+        var inner = command.arguments.get(0);
+        if (inner.arguments.size() != 2) return false;
+        var left = inner.arguments.get(0);
+        var right = inner.arguments.get(1);
+        if (left.command != PUSH_ARRAY_INT_LEAVE_INDEX_ON_STACK) return false;
+        if ((int) left.operand != (int) command.operand) return false; // same array
+
+        var kind = switch (inner.command.name) {
+            case "add" -> FLOW_ARRAY_UPDATE_ADD;
+            case "sub" -> FLOW_ARRAY_UPDATE_SUB;
+            case "multiply" -> FLOW_ARRAY_UPDATE_MULTIPLY;
+            case "divide" -> FLOW_ARRAY_UPDATE_DIVIDE;
+            case "modulo" -> FLOW_ARRAY_UPDATE_MODULO;
+            default -> null;
+        };
+
+        if (kind == null) {
+            return false;
+        } else {
+            stack.set(stack.size() - 1, new Expression(kind, command.operand, List.of(), List.of(left.arguments.get(0), right)));
+            return true;
+        }
     }
 
     // match: [branch_x(..., label_a)]

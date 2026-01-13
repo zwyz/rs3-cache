@@ -159,6 +159,36 @@ public class CodeFormatter {
                 yield formatLocal(local) + "(" + format(expression.arguments.get(0)) + ") = " + format(expression.arguments.get(1));
             }
 
+            case "flow_array_update_add" -> {
+                var index = (int) expression.operand;
+                var local = new LocalReference(LocalDomain.ARRAY, index);
+                yield formatLocal(local) + "(" + format(expression.arguments.get(0)) + ") += " + format(expression.arguments.get(1));
+            }
+
+            case "flow_array_update_sub" -> {
+                var index = (int) expression.operand;
+                var local = new LocalReference(LocalDomain.ARRAY, index);
+                yield formatLocal(local) + "(" + format(expression.arguments.get(0)) + ") -= " + format(expression.arguments.get(1));
+            }
+
+            case "flow_array_update_multiply" -> {
+                var index = (int) expression.operand;
+                var local = new LocalReference(LocalDomain.ARRAY, index);
+                yield formatLocal(local) + "(" + format(expression.arguments.get(0)) + ") *= " + format(expression.arguments.get(1));
+            }
+
+            case "flow_array_update_divide" -> {
+                var index = (int) expression.operand;
+                var local = new LocalReference(LocalDomain.ARRAY, index);
+                yield formatLocal(local) + "(" + format(expression.arguments.get(0)) + ") /= " + format(expression.arguments.get(1));
+            }
+
+            case "flow_array_update_modulo" -> {
+                var index = (int) expression.operand;
+                var local = new LocalReference(LocalDomain.ARRAY, index);
+                yield formatLocal(local) + "(" + format(expression.arguments.get(0)) + ") %= " + format(expression.arguments.get(1));
+            }
+
             case "or" -> {
                 var s = formatBinary(prec, 50, " | ", expression.arguments.get(0), expression.arguments.get(1));
                 yield prec < 50 ? "calc(" + s + ")" : s;

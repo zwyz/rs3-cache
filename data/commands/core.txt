@@ -34,7 +34,7 @@
 [command,long_branch_greater_than](long $x1, long $x2)
 [command,long_branch_less_than_or_equals](long $x1, long $x2)
 [command,long_branch_greater_than_or_equals](long $x1, long $x2)
-[command,push_array_int_leave_index_on_stack]
+[command,push_array_int_leave_index_on_stack](int $index)(int, unknown_int)
 [command,push_array_int_and_index]
 [command,pop_array_int_leave_value_on_stack]
 [command,branch_if_true](unknown_int $x1)

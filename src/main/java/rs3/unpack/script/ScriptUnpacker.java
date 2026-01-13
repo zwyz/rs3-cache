@@ -17,6 +17,7 @@ public class ScriptUnpacker {
     public static final boolean FORMAT_HOOKS = true;
     public static final boolean CHECK_NONEMPTY_STACK = true;
     public static final boolean CHECK_EMPTY_ARGUMENT = true;
+    public static final boolean CHECK_PARTIALLY_USED_ARGUMENT = true;
     public static final boolean ERROR_ON_TYPE_CONFLICT = true;
     public static final Map<Integer, CompiledScript> SCRIPTS = new HashMap<>();
     public static final Map<Integer, List<Expression>> SCRIPTS_DECOMPILED = new HashMap<>();
