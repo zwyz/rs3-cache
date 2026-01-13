@@ -16,7 +16,7 @@ public class MaterialUnpacker {
 
         if (version == 0) {
             decodeV0(lines, packet);
-        } else if (version == 1) {
+        } else if (version == 1 || version == 2) {
             decodeV1(lines, packet);
         } else {
             throw new UnsupportedOperationException();
