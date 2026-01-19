@@ -473,10 +473,10 @@
 [command,cc_radiogroup_setoptionenabled]todo signature
 [command,if_radiogroup_getoptionenabled]todo signature
 [command,cc_radiogroup_getoptionenabled]todo signature
-[command,if_groupbox_setheaderlayout]todo signature
-[command,cc_groupbox_setheaderlayout]todo signature
-[command,if_groupbox_getheaderlayout]todo signature
-[command,cc_groupbox_getheaderlayout]todo signature
+[command,if_groupbox_setheaderlayout](int $x1, int $x2, int $x3, int $x4, int $x5, component $x6)
+[command,cc_groupbox_setheaderlayout](int $x1, int $x2, int $x3, int $x4, int $x5)
+[command,if_groupbox_getheaderlayout](component $x1)(int, int, int, int, int)
+[command,cc_groupbox_getheaderlayout]()(int, int, int, int, int)
 [command,if_combo_getselectedvalue]todo signature
 [command,cc_combo_getselectedvalue]todo signature
 [command,if_combo_select]todo signature
