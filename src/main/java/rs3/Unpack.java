@@ -45,26 +45,8 @@ public class Unpack {
     public static final Gson GSON_PRETTY = new GsonBuilder().serializeSpecialFloatingPointValues().setPrettyPrinting().create();
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        unpackLive("unpacked/live", 946, 1, 0, "content.runescape.com", 43594, ClientTokenProvider.getClientToken());
-//        unpackOpenRS2("unpacked/2024-06-03", 936, "runescape", 1815);
-//        unpackOpenRS2("unpacked/2024-05-28", 935, "runescape", 1806);
-
-//        unpackRS2(711, 298);
-//        unpackRS2(712, 299);
-//        unpackRS2(717, 301);
-//        unpackRS2(718, 302);
-//        unpackRS2(722, 305);
-//        unpackRS2(723, 306);
-//        unpackRS2(724, 307);
-//        unpackRS2(725, 308);
-//        unpackRS2(727, 309);
-//        unpackRS2(728, 310);
-//        unpackRS2(729, 311);
-//        unpackRS2(731, 312);
-//        unpackRS2(736, 313);
-//        unpackRS2(741, 1468);
-//        unpackRS2(742, 466);
-//        unpackRS2(742, 544);
+        unpackLive("unpacked/live", 947, 1, 0, "content.runescape.com", 43594, ClientTokenProvider.getClientToken());
+//        unpackOpenRS2("unpacked/2026-03-16", 946, "runescape", 2495);
     }
 
     private static void unpackRS2(int rev, int id) throws IOException {

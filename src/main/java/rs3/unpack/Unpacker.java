@@ -764,6 +764,15 @@ public class Unpacker {
             if (table == 293 && column == 6) return List.of(Type.UNKNOWN, Type.UNKNOWN);
         }
 
+        if (Unpack.CONFIG_VERSION >= 1774022802) {
+            if (table == 351 && column == 2) return List.of(Type.UNKNOWN, Type.UNKNOWN);
+            if (table == 352 && column == 6) return List.of(Type.UNKNOWN, Type.UNKNOWN);
+            if (table == 352 && column == 7) return List.of(Type.UNKNOWN, Type.UNKNOWN, Type.UNKNOWN);
+            if (table == 352 && column == 12) return List.of(Type.UNKNOWN, Type.UNKNOWN, Type.UNKNOWN, Type.UNKNOWN);
+            if (table == 352 && column == 13) return List.of(Type.UNKNOWN, Type.UNKNOWN, Type.UNKNOWN);
+            if (table == 353 && column == 5) return List.of(Type.UNKNOWN, Type.UNKNOWN);
+        }
+
         System.out.println("assuming non-tuple type for untransmitted column: dbtable_" + table + ":col" + column);
         DBCOLUMN_TYPE.put(new Tuple2<>(table, column), List.of(Type.UNKNOWN)); // to not spam the message
         return List.of(Type.UNKNOWN);

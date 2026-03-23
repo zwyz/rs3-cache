@@ -7,6 +7,7 @@ import java.util.Locale;
 
 public class VFXUnpacker {
     public static final Gson GSON = new GsonBuilder()
+            .serializeSpecialFloatingPointValues()
             .registerTypeAdapter(Module.class, (JsonSerializer<Module>) (src, typeOfSrc, context) -> {
                 var result = new JsonObject(); // new object to make type first field
                 result.addProperty("type", src.getType().name().toLowerCase(Locale.ROOT));
