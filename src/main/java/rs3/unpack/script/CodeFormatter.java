@@ -307,6 +307,8 @@ public class CodeFormatter {
                 }
             }
 
+            case "player_group_member_get_same_world_var" -> expression.command.name + "(" + format(expression.arguments.get(0)) + ", " + format(expression.arguments.get(2)) + ")";
+
             // control flow
             case "flow_ne" -> formatBinary(prec, 40, " ! ", expression.arguments.get(0), expression.arguments.get(1));
             case "flow_eq" -> formatBinary(prec, 40, " = ", expression.arguments.get(0), expression.arguments.get(1));
