@@ -408,6 +408,7 @@ public class SyntaxBuilder {
         if (command1.arguments.get(0).command != ADD) return false;
         if (command1.arguments.get(0).arguments.get(0).command != FLOW_LOAD) return false;
         if (command1.arguments.get(0).arguments.get(1).command != PUSH_CONSTANT_STRING) return false;
+        if (!Objects.equals(command1.arguments.get(0).arguments.get(1).operand, 1)) return false;
         if (command2.command != FLOW_LOAD) return false;
         if (!Objects.equals(command1.arguments.get(0).arguments.get(0).operand, command2.operand)) return false;
         if (!Objects.equals(command1.operand, List.of(command2.operand))) return false;
@@ -426,6 +427,7 @@ public class SyntaxBuilder {
         if (command1.arguments.get(0).command != SUB) return false;
         if (command1.arguments.get(0).arguments.get(0).command != FLOW_LOAD) return false;
         if (command1.arguments.get(0).arguments.get(1).command != PUSH_CONSTANT_STRING) return false;
+        if (!Objects.equals(command1.arguments.get(0).arguments.get(1).operand, 1)) return false;
         if (command2.command != FLOW_LOAD) return false;
         if (!Objects.equals(command1.arguments.get(0).arguments.get(0).operand, command2.operand)) return false;
         if (!Objects.equals(command1.operand, List.of(command2.operand))) return false;
@@ -444,6 +446,7 @@ public class SyntaxBuilder {
         if (command2.arguments.get(0).command != ADD) return false;
         if (command2.arguments.get(0).arguments.get(0).command != FLOW_LOAD) return false;
         if (command2.arguments.get(0).arguments.get(1).command != PUSH_CONSTANT_STRING) return false;
+        if (!Objects.equals(command2.arguments.get(0).arguments.get(1).operand, 1)) return false;
         if (command1.command != FLOW_LOAD) return false;
         if (!Objects.equals(command2.arguments.get(0).arguments.get(0).operand, command1.operand)) return false;
         if (!Objects.equals(command2.operand, List.of(command1.operand))) return false;
@@ -462,6 +465,7 @@ public class SyntaxBuilder {
         if (command2.arguments.get(0).command != SUB) return false;
         if (command2.arguments.get(0).arguments.get(0).command != FLOW_LOAD) return false;
         if (command2.arguments.get(0).arguments.get(1).command != PUSH_CONSTANT_STRING) return false;
+        if (!Objects.equals(command2.arguments.get(0).arguments.get(1).operand, 1)) return false;
         if (command1.command != FLOW_LOAD) return false;
         if (!Objects.equals(command2.arguments.get(0).arguments.get(0).operand, command1.operand)) return false;
         if (!Objects.equals(command2.operand, List.of(command1.operand))) return false;
