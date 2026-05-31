@@ -3,10 +3,10 @@ package rs3.unpack;
 import rs3.Unpack;
 import rs3.unpack.script.ScriptUnpacker;
 import rs3.util.CP1252;
+import rs3.util.Packet;
 import rs3.util.Tuple2;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Unpacker {
     public static final Map<Integer, Type> PARAM_TYPE = new HashMap<>();
@@ -20,9 +20,6 @@ public class Unpacker {
     public static final Map<Integer, String> OTHER_NAMES = new HashMap<>();
     public static final Map<Integer, String> WMA_NAMES = new HashMap<>();
     public static final Map<Integer, String> STYLESHEET_NAMES = new HashMap<>();
-
-    // Unconfirmed exact version due to gap in caches. Synths were converted to vorbis sometime between 754-759
-    public static final Type CONFIG_SOUND_TYPE = Unpack.VERSION < 759 ? Type.SYNTH : Type.VORBIS;
 
     public static void reset() {
         PARAM_TYPE.clear();
@@ -65,7 +62,7 @@ public class Unpacker {
             var z = value & 16383;
             return level + "_" + x / 64 + "_" + z / 64 + "_" + x % 64 + "_" + z % 64;
         } else if (type == Type.TYPE) {
-            return Type.byID(value).name;
+            return Type.byCharOrID(value).name;
         } else if (type == Type.TOPLEVELINTERFACE || type == Type.OVERLAYINTERFACE || type == Type.CLIENTINTERFACE) {
             return format(Type.INTERFACE, value);
         } else if (type == Type.COMPONENT) {
@@ -140,6 +137,15 @@ public class Unpacker {
             } else {
                 return formatVar(VarDomain.byID(value >> 16 & 0xff), value & 0xffff);
             }
+        } else if ((type == Type.SYNTH || type == Type.VORBIS) && Unpack.VERSION >= 757) {
+            // Starting with 757, the packer auto-converts all synths to vorbis, and synth and vorbis IDs
+            // share the same space. The `[sound/bgsound/randomsound]vorbis=yes` config properties are no
+            // longer useful to the client, but they are not removed until rev 862, after which it becomes
+            // impossible to know whether a sound used in a config is a synth or vorbis.
+            //
+            // So to keep things simple and avoid inconsistencies between configs and cs2, or a large diff
+            // on 862, name all sounds sound_[id] starting from when the ID spaces were merged in 757.
+            return value == -1 ? "null" : "sound_" + value;
         } else if (type == Type.VARBIT) {
             return formatVarBit(value);
         } else if (type == Type.VAR_PLAYER) {
@@ -356,7 +362,7 @@ public class Unpacker {
                 case 105 -> "^chattype_spam";
                 case 106 -> "^chattype_playerrelated";
                 case 107 -> "^chattype_10sectimeout";
-                case 109 -> "^chattype_clancreationinvitation";
+                case 109 -> "^chattype_clancreationinvitation"; // TODO: wrong in rs3, probably others too
                 case 110 -> "^chattype_chalreq_clanchat";
                 case 114 -> "^chattype_dialogue";
                 case 115 -> "^chattype_mesbox";
@@ -665,52 +671,6 @@ public class Unpacker {
         };
     }
 
-    public static String formatReplaceMode(int value) {
-        return switch (value) {
-            case 0 -> "ignore"; // continues the current animation
-            case 1 -> "reset"; // resets frame and loop counter
-            case 2 -> "extend"; // resets loop counter only
-            default -> throw new IllegalArgumentException("" + value);
-        };
-    }
-
-    public static String formatTransmitLevel(int value) {
-        return switch (value) {
-            case 0 -> "never";
-            case 1 -> "on_set_different";
-            case 2 -> "on_set_always";
-            default -> throw new IllegalStateException("invalid transmitlevel");
-        };
-    }
-
-    public static String formatVarLifetime(int value) {
-        return switch (value) {
-            case 0 -> "temp"; // https://twitter.com/JagexAsh/status/654366476674183168
-            case 1 -> "perm"; // https://twitter.com/JagexAsh/status/654366476674183168
-            case 2 -> "serverperm";
-            default -> throw new IllegalStateException("invalid lifetime");
-        };
-    }
-
-    public static String formatPreAnimMove(int value) {
-        return switch (value) {
-            case 0 -> "delaymove";
-            case 1 -> "delayanim";
-            case 2 -> "merge";
-            case 3 -> "unknown_3";
-            default -> throw new IllegalStateException("invalid preanim_move");
-        };
-    }
-
-    public static String formatPostAnimMove(int value) {
-        return switch (value) {
-            case 0 -> "delaymove";
-            case 1 -> "abortanim";
-            case 2 -> "merge";
-            default -> throw new IllegalStateException("invalid postanim_move");
-        };
-    }
-
     public static void setVarType(VarDomain domain, int id, Type type) {
         VAR_TYPE.put(new Tuple2<>(domain, id), type);
     }
@@ -891,57 +851,45 @@ public class Unpacker {
         };
     }
 
-    public static String formatRecolRetexIndexList(int value) {
-        var list = new ArrayList<Integer>();
+    public static void unpackRecol(Packet packet, ArrayList<String> lines, int indices) {
+        var count = packet.g1();
 
-        for (var i = 0; i < 16; i++) {
-            if ((value & 1 << i) != 0) {
-                list.add(i + 1);
+        if (Unpack.VERSION < 469) {
+            for (var i = 0; i < count; ++i) {
+                lines.add("recol" + (i + 1) + "s=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
+                lines.add("recol" + (i + 1) + "d=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
+            }
+        } else if (indices == -1) {
+            for (var i = 0; i < count; ++i) {
+                lines.add("recol" + (i + 1) + "s=" + packet.g2());
+                lines.add("recol" + (i + 1) + "d=" + packet.g2());
+            }
+        } else {
+            for (var i = 0; i < 16; i++) {
+                if ((indices & 1 << i) != 0) {
+                    lines.add("recol" + (i + 1) + "s=" + packet.g2());
+                    lines.add("recol" + (i + 1) + "d=" + packet.g2());
+                }
             }
         }
-
-        return list.stream().map(Object::toString).collect(Collectors.joining(","));
     }
 
-    public static ArrayList<String> transformRecolRetexIndices(ArrayList<String> lines) {
-        var recolIndices = (String[]) null;
-        var retexIndices = (String[]) null;
+    public static void unpackRetex(Packet packet, ArrayList<String> lines, int indices) {
+        var count = packet.g1();
 
-        for (var line : lines) {
-            if (line.startsWith("recolindices=")) {
-                recolIndices = line.split("=")[1].split(",");
+        if (indices == -1) {
+            for (var i = 0; i < count; ++i) {
+                lines.add("retex" + (i + 1) + "s=" + format(Type.MATERIAL, packet.g2()));
+                lines.add("retex" + (i + 1) + "d=" + format(Type.MATERIAL, packet.g2()));
             }
-
-            if (line.startsWith("retexindices=")) {
-                retexIndices = line.split("=")[1].split(",");
-            }
-        }
-
-        if (recolIndices != null || retexIndices != null) {
-            var newLines = new ArrayList<String>();
-
-            for (var line : lines) {
-                if (line.startsWith("recolindices")) {
-                    continue;
-                } else if (line.startsWith("retexindices")) {
-                    continue;
-                } else if (recolIndices != null && line.startsWith("recol")) {
-                    var equal = line.indexOf('=');
-                    var newIndex = recolIndices[Integer.parseInt(line.substring(5, equal - 1)) - 1];
-                    line = line.substring(0, 5) + newIndex + line.substring(equal - 1);
-                } else if (retexIndices != null && line.startsWith("retex")) {
-                    var equal = line.indexOf('=');
-                    var newIndex = retexIndices[Integer.parseInt(line.substring(5, equal - 1)) - 1];
-                    line = line.substring(0, 5) + newIndex + line.substring(equal - 1);
+        } else {
+            for (var i = 0; i < 16; i++) {
+                if ((indices & 1 << i) != 0) {
+                    lines.add("retex" + (i + 1) + "s=" + format(Type.MATERIAL, packet.g2()));
+                    lines.add("retex" + (i + 1) + "d=" + format(Type.MATERIAL, packet.g2()));
                 }
-
-                newLines.add(line);
             }
-
-            lines = newLines;
         }
-
-        return lines;
     }
 
     public static String getScriptName(int id) {

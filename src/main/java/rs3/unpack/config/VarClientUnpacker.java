@@ -24,9 +24,9 @@ public class VarClientUnpacker {
             }
 
             case 1 -> {
-                var type = packet.g1();
-                Unpacker.setVarType(VarDomain.CLIENT, id, Type.byID(type));
-                lines.add("type=" + Unpacker.format(Type.TYPE, type));
+                var type = Type.byChar(packet.g1());
+                Unpacker.setVarType(VarDomain.CLIENT, id, type);
+                lines.add("type=" + type);
             }
 
             case 2 -> lines.add("scope=perm");

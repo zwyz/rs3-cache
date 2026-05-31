@@ -26,11 +26,11 @@ public class VarClanUnpacker {
             case 1 -> {
                 var type = packet.g1();
 
-                if (type==1) {
+                if (type == 1) {
                     lines.add("type=bit");
                 } else {
                     Unpacker.setVarType(VarDomain.CLAN, id, Type.byChar(type));
-                    lines.add("type=" + Unpacker.format(Type.TYPE, type));
+                    lines.add("type=" + Type.byChar(type));
                 }
             }
 

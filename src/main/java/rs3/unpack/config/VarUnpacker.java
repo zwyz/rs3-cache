@@ -1,5 +1,6 @@
 package rs3.unpack.config;
 
+import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.unpack.VarDomain;
@@ -24,13 +25,31 @@ public class VarUnpacker {
             }
 
             case 3 -> {
-                var type = packet.g1();
-                Unpacker.setVarType(domain, id, Type.byID(type));
-                lines.add("type=" + Unpacker.format(Type.TYPE, type));
+                var type = Type.byID(packet.g1());
+                Unpacker.setVarType(domain, id, type);
+                lines.add("type=" + type);
             }
 
-            case 4 -> lines.add("lifetime=" + Unpacker.formatVarLifetime(packet.g1()));
-            case 5 -> lines.add("transmitlevel=" + Unpacker.formatTransmitLevel(packet.g1()));
+            case 4 -> {
+                if (Unpack.VERSION < 763) {
+                    lines.add("lifetime=perm");
+                } else {
+                    lines.add("lifetime=" + switch (packet.g1()) {
+                        case 0 -> "temp"; // https://twitter.com/JagexAsh/status/654366476674183168
+                        case 1 -> "perm"; // https://twitter.com/JagexAsh/status/654366476674183168
+                        case 2 -> "serverperm";
+                        default -> throw new IllegalStateException("invalid lifetime");
+                    });
+                }
+            }
+
+            case 5 -> lines.add("transmitlevel=" + switch (packet.g1()) {
+                case 0 -> "never";
+                case 1 -> "on_set_different";
+                case 2 -> "on_set_always";
+                default -> throw new IllegalStateException("invalid transmitlevel");
+            });
+
             case 110 -> lines.add("clientcode=" + packet.g2());
             case 7 -> lines.add("domaindefault=no");
             case 8 -> lines.add("wikisync=yes");

@@ -10,7 +10,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IDKUnpacker {
+    private static int recolindices;
+    private static int retexindices;
+
     public static List<String> unpack(int id, byte[] data) {
+        recolindices = -1;
+        retexindices = -1;
+
+        unpackInner(id, data);
+        return unpackInner(id, data);
+    }
+
+    public static List<String> unpackInner(int id, byte[] data) {
         var lines = new ArrayList<String>();
         var packet = new Packet(data);
         lines.add("[" + Unpacker.format(Type.IDKIT, id) + "]");
@@ -21,7 +32,6 @@ public class IDKUnpacker {
                     throw new IllegalStateException("end of file not reached");
                 }
 
-                lines = Unpacker.transformRecolRetexIndices(lines);
                 return lines;
             }
 
@@ -41,17 +51,7 @@ public class IDKUnpacker {
                 if (Unpack.VERSION < 465) {
                     lines.add("recol1s=" + packet.g2());
                 } else {
-                    var count = packet.g1();
-
-                    for (var i = 0; i < count; ++i) {
-                        if (Unpack.VERSION < 469) {
-                            lines.add("recol" + (i + 1) + "s=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
-                            lines.add("recol" + (i + 1) + "d=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
-                        } else {
-                            lines.add("recol" + (i + 1) + "s=" + packet.g2());
-                            lines.add("recol" + (i + 1) + "d=" + packet.g2());
-                        }
-                    }
+                    Unpacker.unpackRecol(packet, lines, recolindices);
                 }
             }
 
@@ -59,12 +59,7 @@ public class IDKUnpacker {
                 if (Unpack.VERSION < 465) {
                     lines.add("recol2d=" + packet.g2());
                 } else {
-                    var count = packet.g1();
-
-                    for (var i = 0; i < count; ++i) {
-                        lines.add("retex" + (i + 1) + "s=" + Unpacker.format(Type.MATERIAL, packet.g2()));
-                        lines.add("retex" + (i + 1) + "d=" + Unpacker.format(Type.MATERIAL, packet.g2()));
-                    }
+                    Unpacker.unpackRetex(packet, lines, retexindices);
                 }
             }
 
@@ -75,7 +70,7 @@ public class IDKUnpacker {
                 if (Unpack.VERSION < 465) {
                     lines.add("recol5s=" + packet.g2());
                 } else {
-                    lines.add("recolindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
+                    recolindices = packet.g2();
                 }
             }
 
@@ -83,7 +78,7 @@ public class IDKUnpacker {
                 if (Unpack.VERSION < 465) {
                     lines.add("recol6s=" + packet.g2());
                 } else {
-                    lines.add("retexindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
+                    retexindices = packet.g2();
                 }
             }
 

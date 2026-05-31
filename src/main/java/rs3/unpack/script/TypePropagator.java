@@ -125,7 +125,7 @@ public class TypePropagator {
             }
 
             if (expression.operand instanceof VarReference var) {
-                if (Unpack.VERSION >= 742) {
+                if (Unpack.VERSION >= 751) {
                     emitAssign(type(expression, 0), Unpacker.getVarType(var.domain(), var.var()));
                 }
 
@@ -168,8 +168,8 @@ public class TypePropagator {
             var inputtype = expression.arguments.get(0);
             var outputtype = expression.arguments.get(1);
             var key = expression.arguments.get(3);
-            emitAssign(type(key, 0), Type.byID((int) inputtype.operand));
-            emitEqual(type(expression, 0), Type.byID((int) outputtype.operand));
+            emitAssign(type(key, 0), Type.byCharOrID((int) inputtype.operand));
+            emitEqual(type(expression, 0), Type.byCharOrID((int) outputtype.operand));
         }
 
         if (expression.command == ENUM_STRING) {
@@ -182,14 +182,14 @@ public class TypePropagator {
             var inputtype = expression.arguments.get(0);
             var enum_ = expression.arguments.get(1);
             var key = expression.arguments.get(2);
-            emitAssign(type(key, 0), Type.byID((int) inputtype.operand));
+            emitAssign(type(key, 0), Type.byCharOrID((int) inputtype.operand));
         }
 
         if (expression.command == ENUM_GETREVERSECOUNT) {
             var outputtype = expression.arguments.get(0);
             var enum_ = expression.arguments.get(1);
             var value = expression.arguments.get(2);
-            emitAssign(type(value, 0), Type.byID((int) outputtype.operand));
+            emitAssign(type(value, 0), Type.byCharOrID((int) outputtype.operand));
         }
 
         if (expression.command == ENUM_GETREVERSEINDEX) {
@@ -198,8 +198,8 @@ public class TypePropagator {
             var enum_ = expression.arguments.get(2);
             var value = expression.arguments.get(3);
             var index = expression.arguments.get(4);
-            emitAssign(type(value, 0), Type.byID((int) outputtype.operand));
-            emitEqual(type(expression, 0), Type.byID((int) inputtype.operand));
+            emitAssign(type(value, 0), Type.byCharOrID((int) outputtype.operand));
+            emitEqual(type(expression, 0), Type.byCharOrID((int) inputtype.operand));
         }
 
         if (expression.command == ENUM_GETREVERSEINDEX_STRING) {
@@ -207,7 +207,7 @@ public class TypePropagator {
             var enum_ = expression.arguments.get(1);
             var value = expression.arguments.get(2);
             var index = expression.arguments.get(3);
-            emitEqual(type(expression, 0), Type.byID((int) outputtype.operand));
+            emitEqual(type(expression, 0), Type.byCharOrID((int) outputtype.operand));
         }
 
         // params todo: can use a node to allow alias propagation through params
@@ -258,7 +258,7 @@ public class TypePropagator {
 
         if (expression.command == DEFINE_ARRAY) {
             var index = (int) expression.operand >> 16;
-            var type = Type.byID((int) expression.operand & 0xffff);
+            var type = Type.byCharOrID((int) expression.operand & 0xffff);
             emitEqual(local(script, LocalDomain.ARRAY, index), type.array());
         }
 
@@ -369,7 +369,7 @@ public class TypePropagator {
                 ScriptUnpacker.SCRIPT_LOCALS.computeIfAbsent(script, _ -> new HashMap<>()).put(new LocalReference(domain, index), typeof(node));
             }
 
-            if (node instanceof Node.VarType(VarDomain domain, var id) && Unpack.VERSION < 742) {
+            if (node instanceof Node.VarType(VarDomain domain, var id) && Unpack.VERSION < 800) {
                 Unpacker.setVarType(domain, id, ScriptUnpacker.chooseDisplayType(typeof(node)));
             }
         }

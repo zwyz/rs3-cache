@@ -72,15 +72,15 @@ public class EnumUnpacker {
             }
 
             case 101 -> {
-                var type = packet.gSmart1or2();
-                Unpacker.setEnumInputType(id, Type.byID(type));
-                lines.add("inputtype=" + Unpacker.format(Type.TYPE, type));
+                var type = Type.byID(packet.gSmart1or2());
+                Unpacker.setEnumInputType(id, type);
+                lines.add("inputtype=" + type);
             }
 
             case 102 -> {
-                var type = packet.gSmart1or2();
-                Unpacker.setEnumOutputType(id, Type.byID(type));
-                lines.add("outputtype=" + Unpacker.format(Type.TYPE, type));
+                var type = Type.byID(packet.gSmart1or2());
+                Unpacker.setEnumOutputType(id, type);
+                lines.add("outputtype=" + type);
             }
 
             default -> throw new IllegalStateException("unknown opcode");

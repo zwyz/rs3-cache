@@ -33,9 +33,9 @@ public class ParamUnpacker {
             case 5 -> lines.add("default=" + packet.gjstr());
 
             case 101 -> {
-                var type = packet.gSmart1or2();
-                Unpacker.setParamType(id, Type.byID(type));
-                lines.add("type=" + Unpacker.format(Type.TYPE, type));
+                var type = Type.byID(packet.gSmart1or2());
+                Unpacker.setParamType(id, type);
+                lines.add("type=" + type);
             }
 
             default -> throw new IllegalStateException("unknown opcode");

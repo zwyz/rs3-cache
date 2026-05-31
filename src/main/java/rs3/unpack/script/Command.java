@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 public class Command {
     private static final Map<Integer, Command> BY_ID = new HashMap<>();
     private static final Map<String, Command> BY_NAME = new HashMap<>();
+    public static boolean MISSING_OPCODES = false;
     public final String name;
     public final List<Type> arguments;
     public final List<Type> returns;
@@ -171,13 +172,21 @@ public class Command {
 
         try {
             var opcodes = new HashMap<String, Integer>();
+            Path commandsPath;
 
-            var commandsPath = Path.of("data/opcodes-unscrambled.txt");
-            if (Unpack.VERSION >= 685) {
+            if (Unpack.VERSION < 685) {
+                commandsPath = Path.of("data/opcodes-unscrambled.txt");
+            } else if (Unpack.VERSION < 911) {
                 commandsPath = Path.of("data/opcodes-" + Unpack.VERSION + "-" + Unpack.ID + ".txt");
-                if (!Files.exists(commandsPath)) {
-                    commandsPath = Path.of("data/opcodes-" + Unpack.VERSION + ".txt");
-                }
+            } else {
+                commandsPath = Path.of("data/opcodes-" + Unpack.VERSION + ".txt");
+            }
+
+            MISSING_OPCODES = !Files.exists(commandsPath);
+
+            if (MISSING_OPCODES) {
+                System.out.println("missing opcodes file " + commandsPath + ", will skip cs2");
+                return;
             }
 
             for (var line : Files.readAllLines(commandsPath)) {

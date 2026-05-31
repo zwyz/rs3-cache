@@ -101,7 +101,7 @@ public class Unpack {
         loadOtherNames(Path.of("data/names/other.txt"), Unpacker.OTHER_NAMES);
 
         // things stuff depends on
-        if (Unpack.VERSION < 742) {
+        if (Unpack.VERSION < 751) {
             if (Unpack.VERSION < 488) {
                 unpackConfigGroup(2, 14, VarPlayerBitUnpacker::unpack, root.resolve("config/dump.varbit"));
             } else {
@@ -223,21 +223,17 @@ public class Unpack {
         unpackDefaults(28, 12, TitleDefaultsUnpacker::unpack, root.resolve("config/title.defaults"));
 
         // scripts
-        unpackScripts(12, root.resolve("script"));
+        if (!Command.MISSING_OPCODES) unpackScripts(12, root.resolve("script"));
 
         // interface
         unpackInterfaces(3, InterfaceUnpacker::unpack, root.resolve("interface"));
 
         // materials
-        if (Unpack.VERSION < 474) { // broken in rs2
-            unpackConfigArchive(9, 0, TextureUnpacker::unpack, root.resolve("config/dump.texture"));
-        }
+        unpackConfigArchive(9, 0, TextureUnpacker::unpack, root.resolve("config/dump.texture"));
+        unpackConfigArchive(26, 0, MaterialUnpacker::unpack, root.resolve("config/dump.material"));
 
         // other
         unpackConfigArchive(60, 0, StylesheetUnpacker::unpack, root.resolve("config/dump.stylesheet"));
-        if (Unpack.VERSION > 742) { // skip rs2 for now
-            unpackConfigArchive(26, 0, MaterialUnpacker::unpack, root.resolve("config/dump.material"));
-        }
 //        iterateArchive(8, SpriteUnpacker::unpack);
 //        unpackArchiveTransformed(47, b -> GSON.toJson(new Model(new Packet(b))), root.resolve("model"), ".json");
 //        iterateArchive(54, TextureUnpacker::unpack);
@@ -252,9 +248,7 @@ public class Unpack {
 
         // maps
 //        unpackMaps(root);
-        if (Unpack.VERSION > 742) {
-            unpackWorldAreaMap(root);
-        }
+        unpackWorldAreaMap(root);
     }
 
     public static void unpackLegacy(Path root) throws IOException {
@@ -415,6 +409,7 @@ public class Unpack {
     }
 
     private static void unpackWorldAreaMap(Path root) throws IOException {
+        if (Unpack.VERSION < 910) return; // TODO: broken for old revs
         var width = 128 * 8;
         var height = 256 * 8;
         var image = new int[width * height];

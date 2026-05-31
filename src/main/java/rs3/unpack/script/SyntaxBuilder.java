@@ -288,7 +288,7 @@ public class SyntaxBuilder {
 
             var signature = ((String) stack.get(stack.size() - (argumentTypes.size() - hookIndex)).operand).codePoints().mapToObj(c -> {
                 if (Unpack.VERSION < 800) {
-                    return Type.byChar(c);
+                    return Type.byCharOrID(c);
                 } else {
                     return switch (c) {
                         case 'i' -> Type.UNKNOWN_INT;

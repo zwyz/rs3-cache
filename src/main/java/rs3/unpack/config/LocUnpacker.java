@@ -1,7 +1,6 @@
 package rs3.unpack.config;
 
 import rs3.Unpack;
-import rs3.unpack.ColourConversion;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.util.Packet;
@@ -10,7 +9,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LocUnpacker {
+    private static boolean randomsoundvorbis;
+    private static boolean bgsoundvorbis;
+    private static int recolindices;
+    private static int retexindices;
+
     public static List<String> unpack(int id, byte[] data) {
+        randomsoundvorbis = false;
+        bgsoundvorbis = false;
+        recolindices = -1;
+        retexindices = -1;
+
+        unpackInner(id, data);
+        return unpackInner(id, data);
+    }
+
+    public static List<String> unpackInner(int id, byte[] data) {
         var lines = new ArrayList<String>();
         var packet = new Packet(data);
         lines.add("[" + Unpacker.format(Type.LOC, id) + "]");
@@ -21,7 +35,6 @@ public class LocUnpacker {
                     throw new IllegalStateException("end of file not reached");
                 }
 
-                lines = Unpacker.transformRecolRetexIndices(lines);
                 return lines;
             }
 
@@ -104,28 +117,8 @@ public class LocUnpacker {
             case 33 -> lines.add("op4=" + packet.gjstr()); // https://www.youtube.com/watch?v=ovGBifJR4Fs 4:38:00
             case 34 -> lines.add("op5=" + packet.gjstr()); // https://www.youtube.com/watch?v=ovGBifJR4Fs 4:38:00
 
-            case 40 -> { // https://www.youtube.com/watch?v=vZ7oG1IDz1w 2:09:30
-                var count = packet.g1();
-
-                for (var i = 0; i < count; ++i) {
-                    if (Unpack.VERSION < 469) {
-                        lines.add("recol" + (i + 1) + "s=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
-                        lines.add("recol" + (i + 1) + "d=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
-                    } else {
-                        lines.add("recol" + (i + 1) + "s=" + packet.g2());
-                        lines.add("recol" + (i + 1) + "d=" + packet.g2());
-                    }
-                }
-            }
-
-            case 41 -> { // https://www.youtube.com/watch?v=vZ7oG1IDz1w 2:09:30
-                var count = packet.g1();
-
-                for (var i = 0; i < count; ++i) {
-                    lines.add("retex" + (i + 1) + "s=" + Unpacker.format(Type.MATERIAL, packet.g2()));
-                    lines.add("retex" + (i + 1) + "d=" + Unpacker.format(Type.MATERIAL, packet.g2()));
-                }
-            }
+            case 40 -> Unpacker.unpackRecol(packet, lines, recolindices); // https://www.youtube.com/watch?v=vZ7oG1IDz1w 2:09:30
+            case 41 -> Unpacker.unpackRetex(packet, lines, retexindices); // https://www.youtube.com/watch?v=vZ7oG1IDz1w 2:09:30
 
             case 42 -> {
                 var count = packet.g1();
@@ -135,8 +128,8 @@ public class LocUnpacker {
                 }
             }
 
-            case 44 -> lines.add("recolindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
-            case 45 -> lines.add("retexindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
+            case 44 -> recolindices = packet.g2();
+            case 45 -> retexindices = packet.g2();
             case 60 -> lines.add("mapfunction=" + packet.g2());
             case 61 -> lines.add("category=" + Unpacker.format(Type.CATEGORY, packet.g2()));
             case 62 -> lines.add("mirror=yes");
@@ -193,14 +186,14 @@ public class LocUnpacker {
                 }
             }
 
-            case 78 -> lines.add("bgsound=" + Unpacker.format(Unpacker.CONFIG_SOUND_TYPE, packet.g2()) + "," + packet.g1()); // https://twitter.com/JagexAsh/status/1651904693671546881
+            case 78 -> lines.add("bgsound=" + Unpacker.format(bgsoundvorbis ? Type.VORBIS : Type.SYNTH, packet.g2()) + "," + packet.g1()); // https://twitter.com/JagexAsh/status/1651904693671546881
 
             case 79 -> { // https://twitter.com/JagexAsh/status/1651904693671546881
                 var line = "randomsound=" + packet.g2() + "," + packet.g2() + "," + packet.g1();
                 var count = packet.g1();
 
                 for (var i = 0; i < count; ++i) {
-                    line += "," + Unpacker.format(Unpacker.CONFIG_SOUND_TYPE, packet.g2());
+                    line += "," + Unpacker.format(randomsoundvorbis ? Type.VORBIS : Type.SYNTH, packet.g2());
                 }
 
                 lines.add(line);
@@ -294,8 +287,8 @@ public class LocUnpacker {
             case 165 -> lines.add("postoffsety=" + packet.g2s());
             case 166 -> lines.add("postoffsetz=" + packet.g2s());
             case 167 -> lines.add("unknown167=" + packet.g2());
-            case 168 -> lines.add("unknown168=yes");
-            case 169 -> lines.add("unknown169=yes");
+            case 168 -> bgsoundvorbis = true;
+            case 169 -> randomsoundvorbis = true;
             case 170 -> lines.add("unknown170=" + packet.gSmart1or2());
             case 171 -> lines.add("unknown171=" + packet.gSmart1or2());
             case 173 -> lines.add("bgsoundrate=" + packet.g2() + "," + packet.g2());

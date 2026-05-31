@@ -10,7 +10,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NPCUnpacker {
+    private static boolean bgsoundvorbis;
+    private static int recolindices;
+    private static int retexindices;
+
     public static List<String> unpack(int id, byte[] data) {
+        bgsoundvorbis = false;
+        recolindices = -1;
+        retexindices = -1;
+
+        unpackInner(id, data);
+        return unpackInner(id, data);
+    }
+
+    public static List<String> unpackInner(int id, byte[] data) {
         var lines = new ArrayList<String>();
         var packet = new Packet(data);
         lines.add("[" + Unpacker.format(Type.NPC, id) + "]");
@@ -21,7 +34,6 @@ public class NPCUnpacker {
                     throw new IllegalStateException("end of file not reached");
                 }
 
-                lines = Unpacker.transformRecolRetexIndices(lines);
                 return lines;
             }
 
@@ -55,31 +67,9 @@ public class NPCUnpacker {
             case 32 -> lines.add("op3=" + packet.gjstr()); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
             case 33 -> lines.add("op4=" + packet.gjstr()); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
             case 34 -> lines.add("op5=" + packet.gjstr()); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
-
             case 39 -> lines.add("unknown39=" + packet.g1());
-
-            case 40 -> {
-                var length = packet.g1();
-
-                for (var i = 0; i < length; ++i) {
-                    if (Unpack.VERSION < 469) {
-                        lines.add("recol" + (i + 1) + "s=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
-                        lines.add("recol" + (i + 1) + "d=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
-                    } else {
-                        lines.add("recol" + (i + 1) + "s=" + packet.g2());
-                        lines.add("recol" + (i + 1) + "d=" + packet.g2());
-                    }
-                }
-            }
-
-            case 41 -> {
-                var length = packet.g1();
-
-                for (var i = 0; i < length; ++i) {
-                    lines.add("retex" + (i + 1) + "s=" + Unpacker.format(Type.MATERIAL, packet.g2()));
-                    lines.add("retex" + (i + 1) + "d=" + Unpacker.format(Type.MATERIAL, packet.g2()));
-                }
-            }
+            case 40 -> Unpacker.unpackRecol(packet, lines, recolindices);
+            case 41 -> Unpacker.unpackRetex(packet, lines, retexindices);
 
             case 42 -> {
                 var count = packet.g1();
@@ -89,8 +79,8 @@ public class NPCUnpacker {
                 }
             }
 
-            case 44 -> lines.add("recolindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
-            case 45 -> lines.add("retexindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
+            case 44 -> recolindices = packet.g2();
+            case 45 -> retexindices = packet.g2();
 
             case 60 -> {
                 var length = packet.g1();
@@ -201,7 +191,7 @@ public class NPCUnpacker {
             case 125 -> lines.add("respawndir=" + packet.g1s());
             case 127 -> lines.add("bas=" + Unpacker.format(Type.BAS, packet.g2())); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
             case 128 -> lines.add("defaultmovemode=" + Unpacker.format(Type.MOVESPEED, packet.g1())); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
-            case 134 -> lines.add("bgsound=" + Unpacker.format(Unpacker.CONFIG_SOUND_TYPE, packet.g2null()) + "," + Unpacker.format(Unpacker.CONFIG_SOUND_TYPE, packet.g2null()) + "," + Unpacker.format(Unpacker.CONFIG_SOUND_TYPE, packet.g2null()) + "," + Unpacker.format(Unpacker.CONFIG_SOUND_TYPE, packet.g2null()) + "," + packet.g1());
+            case 134 -> lines.add("bgsound=" + Unpacker.format(bgsoundvorbis ? Type.VORBIS : Type.SYNTH, packet.g2null()) + "," + Unpacker.format(bgsoundvorbis ? Type.VORBIS : Type.SYNTH, packet.g2null()) + "," + Unpacker.format(bgsoundvorbis ? Type.VORBIS : Type.SYNTH, packet.g2null()) + "," + Unpacker.format(bgsoundvorbis ? Type.VORBIS : Type.SYNTH, packet.g2null()) + "," + packet.g1());
             case 135 -> lines.add("cursor1=" + (packet.g1() + 1) + "," + Unpacker.format(Type.CURSOR, packet.g2()));
             case 136 -> lines.add("cursor2=" + (packet.g1() + 1) + "," + Unpacker.format(Type.CURSOR, packet.g2()));
             case 137 -> lines.add("cursorattack=" + Unpacker.format(Type.CURSOR, packet.g2()));
@@ -228,7 +218,7 @@ public class NPCUnpacker {
                 }
             }
 
-            case 162 -> lines.add("unknown162=yes");
+            case 162 -> bgsoundvorbis = true;
             case 163 -> lines.add("picksize=" + packet.g1());
             case 164 -> lines.add("bgsoundrate=" + packet.g2() + "," + packet.g2());
             case 165 -> lines.add("picksizeshift=" + packet.g1());

@@ -10,7 +10,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ObjUnpacker {
+    private static int recolindices;
+    private static int retexindices;
+
     public static List<String> unpack(int id, byte[] data) {
+        recolindices = -1;
+        retexindices = -1;
+
+        unpackInner(id, data);
+        return unpackInner(id, data);
+    }
+
+    public static List<String> unpackInner(int id, byte[] data) {
         var lines = new ArrayList<String>();
         var packet = new Packet(data);
         lines.add("[" + Unpacker.format(Type.OBJ, id) + "]");
@@ -21,7 +32,6 @@ public class ObjUnpacker {
                     throw new IllegalStateException("end of file not reached");
                 }
 
-                lines = Unpacker.transformRecolRetexIndices(lines);
                 return lines;
             }
 
@@ -80,29 +90,8 @@ public class ObjUnpacker {
             case 37 -> lines.add("iop3=" + packet.gjstr());
             case 38 -> lines.add("iop4=" + packet.gjstr());
             case 39 -> lines.add("iop5=" + packet.gjstr());
-
-            case 40 -> {
-                var count = packet.g1();
-
-                for (var i = 0; i < count; ++i) {
-                    if (Unpack.VERSION < 469) {
-                        lines.add("recol" + (i + 1) + "s=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
-                        lines.add("recol" + (i + 1) + "d=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
-                    } else {
-                        lines.add("recol" + (i + 1) + "s=" + packet.g2());
-                        lines.add("recol" + (i + 1) + "d=" + packet.g2());
-                    }
-                }
-            }
-
-            case 41 -> {
-                var count = packet.g1();
-
-                for (var i = 0; i < count; ++i) {
-                    lines.add("retex" + (i + 1) + "s=" + Unpacker.format(Type.MATERIAL, packet.g2()));
-                    lines.add("retex" + (i + 1) + "d=" + Unpacker.format(Type.MATERIAL, packet.g2()));
-                }
-            }
+            case 40 -> Unpacker.unpackRecol(packet, lines, recolindices);
+            case 41 -> Unpacker.unpackRetex(packet, lines, retexindices);
 
             case 42 -> {
                 var count = packet.g1();
@@ -113,8 +102,8 @@ public class ObjUnpacker {
             }
 
             case 43 -> lines.add("minimenucolour=" + packet.g4s());
-            case 44 -> lines.add("recolindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
-            case 45 -> lines.add("retexindices=" + Unpacker.formatRecolRetexIndexList(packet.g2()));
+            case 44 -> recolindices = packet.g2();
+            case 45 -> retexindices = packet.g2();
             case 65 -> lines.add("stockmarket=yes");
             case 69 -> lines.add("stockmarketlimit=" + packet.g4s());
             case 78 -> lines.add("manwear3=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));

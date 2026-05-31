@@ -142,7 +142,7 @@ public class CodeFormatter {
 
             case "define_array" -> {
                 var index = (int) expression.operand >> 16;
-                var type = Type.byID((int) expression.operand & 0xffff);
+                var type = Type.byCharOrID((int) expression.operand & 0xffff);
                 var local = new LocalReference(LocalDomain.ARRAY, index);
                 yield "def_" + formatType(type, true) + " " + formatLocal(local) + "(" + format(expression.arguments.get(0)) + ")";
             }

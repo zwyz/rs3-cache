@@ -9,7 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SeqUnpacker {
+    private static boolean soundvorbis;
+
     public static List<String> unpack(int id, byte[] data) {
+        soundvorbis = false;
+
+        unpackInner(id, data);
+        return unpackInner(id, data);
+    }
+
+    public static List<String> unpackInner(int id, byte[] data) {
         var lines = new ArrayList<String>();
         var packet = new Packet(data);
 
@@ -82,9 +91,28 @@ public class SeqUnpacker {
                 lines.add("righthand=" + (value == 0 || value == 65535 ? "hide" : Unpacker.format(Type.OBJ, value - 512)));
             }
             case 8 -> lines.add("loopcount=" + packet.g1());
-            case 9 -> lines.add("preanim_move=" + Unpacker.formatPreAnimMove(packet.g1()));
-            case 10 -> lines.add("postanim_move=" + Unpacker.formatPostAnimMove(packet.g1()));
-            case 11 -> lines.add("replacemode=" + Unpacker.formatReplaceMode(packet.g1()));
+
+            case 9 -> lines.add("preanim_move=" + switch (packet.g1()) {
+                case 0 -> "delaymove";
+                case 1 -> "delayanim";
+                case 2 -> "merge";
+                case 3 -> "unknown_3";
+                default -> throw new IllegalStateException("invalid preanim_move");
+            });
+
+            case 10 -> lines.add("postanim_move=" + switch (packet.g1()) {
+                case 0 -> "delaymove";
+                case 1 -> "abortanim";
+                case 2 -> "merge";
+                default -> throw new IllegalStateException("invalid postanim_move");
+            });
+
+            case 11 -> lines.add("replacemode=" + switch (packet.g1()) {
+                case 0 -> "ignore"; // continues the current animation
+                case 1 -> "reset"; // resets frame and loop counter
+                case 2 -> "extend"; // resets loop counter only
+                default -> throw new IllegalStateException("invalid replacemode");
+            });
 
             case 12 -> {
                 var count = packet.g1();
@@ -133,7 +161,7 @@ public class SeqUnpacker {
                             var type = value >> 8;
                             var loops = value >> 4 & 7;
                             var range = value & 15;
-                            lines.add("sound" + i + "=" + Unpacker.format(Unpacker.CONFIG_SOUND_TYPE, type) + "," + loops + "," + range);
+                            lines.add("sound" + i + "=" + Unpacker.format(soundvorbis ? Type.VORBIS : Type.SYNTH, type) + "," + loops + "," + range);
                         }
                     }
                 } else {
@@ -147,7 +175,7 @@ public class SeqUnpacker {
                             var type = value >> 8;
                             var loops = value >> 4 & 7;
                             var range = value & 15;
-                            var line = "sound" + i + "=" + Unpacker.format(Unpacker.CONFIG_SOUND_TYPE, type) + "," + loops + "," + range;
+                            var line = "sound" + i + "=" + Unpacker.format(soundvorbis ? Type.VORBIS : Type.SYNTH, type) + "," + loops + "," + range;
 
                             for (var j = 1; j < count2; ++j) {
                                 line += "," + packet.g2();
@@ -163,7 +191,7 @@ public class SeqUnpacker {
             case 15 -> lines.add("unknown15=yes");
             case 16 -> lines.add("unknown16=yes");
             case 17 -> lines.add("unknown17=" + packet.g1());
-            case 18 -> lines.add("unknown18=yes");
+            case 18 -> soundvorbis = true;
             case 19 -> lines.add("unknown19=" + packet.g1() + "," + packet.g1());
             case 119 -> lines.add("unknown19=" + packet.g2() + "," + packet.g1());
             case 20 -> lines.add("unknown20=" + packet.g1() + "," + packet.g2() + "," + packet.g2());

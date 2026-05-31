@@ -423,7 +423,7 @@ public class Type {
         return Objects.requireNonNull(BY_NAME.get(name));
     }
 
-    public static Type byIDForced(int id) {
+    public static Type byID(int id) {
         return switch (id) {
             case 0 -> INT;
             case 1 -> BOOLEAN;
@@ -767,11 +767,7 @@ public class Type {
         };
     }
 
-    public static Type byID(int id) {
-        if (Unpack.VERSION < 803) {
-            return byChar(id);
-        }
-
-        return byIDForced(id);
+    public static Type byCharOrID(int value) {
+        return Unpack.VERSION < 751 ? byChar(value) : byID(value);
     }
 }

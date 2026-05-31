@@ -23,7 +23,7 @@
 [command,worldmap_disableelementcategory](category $x1,boolean $x2)
 [command,worldmap_disableelement](int $x1,boolean $x2)
 [command,worldmap_closemap]
-[command,worldmap_3dview_active]()(int)
+[command,worldmap_3dview_active]()(boolean)
 [command,worldmap_3dview_getloddistance]()(int)
 [command,worldmap_getcategorypriority]()(boolean)
 [command,worldmap_3dview_gettextfont](int $x1)(fontmetrics)

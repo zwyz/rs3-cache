@@ -30,7 +30,7 @@ public class VarClanSettingUnpacker {
                     lines.add("type=bit");
                 } else {
                     Unpacker.setVarType(VarDomain.CLAN_SETTING, id, Type.byChar(type));
-                    lines.add("type=" + Unpacker.format(Type.TYPE, type));
+                    lines.add("type=" + Type.byChar(type));
                 }
             }
 

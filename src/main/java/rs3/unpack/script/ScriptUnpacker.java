@@ -60,7 +60,7 @@ public class ScriptUnpacker {
     }
 
     public static List<Type> getReturnTypes(int script) {
-        return SCRIPT_RETURN_TYPES.get(script);
+        return SCRIPT_RETURN_TYPES.getOrDefault(script, List.of());
     }
 
     public static void decompile() {
