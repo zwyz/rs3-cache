@@ -244,7 +244,7 @@ public class TypePropagator {
         if (expression.command == DB_FIND || expression.command == DB_FIND_WITH_COUNT || expression.command == DB_FIND_REFINE || expression.command == DB_FILTER_VALUE) {
             var column = (int) expression.arguments.get(0).operand;
             var value = expression.arguments.get(1);
-            emitEqual(type(value, 0), Unpacker.getDBColumnTypeTupleAssertSingle(column));
+            emitEqual(type(value, 0), Unpacker.getDBColumnTypeTuple(column).getFirst());
         }
 
         // arrays

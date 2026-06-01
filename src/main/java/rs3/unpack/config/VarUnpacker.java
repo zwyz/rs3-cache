@@ -31,7 +31,7 @@ public class VarUnpacker {
             }
 
             case 4 -> {
-                if (Unpack.VERSION < 763) {
+                if (Unpack.VERSION < 762) {
                     lines.add("lifetime=perm");
                 } else {
                     lines.add("lifetime=" + switch (packet.g1()) {

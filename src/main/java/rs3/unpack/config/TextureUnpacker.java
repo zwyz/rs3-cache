@@ -1,7 +1,6 @@
 
 package rs3.unpack.config;
 
-import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.util.Packet;
@@ -14,7 +13,6 @@ public class TextureUnpacker {
         var lines = new ArrayList<String>();
         var packet = new Packet(data);
         lines.add("[" + Unpacker.format(Type.MATERIAL, id) + "]");
-        if (Unpack.VERSION >= 474) return lines; // TODO: broken for new revs
 
         lines.add("averagecolour=" + packet.g2());
         lines.add("opaque=" + (packet.g1() == 1 ? "yes" : "no"));

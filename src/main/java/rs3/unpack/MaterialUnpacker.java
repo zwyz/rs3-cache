@@ -1,6 +1,5 @@
 package rs3.unpack;
 
-import rs3.Unpack;
 import rs3.util.Packet;
 
 import java.util.ArrayList;
@@ -11,7 +10,6 @@ public class MaterialUnpacker {
         var lines = new ArrayList<String>();
         var packet = new Packet(data);
         lines.add("[" + Unpacker.format(Type.MATERIAL, id) + "]");
-        if (Unpack.VERSION < 910) return lines; // TODO: broken for old revs
 
         var version = packet.g1();
 

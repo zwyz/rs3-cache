@@ -3,10 +3,11 @@ package rs3;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import rs3.js4.Jagfile;
+import rs3.js4.Js4ResourceProvider;
+import rs3.js4.OpenRS2Js4ResourceProvider;
 import rs3.js5.*;
 import rs3.unpack.*;
 import rs3.unpack.config.*;
-import rs3.unpack.config.TextureUnpacker;
 import rs3.unpack.cutscene2d.Cutscene2D;
 import rs3.unpack.font.FontMetrics;
 import rs3.unpack.map.MapSquare;
@@ -28,7 +29,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.StructuredTaskScope;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -49,18 +49,18 @@ public class Unpack {
 //        unpackOpenRS2("unpacked/2026-03-16", 946, "runescape", 2495);
     }
 
-    private static void unpackRS2(int rev, int id) throws IOException {
-        unpackOpenRS2("unpacked/" + rev + "-" + id, rev, "runescape", id);
-    }
-
     public static void unpackOpenRS2(String path, int version, String scope, int id) throws IOException {
         VERSION = version;
         ID = id;
 
-        unpack(Path.of(path), new MemoryCacheResourceProvider(new FileSystemCacheResourceProvider(
-                Path.of(System.getProperty("user.home") + "/.rscache/rs3"),
-                new OpenRS2Js5ResourceProvider(scope, id))
-        ));
+        if (Unpack.VERSION < 400) {
+            unpackLegacy(Path.of(path), new OpenRS2Js4ResourceProvider(scope, id));
+        } else {
+            unpack(Path.of(path), new MemoryCacheResourceProvider(new FileSystemCacheResourceProvider(
+                    Path.of(System.getProperty("user.home") + "/.rscache/rs3"),
+                    new OpenRS2Js5ResourceProvider(scope, id))
+            ));
+        }
     }
 
     public static void unpackLive(String path, int version, int subversion, int language, String host, int port, String token) throws IOException {
@@ -73,7 +73,7 @@ public class Unpack {
         ));
     }
 
-    public static void unpack(Path path, Js5ResourceProvider provider) throws IOException {
+    public static void unpack(Path root, Js5ResourceProvider provider) throws IOException {
         PROVIDER = provider;
         MASTER_INDEX = new Js5MasterIndex(Js5Util.decompress(PROVIDER.get(255, 255, false, 0)));
         CONFIG_VERSION = MASTER_INDEX.getArchiveData(Js5Archive.JS5_CONFIG.id).getVersion();
@@ -81,14 +81,6 @@ public class Unpack {
         Unpacker.reset(); // todo: make non-static
         ScriptUnpacker.reset(); // todo: make non-static
 
-        if (VERSION < 400) {
-            unpackLegacy(path);
-        } else {
-            unpackCurrent(path);
-        }
-    }
-
-    private static void unpackCurrent(Path root) throws IOException {
         Files.createDirectories(root);
         Files.createDirectories(root.resolve("config"));
         Files.createDirectories(root.resolve("script"));
@@ -229,8 +221,8 @@ public class Unpack {
         unpackInterfaces(3, InterfaceUnpacker::unpack, root.resolve("interface"));
 
         // materials
-        unpackConfigArchive(9, 0, TextureUnpacker::unpack, root.resolve("config/dump.texture"));
-        unpackConfigArchive(26, 0, MaterialUnpacker::unpack, root.resolve("config/dump.material"));
+//        unpackConfigArchive(9, 0, TextureUnpacker::unpack, root.resolve("config/dump.texture")); // TODO: buggy in some revs
+//        unpackConfigArchive(26, 0, MaterialUnpacker::unpack, root.resolve("config/dump.material")); // todo: buggy in some revs
 
         // other
         unpackConfigArchive(60, 0, StylesheetUnpacker::unpack, root.resolve("config/dump.stylesheet"));
@@ -251,10 +243,10 @@ public class Unpack {
         unpackWorldAreaMap(root);
     }
 
-    public static void unpackLegacy(Path root) throws IOException {
+    public static void unpackLegacy(Path root, Js4ResourceProvider provider) throws IOException {
         Files.createDirectories(root);
         Files.createDirectories(root.resolve("config"));
-        var config = new Jagfile(PROVIDER.get(0, 2, false, 0));
+        var config = new Jagfile(provider.get(0, 2));
         unpackLegacyConfig(config, "idk", IDKUnpacker::unpack, root.resolve("config/dump.idk"));
         unpackLegacyConfig(config, "flo", FloorOverlayUnpacker::unpack, root.resolve("config/dump.flo"));
         unpackLegacyConfig(config, "loc", LocUnpacker::unpack, root.resolve("config/dump.loc"));

@@ -37,6 +37,8 @@ public class ScriptUnpacker {
         SCRIPT_RETURN_TYPES.clear();
         SCRIPT_PARAMETERS.clear();
         SCRIPT_RETURNS.clear();
+        SCRIPT_LEGACY_ARRAY_PARAMETER.clear();
+        SCRIPT_LOCALS.clear();
         CALLED.clear();
         SCRIPT_TRIGGERS.clear();
     }

@@ -93,12 +93,6 @@ public class ColourConversion {
     }
 
     public static int reverseRGBFromHSL(int value) {
-        var reverse = REVERSE_RGB_TO_HSL[value];
-
-        if (reverse == -1) {
-            throw new IllegalStateException("hsl " + value + " unobtainable from rgb");
-        }
-
-        return reverse;
+        return REVERSE_RGB_TO_HSL[value];
     }
 }

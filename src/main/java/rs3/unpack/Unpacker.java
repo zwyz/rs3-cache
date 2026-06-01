@@ -854,23 +854,39 @@ public class Unpacker {
     public static void unpackRecol(Packet packet, ArrayList<String> lines, int indices) {
         var count = packet.g1();
 
-        if (Unpack.VERSION < 469) {
+        if (indices == -1) {
             for (var i = 0; i < count; ++i) {
-                lines.add("recol" + (i + 1) + "s=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
-                lines.add("recol" + (i + 1) + "d=" + ColourConversion.reverseRGBFromHSL(packet.g2()));
-            }
-        } else if (indices == -1) {
-            for (var i = 0; i < count; ++i) {
-                lines.add("recol" + (i + 1) + "s=" + packet.g2());
-                lines.add("recol" + (i + 1) + "d=" + packet.g2());
+                unpackRecolLine(packet, lines, i);
             }
         } else {
             for (var i = 0; i < 16; i++) {
                 if ((indices & 1 << i) != 0) {
-                    lines.add("recol" + (i + 1) + "s=" + packet.g2());
-                    lines.add("recol" + (i + 1) + "d=" + packet.g2());
+                    unpackRecolLine(packet, lines, i);
                 }
             }
+        }
+    }
+
+    private static void unpackRecolLine(Packet packet, ArrayList<String> lines, int i) {
+        var s = packet.g2();
+        var d = packet.g2();
+        var rgbs = ColourConversion.reverseRGBFromHSL(s);
+        var rgbd = ColourConversion.reverseRGBFromHSL(d);
+
+        if (Unpack.VERSION < 468 && s < 100 && d < 100) {
+            // In older versions, values below 100 were treated as texture IDs and not
+            // converted to HSL when packing, but this leaves an ambiguity. The true
+            // values in the source code could be either rgbs,rgbd (if they are valid)
+            // or s,d. We choose to unpack as s,d since it leads to the smaller diff
+            // between the 463 and 469 caches.
+            lines.add("recol" + (i + 1) + "s=" + s);
+            lines.add("recol" + (i + 1) + "d=" + d);
+        } else if (rgbs != -1 && rgbd != -1) {
+            lines.add("recol" + (i + 1) + "s=" + rgbs);
+            lines.add("recol" + (i + 1) + "d=" + rgbd);
+        } else { // a new opcode was added to skip conversion when packing
+            lines.add("recolhsl" + (i + 1) + "s=" + s);
+            lines.add("recolhsl" + (i + 1) + "d=" + d);
         }
     }
 
