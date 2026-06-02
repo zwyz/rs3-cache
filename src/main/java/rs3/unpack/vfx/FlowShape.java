@@ -24,6 +24,7 @@ public class FlowShape {
             case 5 -> FlowShapeType.CONE;
             case 6 -> FlowShapeType.SPHERE;
             case 7 -> FlowShapeType.HEMISPHERE;
+            case 8 -> FlowShapeType.UNKNOWN_8;
             default -> throw new IllegalStateException("unknown kind " + kindID);
         };
 
@@ -61,6 +62,12 @@ public class FlowShape {
                 width = packet.gFloat();
             }
 
+            case UNKNOWN_8 -> {
+                height = packet.gFloat();
+                length = packet.gFloat();
+                width = packet.gFloat();
+            }
+
             default -> {
                 throw new IllegalStateException("unknown type " + kind);
             }
@@ -75,6 +82,7 @@ public class FlowShape {
         DISC,
         CONE,
         SPHERE,
-        HEMISPHERE
+        HEMISPHERE,
+        UNKNOWN_8,
     }
 }
