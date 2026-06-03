@@ -12,7 +12,7 @@ public class InterfaceUnpacker {
     public static List<String> unpack(int id, byte[] data) {
         var lines = new ArrayList<String>();
         var packet = new Packet(data);
-        lines.add("[com" + (id & 0xffff) + "]");
+        lines.add("[" + Unpacker.formatComponentShort(id) + "]");
         var version = packet.g1();
 
         if (Unpack.VERSION < 566 && version != 0xff) {
@@ -24,7 +24,7 @@ public class InterfaceUnpacker {
         }
 
         var type = packet.g1();
-        line(lines, "type=", Unpacker.formatIfType(type));
+        line(lines, "type=", formatIfType(type));
 
         if ((type & 128) != 0) {
             type &= 127;
@@ -32,7 +32,7 @@ public class InterfaceUnpacker {
         }
 
         line(lines, "contenttype=", packet.g2(), 0);
-        decode(lines, packet, version, type);
+        decode(id, lines, packet, version, type);
 
         if (packet.pos != packet.arr.length) {
             throw new IllegalStateException("end of file not reached");
@@ -41,7 +41,7 @@ public class InterfaceUnpacker {
         return lines;
     }
 
-    private static void decode(ArrayList<String> lines, Packet packet, int version, int type) {
+    private static void decode(int id, ArrayList<String> lines, Packet packet, int version, int type) {
         line(lines, "x=", packet.g2s(), 0); // if_getx
         line(lines, "y=", packet.g2s(), 0); // if_gety
         line(lines, "width=", packet.g2(), 0); // if_getwidth
@@ -63,7 +63,11 @@ public class InterfaceUnpacker {
             line(lines, "aspectheight=", packet.g2(), 1); // if_setaspect
         }
 
-        line(lines, "layer=com", packet.g2null(), -1);
+        var layerID = packet.g2null();
+
+        if (layerID != -1) {
+            line(lines, "layer=", Unpacker.formatComponentShort((id & 0xffff0000) | layerID)); // if_getlayer
+        }
 
         var flags = packet.g1();
         line(lines, "hide=", ((flags & 1) != 0 ? "yes" : "no"), "no"); // if_sethide
@@ -401,7 +405,7 @@ public class InterfaceUnpacker {
             line(lines, "modelangle_z=", packet.g2()); // if_getmodelangle_z
             line(lines, "modelzoom=", packet.g2()); // if_setmodelzoom
             line(lines, "modelanim=", Unpacker.format(Type.SEQ, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()), "null"); // if_setmodelanim
-            line(lines, "modelorthog=", Unpacker.formatBoolean(packet.g1()), "no"); // if_setmodelorthog
+            line(lines, "modelorthog=", Unpacker.formatYesNo(packet.g1()), "no"); // if_setmodelorthog
 
             if (Unpack.VERSION >= 493) {
                 line(lines, "unknown100=", packet.g2());
@@ -409,7 +413,7 @@ public class InterfaceUnpacker {
 
             if (Unpack.VERSION >= 501) {
                 line(lines, "unknown101=", packet.g2());
-                line(lines, "unknown103=", Unpacker.formatBoolean(packet.g1()), "no");
+                line(lines, "unknown103=", Unpacker.formatYesNo(packet.g1()), "no");
             }
         } else {
             var flags = packet.g1();
@@ -751,5 +755,35 @@ public class InterfaceUnpacker {
         if (!Objects.equals(value, ignore)) {
             lines.add(name + value);
         }
+    }
+
+    public static String formatIfType(int type) {
+        return switch (type) {
+            case 0 -> "layer";
+            case 3 -> "rectangle";
+            case 4 -> "text";
+            case 5 -> "graphic";
+            case 6 -> "model";
+            case 9 -> "line";
+            case 10 -> "button";
+            case 11 -> "panel";
+            case 12 -> "check";
+            case 13 -> "input";
+            case 14 -> "slider";
+            case 15 -> "grid";
+            case 16 -> "list";
+            case 17 -> "combo";
+            case 18 -> "pagedlayer";
+            case 19 -> "pagedlayerheader";
+            case 20 -> "carousel";
+            case 21 -> "pagedcarousel";
+            case 22 -> "radiogroup";
+            case 23 -> "groupbox";
+            case 24 -> "radialprogressoverlay";
+            case 26 -> "crmview";
+            case 27 -> "cutscenelayer";
+            case 28 -> "modelgroup";
+            default -> throw new IllegalStateException("Unexpected value: " + type);
+        };
     }
 }

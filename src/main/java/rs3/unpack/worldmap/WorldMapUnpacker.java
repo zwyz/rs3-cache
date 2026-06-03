@@ -120,7 +120,7 @@ public class WorldMapUnpacker {
     private static String unpackDetails(int id, List<String> lines, byte[] data) {
         var packet = new Packet(data);
         var debugname = packet.gjstr();
-        Unpacker.setWorldMapAreaName(id, debugname);
+        Unpacker.setSymbolName(Type.MAPAREA, id, debugname);
         lines.add("[" + Unpacker.format(Type.MAPAREA, id) + "]");
         lines.add("name=" + packet.gjstr());
         if (Unpack.VERSION >= 537) {

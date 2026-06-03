@@ -154,7 +154,7 @@ public class WaterUnpacker {
             // jag::WaterType::Decode
             case 81 -> lines.add("still_water_normal_strength=" + packet.gFloat());
             case 82 -> lines.add("flow_noise=" + packet.gFloat());
-            case 85 -> lines.add("override_default_water_type=" + Unpacker.formatBoolean(packet.g1()));
+            case 85 -> lines.add("override_default_water_type=" + Unpacker.formatYesNo(packet.g1()));
 
             default -> throw new IllegalStateException("unknown opcode");
         }
@@ -162,7 +162,7 @@ public class WaterUnpacker {
 
     private static void decodeNormalMapParams(List<String> lines, int target, int op, Packet packet) {
         switch (op) {
-            case 0 -> lines.add("normal_map_params" + (target + 1) + "_unknown33=" + Unpacker.formatBoolean(packet.g1()));
+            case 0 -> lines.add("normal_map_params" + (target + 1) + "_unknown33=" + Unpacker.formatYesNo(packet.g1()));
             case 1 -> lines.add("normal_map_params" + (target + 1) + "_unknown34 =" + packet.gFloat());
             case 2 -> lines.add("normal_map_params" + (target + 1) + "_unknown35=" + packet.gFloat());
             case 3 -> lines.add("normal_map_params" + (target + 1) + "_unknown36=" + packet.gFloat());

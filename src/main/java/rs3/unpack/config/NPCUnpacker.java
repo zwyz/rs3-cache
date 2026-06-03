@@ -190,7 +190,16 @@ public class NPCUnpacker {
             case 123 -> lines.add("overlayheight=" + packet.g2());
             case 125 -> lines.add("respawndir=" + packet.g1s());
             case 127 -> lines.add("bas=" + Unpacker.format(Type.BAS, packet.g2())); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
-            case 128 -> lines.add("defaultmovemode=" + Unpacker.format(Type.MOVESPEED, packet.g1())); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
+
+            case 128 -> lines.add("defaultmovemode=" + switch (packet.g1()) { // https://discord.com/channels/@me/698790755363323904/1203639168836833340
+                case -1 -> "stationary";
+                case 0 -> "crawl";
+                case 1 -> "walk";
+                case 2 -> "run";
+                case 3 -> "instant";
+                default -> throw new IllegalStateException("invalid defaultmovemode");
+            });
+
             case 134 -> lines.add("bgsound=" + Unpacker.format(bgsoundvorbis ? Type.VORBIS : Type.SYNTH, packet.g2null()) + "," + Unpacker.format(bgsoundvorbis ? Type.VORBIS : Type.SYNTH, packet.g2null()) + "," + Unpacker.format(bgsoundvorbis ? Type.VORBIS : Type.SYNTH, packet.g2null()) + "," + Unpacker.format(bgsoundvorbis ? Type.VORBIS : Type.SYNTH, packet.g2null()) + "," + packet.g1());
             case 135 -> lines.add("cursor1=" + (packet.g1() + 1) + "," + Unpacker.format(Type.CURSOR, packet.g2()));
             case 136 -> lines.add("cursor2=" + (packet.g1() + 1) + "," + Unpacker.format(Type.CURSOR, packet.g2()));

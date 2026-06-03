@@ -265,6 +265,7 @@ public class Type {
     public static final Type VAR_CONTROLLER = new Type("var_controller", BaseVarType.INTEGER);
     public static final Type VAR_PLAYER_GROUP = new Type("var_player_group", BaseVarType.INTEGER);
     public static final Type VAR_GLOBAL = new Type("var_global", BaseVarType.INTEGER);
+    public static final Type SOUND = new Type("sound", BaseVarType.INTEGER);
 
     // split the int type into fake subtypes
     public static final Type INT_INT = new Type("int", Type.INT);

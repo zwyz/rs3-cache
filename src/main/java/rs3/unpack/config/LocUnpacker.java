@@ -101,7 +101,7 @@ public class LocUnpacker {
             case 15 -> lines.add("length=" + packet.g1()); // https://www.youtube.com/watch?v=vZ7oG1IDz1w
             case 17 -> lines.add("blockwalk=no"); // https://www.youtube.com/watch?v=ovGBifJR4Fs 4:38:00
             case 18 -> lines.add("blockrange=no"); // https://www.youtube.com/watch?v=ovGBifJR4Fs 4:38:00
-            case 19 -> lines.add("active=" + Unpacker.formatBoolean(packet.g1())); //https://www.youtube.com/watch?v=ovGBifJR4Fs 4:38:00
+            case 19 -> lines.add("active=" + Unpacker.formatYesNo(packet.g1())); //https://www.youtube.com/watch?v=ovGBifJR4Fs 4:38:00
             case 21 -> lines.add("hillskew=yes"); // https://www.youtube.com/watch?v=ovGBifJR4Fs 4:38:00
             case 22 -> lines.add("sharelight=yes"); // https://www.youtube.com/watch?v=ovGBifJR4Fs 4:38:00
             case 23 -> lines.add("occlude=yes"); // https://www.youtube.com/watch?v=vZ7oG1IDz1w 2:09:30
@@ -160,7 +160,7 @@ public class LocUnpacker {
             case 72 -> lines.add("offsetz=" + packet.g2s()); // html5 (only offset)
             case 73 -> lines.add("forcedecor=yes");
             case 74 -> lines.add("breakroutefinding=yes"); // https://twitter.com/JagexAsh/status/1443150721734660096
-            case 75 -> lines.add("raiseobject=" + Unpacker.formatBoolean(packet.g1())); // https://twitter.com/JagexAsh/status/1641051532010434560
+            case 75 -> lines.add("raiseobject=" + Unpacker.formatYesNo(packet.g1())); // https://twitter.com/JagexAsh/status/1641051532010434560
 
             case 77 -> { // * https://twitter.com/JagexAsh/status/737426310545481728
                 var multivarbit = packet.g2null();
@@ -428,11 +428,11 @@ public class LocUnpacker {
             }
 
             case 250 -> lines.add("bgsoundshape=" + packet.g1());
-            case 251 -> lines.add("bgsounddistancefiltered=" + Unpacker.formatBoolean(packet.g1()));
+            case 251 -> lines.add("bgsounddistancefiltered=" + Unpacker.formatYesNo(packet.g1()));
             case 252 -> lines.add("bgsounddistancefilterparams=" + packet.g2() + "," + packet.g2() + "," + packet.g2()); //hzhigh,hzlow,q
 
             case 253 -> lines.add("randomsoundshape=" + packet.g1());
-            case 254 -> lines.add("randomsounddistancefiltered=" + Unpacker.formatBoolean(packet.g1()));
+            case 254 -> lines.add("randomsounddistancefiltered=" + Unpacker.formatYesNo(packet.g1()));
             case 255 -> lines.add("randomsounddistancefilterparams=" + packet.g2() + "," + packet.g2() + "," + packet.g2());
 
             default -> throw new IllegalStateException("unknown opcode");

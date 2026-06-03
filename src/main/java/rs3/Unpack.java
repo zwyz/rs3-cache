@@ -87,10 +87,10 @@ public class Unpack {
         Files.createDirectories(root.resolve("interface"));
 
         // load names
-        loadGroupNamesScriptTrigger(12, Unpacker.SCRIPT_NAMES);
-        loadGroupNames(Path.of("data/names/scripts.txt"), 12, Unpacker.SCRIPT_NAMES);
-        loadGroupNames(Path.of("data/names/graphics.txt"), 8, Unpacker.GRAPHIC_NAMES);
-        loadOtherNames(Path.of("data/names/other.txt"), Unpacker.OTHER_NAMES);
+        loadGroupNamesScriptTrigger(12, Unpacker.SCRIPT_NAME);
+        loadGroupNames(Path.of("data/names/scripts.txt"), 12, Unpacker.SCRIPT_NAME::put);
+        loadGroupNames(Path.of("data/names/graphics.txt"), 8,  (id, name) -> Unpacker.setSymbolName(Type.GRAPHIC, id, name));
+        loadGroupNames(Path.of("data/names/binaries.txt"), 10, Unpacker.BINARY_NAME::put);
 
         // things stuff depends on
         if (Unpack.VERSION < 751) {
@@ -229,9 +229,9 @@ public class Unpack {
 //        iterateArchive(8, SpriteUnpacker::unpack);
 //        unpackArchiveTransformed(47, b -> GSON.toJson(new Model(new Packet(b))), root.resolve("model"), ".json");
 //        iterateArchive(54, TextureUnpacker::unpack);
-        unpackArchive(10, root.resolve("binary"), ".dat");
+        unpackBinaries(root.resolve("binary"));
         unpackArchiveTransformed(58, b -> GSON_PRETTY.toJson(new FontMetrics(new Packet(b))), root.resolve("fontmetrics"), ".json");
-        unpackArchive(59, root.resolve("ttf"), ".ttf");
+        unpackTTF(root.resolve("ttf"));
         unpackArchiveTransformed(61, VFXUnpacker::unpack, root.resolve("vfx"), ".json");
         unpackArchiveTransformed(62, b -> GSON_PRETTY.toJson(AnimatorController.decode(new Packet(b))), root.resolve("animator"), ".json");
         unpackGroupTransformed(65, 0, b -> GSON_PRETTY.toJson(new AnimCurve(new Packet(b))), root.resolve("uianimcurve"), ".json");
@@ -289,11 +289,7 @@ public class Unpack {
         Files.write(path, lines);
     }
 
-    private static void loadOtherNames(Path path, Map<Integer, String> names) throws IOException {
-        generateNames(path, names);
-    }
-
-    private static void loadGroupNames(Path path, int archive, Map<Integer, String> names) throws IOException {
+    private static void loadGroupNames(Path path, int archive, BiConsumer<Integer, String> consumer) throws IOException {
         if (archive >= MASTER_INDEX.getArchiveCount() || MASTER_INDEX.getArchiveData(archive).getCrc() == 0) {
             return; // empty archives don't get packed
         }
@@ -310,7 +306,7 @@ public class Unpack {
             var hash = archiveIndex.groupNameHash[group];
 
             if (unhash.containsKey(hash)) {
-                names.put(group, unhash.get(hash));
+                consumer.accept(group, unhash.get(hash));
             }
         }
     }
@@ -511,49 +507,23 @@ public class Unpack {
         return result;
     }
 
-    private static void unpackArchive(int archive, Path path, String extension) throws IOException {
-        if (archive >= MASTER_INDEX.getArchiveCount() || MASTER_INDEX.getArchiveData(archive).getCrc() == 0) {
-            return; // empty archives don't get packed
-        }
-
+    private static void unpackBinaries(Path path) throws IOException {
         Files.createDirectories(path);
-        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, Js5Archive.JS5_BINARY.id, false, 0)));
 
         for (var group : archiveIndex.groupId) {
-            String groupName = null;
-            if (archiveIndex.groupNameHash != null && archiveIndex.groupNameHash[group] != -1) {
-                groupName = Unpacker.OTHER_NAMES.get(archiveIndex.groupNameHash[group]);
-            }
-            if (groupName == null) {
-                groupName = String.valueOf(group);
-            }
+            var files = Js5Util.unpackGroup(archiveIndex, group, PROVIDER.get(Js5Archive.JS5_BINARY.id, group, false, 0));
+            Files.write(path.resolve(Unpacker.BINARY_NAME.getOrDefault(group, group + ".dat")), files.get(0));
+        }
+    }
 
-            var files = Js5Util.unpackGroup(archiveIndex, group, PROVIDER.get(archive, group, false, 0));
+    private static void unpackTTF(Path path) throws IOException {
+        Files.createDirectories(path);
+        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, Js5Archive.JS5_TRUETYPEFONTS.id, false, 0)));
 
-            if (files.size() == 1 && files.containsKey(0)) {
-                String name = null;
-                if (archiveIndex.groupFileNames != null && archiveIndex.groupFileNames[group][0] != -1) {
-                    name = Unpacker.OTHER_NAMES.get(archiveIndex.groupFileNames[group][0]);
-                }
-                if (name == null) {
-                    name = group + extension;
-                }
-                Files.write(path.resolve(name), files.get(0));
-            } else {
-                var groupDirectory = path.resolve(groupName);
-                Files.createDirectories(groupDirectory);
-
-                for (var file : files.keySet()) {
-                    String name = null;
-                    if (archiveIndex.groupFileNames != null) {
-                        name = Unpacker.OTHER_NAMES.get(archiveIndex.groupFileNames[group][file]);
-                    }
-                    if (name == null) {
-                        name = file + extension;
-                    }
-                    Files.write(groupDirectory.resolve(name), files.get(file));
-                }
-            }
+        for (var group : archiveIndex.groupId) {
+            var files = Js5Util.unpackGroup(archiveIndex, group, PROVIDER.get(Js5Archive.JS5_TRUETYPEFONTS.id, group, false, 0));
+            Files.write(path.resolve(group + ".dat"), files.get(0));
         }
     }
 
@@ -569,29 +539,13 @@ public class Unpack {
             var files = Js5Util.unpackGroup(archiveIndex, group, PROVIDER.get(archive, group, false, 0));
 
             if (files.size() == 1 && files.containsKey(0)) {
-                String name = null;
-                if (archiveIndex.groupNameHash != null && archiveIndex.groupNameHash[group] != -1) {
-                    name = Unpacker.OTHER_NAMES.get(archiveIndex.groupNameHash[group]);
-                } else if (archiveIndex.groupFileNames != null && archiveIndex.groupFileNames[group][0] != -1) {
-                    name = Unpacker.OTHER_NAMES.get(archiveIndex.groupFileNames[group][0]);
-                }
-                if (name == null) {
-                    name = group + extension;
-                }
-                Files.writeString(path.resolve(name), unpack.apply(files.get(0)));
+                Files.writeString(path.resolve(group + extension), unpack.apply(files.get(0)));
             } else {
                 var groupDirectory = path.resolve(String.valueOf(group));
                 Files.createDirectories(groupDirectory);
 
                 for (var file : files.keySet()) {
-                    String name = null;
-                    if (archiveIndex.groupFileNames != null) {
-                        name = Unpacker.OTHER_NAMES.get(archiveIndex.groupFileNames[group][file]);
-                    }
-                    if (name == null) {
-                        name = file + extension;
-                    }
-                    Files.writeString(groupDirectory.resolve(name), unpack.apply(files.get(file)));
+                    Files.writeString(groupDirectory.resolve(file + extension), unpack.apply(files.get(file)));
                 }
             }
         }
@@ -617,36 +571,6 @@ public class Unpack {
 
         for (var file : files.keySet()) {
             Files.writeString(path.resolve(file + extension), unpack.apply(files.get(file)));
-        }
-    }
-
-    private static void iterateArchive(int archive, BiConsumer<Integer, byte[]> unpack) throws IOException {
-        var lines = new ArrayList<String>();
-        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
-
-        for (var group : archiveIndex.groupId) {
-            var files = Js5Util.unpackGroup(archiveIndex, group, PROVIDER.get(archive, group, false, 0));
-
-            if (files.size() == 1 && files.containsKey(0)) {
-                unpack.accept(group, files.get(0));
-            } else {
-                throw new IllegalStateException();
-            }
-        }
-    }
-
-    private static void iterateGroup(int archive, BiConsumer<Integer, byte[]> unpack) throws IOException {
-        var lines = new ArrayList<String>();
-        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
-
-        for (var group : archiveIndex.groupId) {
-            var files = Js5Util.unpackGroup(archiveIndex, group, PROVIDER.get(archive, group, false, 0));
-
-            if (files.size() == 1 && files.containsKey(0)) {
-                unpack.accept(group, files.get(0));
-            } else {
-                throw new IllegalStateException();
-            }
         }
     }
 
@@ -745,22 +669,5 @@ public class Unpack {
             String extension = scripted ? "if3" : "if";
             Files.write(result.resolve(Unpacker.format(Type.INTERFACE, group) + "." + extension), lines);
         }
-    }
-
-    private static void unpackArchive(int archive, BiFunction<Integer, byte[], List<String>> unpack, Path result) throws IOException {
-        var lines = new ArrayList<String>();
-        var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
-
-        for (var group : archiveIndex.groupId) {
-            var file = Js5Util.decompress(PROVIDER.get(archive, group, false, 0));
-            lines.addAll(unpack.apply(group, file));
-            lines.add("");
-        }
-
-        Files.write(result, lines);
-    }
-
-    private static byte[] get(int archive, int group) throws IOException {
-        return Js5Util.decompress(PROVIDER.get(archive, group, false, 0));
     }
 }

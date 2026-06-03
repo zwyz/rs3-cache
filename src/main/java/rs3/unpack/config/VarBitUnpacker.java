@@ -7,6 +7,7 @@ import rs3.util.Packet;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class VarBitUnpacker {
     public static List<String> unpack(int id, byte[] data) {
@@ -25,10 +26,10 @@ public class VarBitUnpacker {
                 }
 
                 case 1 -> {
-                    var domain = packet.g1();
-                    Unpacker.setVarBitDomain(id, VarDomain.byID(domain));
-                    lines.add("domain=" + Unpacker.formatVarDomain(domain));
-                    lines.add("basevar=" + Unpacker.formatVar(VarDomain.byID(domain), packet.gSmart2or4null()));
+                    var domain = VarDomain.byID(packet.g1());
+                    Unpacker.setVarBitDomain(id, domain);
+                    lines.add("domain=" + domain.name().toLowerCase(Locale.ROOT));
+                    lines.add("basevar=" + Unpacker.formatVar(domain, packet.gSmart2or4null()));
                 }
 
                 case 2 -> {

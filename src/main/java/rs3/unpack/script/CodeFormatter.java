@@ -530,7 +530,7 @@ public class CodeFormatter {
     private static String formatVarBit(Object operand) {
         var var = ((VarBitReference) operand).var();
         var secondary = ((VarBitReference) operand).secondary();
-        return (secondary ? "." : "") + "%" + Unpacker.formatVarBit(var);
+        return (secondary ? "." : "") + "%" + Unpacker.format(Type.VARBIT, var);
     }
 
     private static String formatVarClient(VarClientReference var) {
