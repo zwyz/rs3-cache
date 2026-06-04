@@ -85,7 +85,7 @@ public class AchievementUnpacker {
                     var count2 = packet.gSmart1or2();
 
                     for (var j = 0; j < count2; j++) {
-                        line += "," + Unpacker.format(Type.VARBIT, packet.g2());
+                        line += "," + Unpacker.format(Type.VAR_PLAYER_BIT, packet.g2());
                     }
 
                     lines.add(line);
@@ -147,7 +147,7 @@ public class AchievementUnpacker {
                     var count2 = packet.gSmart1or2();
 
                     for (var j = 0; j < count2; j++) {
-                        line += "," + Unpacker.format(Type.VARBIT, packet.g2());
+                        line += "," + Unpacker.format(Type.VAR_PLAYER_BIT, packet.g2());
                     }
 
                     lines.add(line);
@@ -203,7 +203,7 @@ public class AchievementUnpacker {
                 var count = packet.gSmart1or2();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("varbittestbitprereq=" + packet.g1() + "," + Unpacker.format(Type.VARBIT, packet.g2()) + "," + packet.g1() + "," + packet.gjstr2() + "," + packet.g1());
+                    lines.add("varbittestbitprereq=" + packet.g1() + "," + Unpacker.format(Type.VAR_PLAYER_BIT, packet.g2()) + "," + packet.g1() + "," + packet.gjstr2() + "," + packet.g1());
                 }
             }
 
@@ -211,7 +211,7 @@ public class AchievementUnpacker {
                 var count = packet.gSmart1or2();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("varbittestbitreq=" + packet.g1() + "," + Unpacker.format(Type.VARBIT, packet.g2()) + "," + packet.g1() + "," + packet.gjstr2() + "," + packet.g1());
+                    lines.add("varbittestbitreq=" + packet.g1() + "," + Unpacker.format(Type.VAR_PLAYER_BIT, packet.g2()) + "," + packet.g1() + "," + packet.gjstr2() + "," + packet.g1());
                 }
             }
 

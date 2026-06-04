@@ -20,7 +20,7 @@ public class VarUnpacker {
                     throw new IllegalStateException("end of file not reached");
                 }
 
-                lines.addFirst("[" + Unpacker.formatVar(domain, id) + "]");
+                lines.addFirst("[" + Unpacker.format(domain.type, id) + "]");
                 return lines;
             }
 

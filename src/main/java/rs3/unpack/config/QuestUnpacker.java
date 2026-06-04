@@ -37,7 +37,7 @@ public class QuestUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("progressvarbit=" + Unpacker.format(Type.VARBIT, packet.g2()) + "," + packet.g4s() + "," + packet.g4s());
+                    lines.add("progressvarbit=" + Unpacker.format(Type.VAR_PLAYER_BIT, packet.g2()) + "," + packet.g4s() + "," + packet.g4s());
                 }
             }
 
@@ -88,7 +88,7 @@ public class QuestUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("varbitreq=" + Unpacker.format(Type.VARBIT, packet.g4s()) + "," + packet.g4s() + "," + packet.g4s() + "," + packet.gjstr());
+                    lines.add("varbitreq=" + Unpacker.format(Type.VAR_PLAYER_BIT, packet.g4s()) + "," + packet.g4s() + "," + packet.g4s() + "," + packet.gjstr());
                 }
             }
 

@@ -41,7 +41,7 @@ public class MapElementUnpacker {
                 } else if (multivar != -1) {
                     lines.add("condition=" + Unpacker.format(Type.VAR_PLAYER, multivar) + "," + packet.g4s() + "," + packet.g4s());
                 } else if (multivarbit != -1) {
-                    lines.add("condition=" + Unpacker.format(Type.VARBIT, multivarbit) + "," + packet.g4s() + "," + packet.g4s());
+                    lines.add("condition=" + Unpacker.format(Type.VAR_PLAYER_BIT, multivarbit) + "," + packet.g4s() + "," + packet.g4s());
                 }
             }
 
@@ -90,7 +90,7 @@ public class MapElementUnpacker {
                 var multivarbit = packet.g2null();
 
                 if (multivarbit != -1) {
-                    lines.add("multivar=" + Unpacker.format(Type.VARBIT, multivarbit));
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER_BIT, multivarbit));
                 }
 
                 var multivarp = packet.g2null();
@@ -114,7 +114,7 @@ public class MapElementUnpacker {
                 var multivarbit = packet.g2null();
 
                 if (multivarbit != -1) {
-                    lines.add("multivar=" + Unpacker.format(Type.VARBIT, multivarbit));
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER_BIT, multivarbit));
                 }
 
                 var multivarp = packet.g2null();

@@ -481,12 +481,10 @@ public class Unpacker {
             }
 
             if ((value & 0xff000000) != 0) {
-                return format(Type.VARBIT, value & 0xffff);
+                return format(getVarBitDomain(value & 0xffff).bittype, value & 0xffff);
             } else {
-                return formatVar(VarDomain.byID(value >> 16 & 0xff), value & 0xffff);
+                return format(VarDomain.byID(value >> 16 & 0xff).type, value & 0xffff);
             }
-        } else if (type == Type.VARBIT) {
-            return "var" + getVarBitDomain(value).name().toLowerCase(Locale.ROOT) + "bit_" + value;
         } else if (type == Type.INT_INT) {
             return Integer.toString(value);
         } else if (type == Type.INT_RGB) {
@@ -571,22 +569,6 @@ public class Unpacker {
             case 0 -> "no";
             case 1 -> "yes";
             default -> throw new IllegalArgumentException("invalid boolean");
-        };
-    }
-
-    public static String formatVar(VarDomain domain, int value) {
-        return switch (domain) {
-            case PLAYER -> format(Type.VAR_PLAYER, value);
-            case NPC -> format(Type.VAR_NPC, value);
-            case CLIENT -> format(Type.VAR_CLIENT, value);
-            case WORLD -> format(Type.VAR_WORLD, value);
-            case REGION -> format(Type.VAR_REGION, value);
-            case OBJECT -> format(Type.VAR_OBJECT, value);
-            case CLAN -> format(Type.VAR_CLAN, value);
-            case CLAN_SETTING -> format(Type.VAR_CLAN_SETTING, value);
-            case CONTROLLER -> format(Type.VAR_CONTROLLER, value);
-            case PLAYER_GROUP -> format(Type.VAR_PLAYER_GROUP, value);
-            case GLOBAL -> format(Type.VAR_GLOBAL, value);
         };
     }
 

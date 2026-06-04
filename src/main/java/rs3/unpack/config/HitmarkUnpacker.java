@@ -42,7 +42,7 @@ public class HitmarkUnpacker {
                 var multivarbit = packet.g2null();
 
                 if (multivarbit != -1) {
-                    lines.add("multivar=" + Unpacker.format(Type.VARBIT, multivarbit));
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER_BIT, multivarbit));
                 }
 
                 var multivarp = packet.g2null();
@@ -66,7 +66,7 @@ public class HitmarkUnpacker {
                 var multivarbit = packet.g2null();
 
                 if (multivarbit != -1) {
-                    lines.add("multivar=" + Unpacker.format(Type.VARBIT, multivarbit));
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER_BIT, multivarbit));
                 }
 
                 var multivarp = packet.g2null();

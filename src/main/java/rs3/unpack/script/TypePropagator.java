@@ -125,10 +125,6 @@ public class TypePropagator {
             }
 
             if (expression.operand instanceof VarReference var) {
-                if (Unpack.VERSION >= 751) {
-                    emitAssign(type(expression, 0), Unpacker.getVarType(var.domain(), var.var()));
-                }
-
                 emitEqual(type(expression, 0), var(var.domain(), var.var()));
             }
 
@@ -235,7 +231,7 @@ public class TypePropagator {
                 emitEqual(type(var, 0), Type.VAR_PLAYER);
                 emitEqual(type(expression, 0), var(VarDomain.PLAYER, (int) var.operand));
             } else {
-                emitEqual(type(var, 0), Type.VARBIT);
+                emitEqual(type(var, 0), Type.VAR_PLAYER_BIT);
                 emitEqual(type(expression, 0), varbit((int) var.operand));
             }
         }
@@ -369,7 +365,7 @@ public class TypePropagator {
                 ScriptUnpacker.SCRIPT_LOCALS.computeIfAbsent(script, _ -> new HashMap<>()).put(new LocalReference(domain, index), typeof(node));
             }
 
-            if (node instanceof Node.VarType(VarDomain domain, var id) && Unpack.VERSION < 800) {
+            if (node instanceof Node.VarType(VarDomain domain, var id) && Unpack.VERSION < 751) {
                 Unpacker.setVarType(domain, id, ScriptUnpacker.chooseDisplayType(typeof(node)));
             }
         }
@@ -432,7 +428,7 @@ public class TypePropagator {
     }
 
     private Node varbit(int index) {
-        return new Node.VarPlayerBitType(index);
+        return new Node.VarBitType(index);
     }
 
     private Node varclient(int index) {
@@ -572,7 +568,7 @@ public class TypePropagator {
                 case Node.ServerParameterType(var s, var i) -> "[shape=box,label=\"serverscript_" + s + ".param" + i + "\\n" + typeof(node) + "\"]";
                 case Node.ReturnType(var s, var i) -> "[shape=box,label=\"script_" + s + ".result" + i + "\\n" + typeof(node) + "\"]";
                 case Node.VarType(VarDomain domain, var i) -> "[shape=box,label=\"var" + domain.name().toLowerCase() + "_" + i + "\\n" + typeof(node) + "\"]";
-                case Node.VarPlayerBitType(var i) -> "[shape=box,label=\"varplayerbit_" + i + "\\n" + typeof(node) + "\"]";
+                case Node.VarBitType(var i) -> "[shape=box,label=\"varplayerbit_" + i + "\\n" + typeof(node) + "\"]";
                 case Node.VarClientType(var i) -> "[shape=box,label=\"varclient_" + i + "\\n" + typeof(node) + "\"]";
                 case Node.TemporaryType() -> "[shape=box,color=gray,fontcolor=gray,label=\"" + typeof(node) + "\"]";
             });
@@ -609,7 +605,7 @@ public class TypePropagator {
         record ServerParameterType(int script, int index) implements Node {}
         record ReturnType(int script, int index) implements Node {}
         record VarType(VarDomain domain, int id) implements Node {}
-        record VarPlayerBitType(int id) implements Node {}
+        record VarBitType(int id) implements Node {}
         record VarClientType(int id) implements Node {}
 
         record TemporaryType() implements Node {

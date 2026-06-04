@@ -91,8 +91,8 @@ public class SyntaxBuilder {
 
             for (var pop : pops.reversed()) {
                 switch (pop) {
-                    case VarReference var -> argumentTypes.add(Unpacker.getVarType(var.domain(), var.var()));
-                    case VarBitReference _ -> argumentTypes.add(Type.INT_INT);
+                    case VarReference(var domain, var var, var secondary) -> argumentTypes.add(Unpack.VERSION >= 751 ? Unpacker.getVarType(domain, var) : Type.UNKNOWN_INT);
+                    case VarBitReference _ -> argumentTypes.add(Type.INT);
                     case VarClientReference _ -> argumentTypes.add(Type.UNKNOWN_INT);
                     case VarClientStringReference _ -> argumentTypes.add(Type.STRING);
 
@@ -135,7 +135,7 @@ public class SyntaxBuilder {
 
         if (command == PUSH_VAR) {
             var var = (VarReference) operand;
-            var type = Unpacker.getVarType(var.domain(), var.var());
+            var type = Unpack.VERSION >= 751 ? Unpacker.getVarType(var.domain(), var.var()) : Type.UNKNOWN_INT;
             buildCommand(code, index, FLOW_LOAD, var, List.of(), List.of(type));
             return;
         }

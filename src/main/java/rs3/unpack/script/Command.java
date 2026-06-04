@@ -356,7 +356,7 @@ public class Command {
     }
 
     // push_varbit, pop_varbit
-    public record VarBitReference(int var, boolean secondary) {
+    public record VarBitReference(VarDomain domain, int var, boolean secondary) {
 
     }
 

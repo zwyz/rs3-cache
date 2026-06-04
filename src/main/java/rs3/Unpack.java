@@ -518,6 +518,10 @@ public class Unpack {
     }
 
     private static void unpackTTF(Path path) throws IOException {
+        if (Js5Archive.JS5_TRUETYPEFONTS.id >= MASTER_INDEX.getArchiveCount() || MASTER_INDEX.getArchiveData(Js5Archive.JS5_TRUETYPEFONTS.id).getCrc() == 0) {
+            return; // empty archives don't get packed
+        }
+
         Files.createDirectories(path);
         var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, Js5Archive.JS5_TRUETYPEFONTS.id, false, 0)));
 

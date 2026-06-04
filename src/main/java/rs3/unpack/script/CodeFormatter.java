@@ -3,6 +3,7 @@ package rs3.unpack.script;
 import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
+import rs3.unpack.VarDomain;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -524,13 +525,14 @@ public class CodeFormatter {
         var domain = ((VarReference) operand).domain();
         var var = ((VarReference) operand).var();
         var secondary = ((VarReference) operand).secondary();
-        return (secondary ? "." : "") + "%" + Unpacker.formatVar(domain, var);
+        return (secondary ? "." : "") + "%" + Unpacker.format(domain.type, var);
     }
 
     private static String formatVarBit(Object operand) {
+        var domain = ((VarBitReference) operand).domain();
         var var = ((VarBitReference) operand).var();
         var secondary = ((VarBitReference) operand).secondary();
-        return (secondary ? "." : "") + "%" + Unpacker.format(Type.VARBIT, var);
+        return (secondary ? "." : "") + "%" + Unpacker.format(domain.bittype, var);
     }
 
     private static String formatVarClient(VarClientReference var) {

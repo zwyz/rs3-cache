@@ -1,6 +1,7 @@
 package rs3.unpack.script;
 
 import rs3.Unpack;
+import rs3.unpack.Unpacker;
 import rs3.unpack.VarDomain;
 import rs3.util.Packet;
 
@@ -114,9 +115,10 @@ public class CompiledScript {
             }
         } else if (command == PUSH_VARBIT || command == POP_VARBIT) {
             if (Unpack.VERSION < 800) {
-                return new VarBitReference(packet.g4s(), false);
+                return new VarBitReference(VarDomain.PLAYER, packet.g4s(), false);
             } else {
-                return new VarBitReference(packet.g2(), packet.g1() == 1); // varbit
+                var value = packet.g2();
+                return new VarBitReference(Unpacker.getVarBitDomain(value), value, packet.g1() == 1); // varbit
             }
         } else if (command == PUSH_VARC_INT || command == POP_VARC_INT) {
             return packet.g4s();

@@ -248,23 +248,31 @@ public class Type {
     public static final Type TWITCH_EVENT = new Type("twitch_event", BaseVarType.INTEGER);
     public static final Type MINIMENU_EVENT = new Type("minimenu_event", BaseVarType.INTEGER);
     public static final Type DBCOLUMN = new Type("dbcolumn", BaseVarType.INTEGER);
-    public static final Type VARBIT = new Type("varbit", BaseVarType.INTEGER);
     public static final Type DBFILTER = new Type("dbfilter", BaseVarType.INTEGER);
     public static final Type VAR_PLAYER = new Type("var_player", BaseVarType.INTEGER);
     public static final Type VAR_PLAYER_BIT = new Type("var_player_bit", BaseVarType.INTEGER);
     public static final Type VAR_NPC = new Type("var_npc", BaseVarType.INTEGER);
     public static final Type VAR_NPC_BIT = new Type("var_npc_bit", BaseVarType.INTEGER);
     public static final Type VAR_CLIENT = new Type("var_client", BaseVarType.INTEGER);
+    public static final Type VAR_CLIENT_BIT = new Type("var_client_bit", BaseVarType.INTEGER);
     public static final Type VAR_CLIENT_STRING = new Type("var_client_string", BaseVarType.INTEGER);
     public static final Type VAR_WORLD = new Type("var_world", BaseVarType.INTEGER);
+    public static final Type VAR_WORLD_BIT = new Type("var_world_bit", BaseVarType.INTEGER);
     public static final Type VAR_WORLD_STRING = new Type("var_world_string", BaseVarType.INTEGER);
     public static final Type VAR_REGION = new Type("var_region", BaseVarType.INTEGER);
+    public static final Type VAR_REGION_BIT = new Type("var_region_bit", BaseVarType.INTEGER);
     public static final Type VAR_OBJECT = new Type("var_object", BaseVarType.INTEGER);
+    public static final Type VAR_OBJECT_BIT = new Type("var_object_bit", BaseVarType.INTEGER);
     public static final Type VAR_CLAN = new Type("var_clan", BaseVarType.INTEGER);
+    public static final Type VAR_CLAN_BIT = new Type("var_clan_bit", BaseVarType.INTEGER);
     public static final Type VAR_CLAN_SETTING = new Type("var_clan_setting", BaseVarType.INTEGER);
+    public static final Type VAR_CLAN_SETTING_BIT = new Type("var_clan_setting_bit", BaseVarType.INTEGER);
     public static final Type VAR_CONTROLLER = new Type("var_controller", BaseVarType.INTEGER);
+    public static final Type VAR_CONTROLLER_BIT = new Type("var_controller_bit", BaseVarType.INTEGER);
     public static final Type VAR_PLAYER_GROUP = new Type("var_player_group", BaseVarType.INTEGER);
+    public static final Type VAR_PLAYER_GROUP_BIT = new Type("var_player_group_bit", BaseVarType.INTEGER);
     public static final Type VAR_GLOBAL = new Type("var_global", BaseVarType.INTEGER);
+    public static final Type VAR_GLOBAL_BIT = new Type("var_global_bit", BaseVarType.INTEGER);
     public static final Type SOUND = new Type("sound", BaseVarType.INTEGER);
 
     // split the int type into fake subtypes

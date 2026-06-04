@@ -21,7 +21,7 @@ public class VarBitUnpacker {
                         throw new IllegalStateException("end of file not reached");
                     }
 
-                    lines.addFirst("[" + Unpacker.format(Type.VARBIT, id) + "]");
+                    lines.addFirst("[" + Unpacker.format(Unpacker.getVarBitDomain(id).bittype, id) + "]");
                     return lines;
                 }
 
@@ -29,7 +29,7 @@ public class VarBitUnpacker {
                     var domain = VarDomain.byID(packet.g1());
                     Unpacker.setVarBitDomain(id, domain);
                     lines.add("domain=" + domain.name().toLowerCase(Locale.ROOT));
-                    lines.add("basevar=" + Unpacker.formatVar(domain, packet.gSmart2or4null()));
+                    lines.add("basevar=" + Unpacker.format(domain.type, packet.gSmart2or4null()));
                 }
 
                 case 2 -> {
