@@ -998,9 +998,9 @@ clearbit_range,831
 getbit_range,859
 setbit_range_toint,1464
 sqrt,1450
-sin_deg,1640
-cos_deg,936
-atan2_deg,608
+sin,1640
+cos,936
+atan2,608
 abs,1326
 random_sound_pitch,1753
 hsvtorgb,919
