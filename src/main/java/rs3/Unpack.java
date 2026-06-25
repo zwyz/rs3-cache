@@ -141,6 +141,7 @@ public class Unpack {
             unpackConfigGroup(2, 16, VarPlayerUnpacker::unpack, root.resolve("config/dump.varp"));
             unpackConfigGroup(2, 19, VarClientUnpacker::unpack, root.resolve("config/dump.varc"));
             unpackConfigGroup(2, 20, VarObjUnpacker::unpack, root.resolve("config/dump.varobj"));
+            unpackConfigGroup(2, 21, VarPlayerUnpacker::unpack, root.resolve("config/dump.varpstr"));
             unpackConfigGroup(2, 22, VarSharedUnpacker::unpack, root.resolve("config/dump.vars"));
             unpackConfigGroup(2, 23, VarSharedStringUnpacker::unpack, root.resolve("config/dump.varsstr"));
             unpackConfigGroup(2, 24, VarNpcUnpacker::unpack, root.resolve("config/dump.varn"));
