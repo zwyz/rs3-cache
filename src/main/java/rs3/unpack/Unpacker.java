@@ -143,42 +143,71 @@ public class Unpacker {
         setSymbolName(Type.INT_CHATFILTER, 4, "^chatfilter_autochat");
 
         // https://twitter.com/TheCrazy0neTv/status/1100567742602756096
-        // TODO: some of these are wrong on RS3
-        setSymbolName(Type.INT_CHATTYPE, 0, "^chattype_gamemessage");
-        setSymbolName(Type.INT_CHATTYPE, 1, "^chattype_modchat");
-        setSymbolName(Type.INT_CHATTYPE, 2, "^chattype_publicchat");
-        setSymbolName(Type.INT_CHATTYPE, 3, "^chattype_privatechat");
-        setSymbolName(Type.INT_CHATTYPE, 4, "^chattype_engine");
-        setSymbolName(Type.INT_CHATTYPE, 5, "^chattype_loginlogoutnotification");
-        setSymbolName(Type.INT_CHATTYPE, 6, "^chattype_privatechatout");
-        setSymbolName(Type.INT_CHATTYPE, 7, "^chattype_modprivatechat");
-        setSymbolName(Type.INT_CHATTYPE, 9, "^chattype_friendschat");
-        setSymbolName(Type.INT_CHATTYPE, 11, "^chattype_friendschatnotification");
-        setSymbolName(Type.INT_CHATTYPE, 14, "^chattype_broadcast");
-        setSymbolName(Type.INT_CHATTYPE, 26, "^chattype_snapshotfeedback");
-        setSymbolName(Type.INT_CHATTYPE, 27, "^chattype_obj_examine");
-        setSymbolName(Type.INT_CHATTYPE, 28, "^chattype_npc_examine");
-        setSymbolName(Type.INT_CHATTYPE, 29, "^chattype_loc_examine");
-        setSymbolName(Type.INT_CHATTYPE, 30, "^chattype_friendnotification");
-        setSymbolName(Type.INT_CHATTYPE, 31, "^chattype_ignorenotification");
-        setSymbolName(Type.INT_CHATTYPE, 41, "^chattype_clanchat");
-        setSymbolName(Type.INT_CHATTYPE, 43, "^chattype_clanmessage");
-        setSymbolName(Type.INT_CHATTYPE, 44, "^chattype_clanguestchat");
-        setSymbolName(Type.INT_CHATTYPE, 46, "^chattype_clanguestmessage");
-        setSymbolName(Type.INT_CHATTYPE, 90, "^chattype_autotyper");
-        setSymbolName(Type.INT_CHATTYPE, 91, "^chattype_modautotyper");
-        setSymbolName(Type.INT_CHATTYPE, 99, "^chattype_console");
-        setSymbolName(Type.INT_CHATTYPE, 101, "^chattype_tradereq");
-        setSymbolName(Type.INT_CHATTYPE, 102, "^chattype_trade");
-        setSymbolName(Type.INT_CHATTYPE, 103, "^chattype_chalreq_trade");
-        setSymbolName(Type.INT_CHATTYPE, 104, "^chattype_chalreq_friendschat");
-        setSymbolName(Type.INT_CHATTYPE, 105, "^chattype_spam");
-        setSymbolName(Type.INT_CHATTYPE, 106, "^chattype_playerrelated");
-        setSymbolName(Type.INT_CHATTYPE, 107, "^chattype_10sectimeout");
-        setSymbolName(Type.INT_CHATTYPE, 109, "^chattype_clancreationinvitation");
-        setSymbolName(Type.INT_CHATTYPE, 110, "^chattype_chalreq_clanchat");
-        setSymbolName(Type.INT_CHATTYPE, 114, "^chattype_dialogue");
-        setSymbolName(Type.INT_CHATTYPE, 115, "^chattype_mesbox");
+        setSymbolName(Type.INT_CHATTYPE, 0, "^chattype_gamemessage"); // GENERAL
+        setSymbolName(Type.INT_CHATTYPE, 1, "^chattype_modchat"); // MOD
+        setSymbolName(Type.INT_CHATTYPE, 2, "^chattype_publicchat"); // PUBLIC
+        setSymbolName(Type.INT_CHATTYPE, 3, "^chattype_privatechat"); // PRIVATE_INCOMING
+        setSymbolName(Type.INT_CHATTYPE, 4, "^chattype_engine"); // ENGINE
+        setSymbolName(Type.INT_CHATTYPE, 5, "^chattype_loginlogoutnotification"); // LOGIN_LOGOUT
+        setSymbolName(Type.INT_CHATTYPE, 6, "^chattype_privatechatout"); // PRIVATE_OUTGOING
+        setSymbolName(Type.INT_CHATTYPE, 7, "^chattype_modprivatechat"); // MOD_PRIVATE_INCOMING
+        setSymbolName(Type.INT_CHATTYPE, 9, "^chattype_friendschat"); // FRIEND_CHAT
+        setSymbolName(Type.INT_CHATTYPE, 11, "^chattype_friendschatnotification"); // FRIEND_CHAT_NOTIFICATION
+        setSymbolName(Type.INT_CHATTYPE, 17, "^chattype_quickchat_public"); // QUICKCHAT_PUBLIC
+        setSymbolName(Type.INT_CHATTYPE, 18, "^chattype_quickchat_private_incoming"); // QUICKCHAT_PRIVATE_INCOMING
+        setSymbolName(Type.INT_CHATTYPE, 19, "^chattype_quickchat_private_outgoing"); // QUICKCHAT_PRIVATE_OUTGOING
+        setSymbolName(Type.INT_CHATTYPE, 20, "^chattype_quickchat_friend_chat"); // QUICKCHAT_FRIEND_CHAT
+        setSymbolName(Type.INT_CHATTYPE, 22, "^chattype_group_same_team"); // GROUP_SAME_TEAM
+        setSymbolName(Type.INT_CHATTYPE, 23, "^chattype_quickchat_group_same_team"); // QUICKCHAT_GROUP_SAME_TEAM
+        setSymbolName(Type.INT_CHATTYPE, 24, "^chattype_group_all"); // GROUP_ALL
+        setSymbolName(Type.INT_CHATTYPE, 25, "^chattype_quickchat_group_all"); // QUICKCHAT_GROUP_ALL
+        setSymbolName(Type.INT_CHATTYPE, 26, "^chattype_snapshotfeedback"); // SNAPSHOT_FEEDBACK
+        setSymbolName(Type.INT_CHATTYPE, 27, "^chattype_obj_examine"); // OBJ_EXAMINE
+        setSymbolName(Type.INT_CHATTYPE, 28, "^chattype_npc_examine"); // NPC_EXAMINE
+        setSymbolName(Type.INT_CHATTYPE, 29, "^chattype_loc_examine"); // LOC_EXAMINE
+        setSymbolName(Type.INT_CHATTYPE, 30, "^chattype_friendnotification"); // FRIEND_NOTIFICATION
+        setSymbolName(Type.INT_CHATTYPE, 31, "^chattype_ignorenotification"); // IGNORE_NOTIFICATION
+        setSymbolName(Type.INT_CHATTYPE, 41, "^chattype_clanchat"); // CLANCHANNEL_AFFINED_CHAT
+        setSymbolName(Type.INT_CHATTYPE, 42, "^chattype_quickchat_clanchat"); // CLANCHANNEL_AFFINED_QUICKCHAT
+        setSymbolName(Type.INT_CHATTYPE, 43, "^chattype_clanmessage"); // CLANCHANNEL_AFFINED_NOTIFICATION
+        setSymbolName(Type.INT_CHATTYPE, 44, "^chattype_clanguestchat"); // CLANCHANNEL_GUEST_CHAT
+        setSymbolName(Type.INT_CHATTYPE, 45, "^chattype_quickchat_clanguestchat"); // CLANCHANNEL_GUEST_QUICKCHAT
+        setSymbolName(Type.INT_CHATTYPE, 46, "^chattype_clanguestmessage"); // CLANCHANNEL_GUEST_NOTIFICATION
+        setSymbolName(Type.INT_CHATTYPE, 96, "^chattype_console_error"); // CONSOLE_ERROR
+        setSymbolName(Type.INT_CHATTYPE, 98, "^chattype_console_buffer_replace"); // CONSOLE_BUFFER_REPLACE
+        setSymbolName(Type.INT_CHATTYPE, 99, "^chattype_console"); // CONSOLE
+        setSymbolName(Type.INT_CHATTYPE, 100, "^chattype_tradereq"); // TRADE_REQUEST
+        setSymbolName(Type.INT_CHATTYPE, 101, "^chattype_challenge"); // CHALLENGE
+        setSymbolName(Type.INT_CHATTYPE, 102, "^chattype_assistreq"); // ASSIST_REQUEST
+        setSymbolName(Type.INT_CHATTYPE, 103, "^chattype_trade_notification"); // TRADE_NOTIFICATION
+        setSymbolName(Type.INT_CHATTYPE, 104, "^chattype_assist_notification"); // ASSIST_NOTIFICATION
+        setSymbolName(Type.INT_CHATTYPE, 107, "^chattype_clan_challenge"); // CLAN_CHALLENGE
+        setSymbolName(Type.INT_CHATTYPE, 108, "^chattype_ally_request"); // ALLY_REQUEST
+        setSymbolName(Type.INT_CHATTYPE, 109, "^chattype_spam"); // SPAM
+        setSymbolName(Type.INT_CHATTYPE, 111, "^chattype_dungeon_invite"); // DUNGEON_INVITE
+        setSymbolName(Type.INT_CHATTYPE, 113, "^chattype_conquest_regular_challenge"); // CONQUEST_REGULAR_CHALLENGE
+        setSymbolName(Type.INT_CHATTYPE, 115, "^chattype_system_broadcast"); // SYSTEM_BROADCAST
+        setSymbolName(Type.INT_CHATTYPE, 116, "^chattype_npc_chat"); // NPC_CHAT
+        setSymbolName(Type.INT_CHATTYPE, 117, "^chattype_clan_join"); // CLAN_JOIN
+        setSymbolName(Type.INT_CHATTYPE, 118, "^chattype_rated_clan_war"); // RATED_CLAN_WAR
+        setSymbolName(Type.INT_CHATTYPE, 119, "^chattype_ignorable_trade_notification"); // IGNORABLE_TRADE_NOTIFICATION
+        setSymbolName(Type.INT_CHATTYPE, 120, "^chattype_all_panes"); // IGNORABLE_TRADE_NOTIFICATION
+        setSymbolName(Type.INT_CHATTYPE, 122, "^chattype_raid_high"); // RAID_HIGH
+        setSymbolName(Type.INT_CHATTYPE, 123, "^chattype_raid_dnd"); // RAID_DND
+        setSymbolName(Type.INT_CHATTYPE, 125, "^chattype_broadcast"); // BROADCAST
+        setSymbolName(Type.INT_CHATTYPE, 132, "^chattype_duel_any_request"); // DUEL_ANY_REQUEST
+        setSymbolName(Type.INT_CHATTYPE, 133, "^chattype_temporary_event"); // TEMPORARY_EVENT
+        setSymbolName(Type.INT_CHATTYPE, 134, "^chattype_hati_fenrir"); // HATI_FENRIR
+        setSymbolName(Type.INT_CHATTYPE, 135, "^chattype_latest_newspost"); // LATEST_NEWSPOST
+        setSymbolName(Type.INT_CHATTYPE, 136, "^chattype_motd"); // MOTD
+        setSymbolName(Type.INT_CHATTYPE, 137, "^chattype_broadcast_global"); // BROADCAST_GLOBAL
+        setSymbolName(Type.INT_CHATTYPE, 138, "^chattype_broadcast_world"); // BROADCAST_WORLD
+        setSymbolName(Type.INT_CHATTYPE, 139, "^chattype_broadcast_friends"); // BROADCAST_FRIENDS
+        setSymbolName(Type.INT_CHATTYPE, 140, "^chattype_interface_open"); // INTERFACE_OPEN
+        setSymbolName(Type.INT_CHATTYPE, 142, "^chattype_timed_event"); // TIMED_EVENT
+        setSymbolName(Type.INT_CHATTYPE, 143, "^chattype_interface_open_filtered"); // INTERFACE_OPEN_FILTERED
+        setSymbolName(Type.INT_CHATTYPE, 144, "^chattype_group_ironman_notification"); // GROUP_IRONMAN_NOTIFICATION
+        setSymbolName(Type.INT_CHATTYPE, 145, "^chattype_general_linkable"); // GENERAL_LINKABLE
 
         setSymbolName(Type.INT_PLATFORMTYPE, 0, "^platformtype_default");
         setSymbolName(Type.INT_PLATFORMTYPE, 1, "^platformtype_steam");
