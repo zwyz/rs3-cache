@@ -86,6 +86,42 @@ public class Unpack {
         Files.createDirectories(root.resolve("script"));
         Files.createDirectories(root.resolve("interface"));
 
+        loadDebugNames(0, Type.COMPONENT);
+        loadDebugNames(5, Type.BAS);
+        loadDebugNames(9, Type.CATEGORY);
+        loadDebugNames(12, Type.CURSOR);
+        loadDebugNames(14, Type.DBROW);
+        loadDebugNames(15, Type.DBTABLE);
+        loadDebugNames(16, Type.ENUM);
+        loadDebugNames(20, Type.HEADBAR);
+        loadDebugNames(21, Type.HITMARK);
+        loadDebugNames(24, Type.INTERFACE);
+        loadDebugNames(25, Type.INV);
+        loadDebugNames(28, Type.LOC);
+        loadDebugNames(32, Type.MATERIAL);
+        loadDebugNames(34, Type.MODEL);
+        loadDebugNames(35, Type.NPC);
+        loadDebugNames(36, Type.OBJ);
+        loadDebugNames(37, Type.PARAM);
+        loadDebugNames(41, Type.QUEST);
+        loadDebugNames(44, Type.SEQ);
+        loadDebugNames(49, Type.GRAPHIC);
+        loadDebugNames(50, Type.STRUCT);
+        loadDebugNames(55, Type.VAR_CLAN);
+        loadDebugNames(56, Type.VAR_CLAN_SETTING);
+        loadDebugNames(57, Type.VAR_CLIENT);
+        loadDebugNames(59, Type.VAR_NPC);
+        loadDebugNames(60, Type.VAR_OBJECT);
+        loadDebugNames(61, Type.VAR_PLAYER);
+        loadDebugNames(64, Type.SOUND);
+        loadDebugNames(69, Type.MIDI);
+        loadDebugNames(80, Type.VAR_PLAYER_GROUP);
+        loadDebugNames(89, Type.ACHIEVEMENT);
+        loadDebugNames(90, Type.FONTMETRICS);
+        loadDebugNames(92, Type.STYLESHEET);
+        loadDebugNames(96, Type.UI_ANIM_CURVE);
+        loadDebugNames(97, Type.UI_ANIM);
+
         // load names
         loadGroupNamesScriptTrigger(12, Unpacker.SCRIPT_NAME);
         loadGroupNames(Path.of("data/names/scripts.txt"), 12, Unpacker.SCRIPT_NAME::put);
@@ -393,6 +429,73 @@ public class Unpack {
             }
         } else {
             map.put(name.hashCode(), name);
+        }
+    }
+
+    private static void loadDebugNames(int group, Type type) {
+        if (Js5Archive.JS5_GAMEVALS.id >= MASTER_INDEX.getArchiveCount() || MASTER_INDEX.getArchiveData(Js5Archive.JS5_GAMEVALS.id).getCrc() == 0) {
+            return; // empty archives don't get packed
+        }
+
+        int[] hashes = null;
+        if (type == Type.GRAPHIC) {
+            var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, Js5Archive.JS5_SPRITES.id, false, 0)));
+            hashes = archiveIndex.groupNameHash;
+        }
+
+        var data = Js5Util.decompress(PROVIDER.get(Js5Archive.JS5_GAMEVALS.id, group, false, 0));
+        var buf = new Packet(data);
+
+        var packType = buf.g4s();
+        if (packType != 1 && packType != 2) {
+            throw new IllegalStateException("Unknown pack type: " + packType);
+        }
+
+        var count = buf.g4s();
+        var ids = new int[count];
+        var offsets = new int[count];
+
+        for (int i = 0; i < count; i++) {
+            ids[i] = (packType == 1) ? i : buf.g4s();
+            offsets[i] = buf.g4s();
+        }
+
+        var lastNoPrefix = -1;
+        var tableStart = buf.pos;
+
+        for (int i = 0; i < count; i++) {
+            var offset = offsets[i];
+            if (offset == -1) {
+                continue;
+            }
+
+            buf.pos = tableStart + offset;
+            var name = buf.gjstr().toLowerCase();
+            var id = ids[i];
+
+            var finalType = type;
+            if (type == Type.VAR_CLAN || type == Type.VAR_CLAN_SETTING || type == Type.VAR_CLIENT || type == Type.VAR_NPC || type == Type.VAR_OBJECT || type == Type.VAR_PLAYER || type == Type.VAR_PLAYER_GROUP) {
+                if (name.startsWith("_")) {
+                    finalType = VarDomain.byType(type).bittype;
+                    name = name.substring(1);
+                    id = id - lastNoPrefix - 1;
+                } else {
+                    lastNoPrefix = id;
+                }
+            } else if (type == Type.GRAPHIC && hashes != null && id < hashes.length) {
+                // try to reverse 'some_name_1' -> 'some_name,1'
+                int lastUnderscore = name.lastIndexOf("_");
+                if (lastUnderscore != -1) {
+                    String possibleName = name.substring(0, lastUnderscore) + "," + name.substring(lastUnderscore + 1);
+                    if (possibleName.hashCode() == hashes[id]) {
+                        name = possibleName;
+                    }
+                }
+            } else if (type == Type.COMPONENT) {
+                // replace 'interface__component' -> 'interface:component'
+                name = name.replace("__", ":");
+            }
+            Unpacker.setSymbolName(finalType, id, name);
         }
     }
 

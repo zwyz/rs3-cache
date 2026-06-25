@@ -32,4 +32,13 @@ public enum VarDomain {
 
         throw new IllegalStateException("unknown var domain " + id);
     }
+
+    public static VarDomain byType(Type type) {
+        for (var domain : values()) {
+            if (domain.type == type) {
+                return domain;
+            }
+        }
+        throw new IllegalStateException("unknown var type " + type);
+    }
 }
