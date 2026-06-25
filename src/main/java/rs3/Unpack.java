@@ -36,6 +36,8 @@ import java.util.function.Function;
 
 // todo: clean this up
 public class Unpack {
+    public static final boolean DUMP_CONFIG_IDS = true;
+
     public static int VERSION;
     public static int ID;
     public static Js5ResourceProvider PROVIDER;
@@ -706,6 +708,9 @@ public class Unpack {
         var files = Js5Util.unpackGroup(archiveIndex, group, PROVIDER.get(archive, group, false, 0));
 
         for (var file : files.keySet()) {
+            if (DUMP_CONFIG_IDS) {
+                lines.add("// " + file);
+            }
             lines.addAll(unpack.apply(file, files.get(file)));
             lines.add("");
         }
@@ -749,6 +754,9 @@ public class Unpack {
             var files = Js5Util.unpackGroup(archiveIndex, group, groups[group]);
 
             for (var file : files.keySet()) {
+                if (DUMP_CONFIG_IDS) {
+                    lines.add("// " + ((group << bits) + file));
+                }
                 lines.addAll(unpack.apply((group << bits) + file, files.get(file)));
                 lines.add("");
             }
@@ -769,6 +777,9 @@ public class Unpack {
             for (var file : files.keySet()) {
                 var data = files.get(file);
                 scripted |= data[0] == -1;
+                if (DUMP_CONFIG_IDS) {
+                    lines.add("// " + group + ":" + file);
+                }
                 lines.addAll(unpack.apply((group << 16) + file, data));
                 lines.add("");
             }
