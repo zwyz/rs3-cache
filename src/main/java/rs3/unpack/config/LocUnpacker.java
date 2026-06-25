@@ -7,6 +7,7 @@ import rs3.util.Packet;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 public class LocUnpacker {
     private static boolean randomsoundvorbis;
@@ -276,9 +277,11 @@ public class LocUnpacker {
             case 160 -> {
                 var count = packet.g1();
 
+                StringJoiner joiner = new StringJoiner(",");
                 for (var i = 0; i < count; i++) {
-                    lines.add("quest=" + Unpacker.format(Type.QUEST, packet.g2()));
+                    joiner.add(Unpacker.format(Type.QUEST, packet.g2()));
                 }
+                lines.add("quest=" + joiner);
             }
 
             case 162 -> lines.add("hillchange=rotate," + packet.g4s());
@@ -296,7 +299,7 @@ public class LocUnpacker {
             case 178 -> lines.add("bgsounddropoffrange=" + packet.g1());
             case 179 -> lines.add("unknown179=yes"); // todo: bgsound
             case 186 -> lines.add("unknown186=" + packet.g1());
-            case 188 -> lines.add("unknown188=yes");
+            case 188 -> lines.add("findable=yes"); // jag::game::LocType::IsFindable
             case 189 -> lines.add("antimacro=yes");
             case 190 -> lines.add("cursor1=" + Unpacker.format(Type.CURSOR, packet.g2()));
             case 191 -> lines.add("cursor2=" + Unpacker.format(Type.CURSOR, packet.g2()));

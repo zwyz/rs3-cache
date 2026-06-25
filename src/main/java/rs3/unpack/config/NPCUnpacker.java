@@ -8,6 +8,7 @@ import rs3.util.Packet;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 public class NPCUnpacker {
     private static boolean bgsoundvorbis;
@@ -222,9 +223,11 @@ public class NPCUnpacker {
             case 160 -> {
                 var count = packet.g1();
 
+                StringJoiner joiner = new StringJoiner(",");
                 for (var i = 0; i < count; i++) {
-                    lines.add("quest=" + Unpacker.format(Type.QUEST, packet.g2()));
+                    joiner.add(Unpacker.format(Type.QUEST, packet.g2()));
                 }
+                lines.add("quest=" + joiner);
             }
 
             case 162 -> bgsoundvorbis = true;
