@@ -268,6 +268,9 @@ public class LocUnpacker {
             }
 
             case 107 -> lines.add("mapelement=" + Unpacker.format(Type.MAPELEMENT, packet.g2()));
+            case 108 -> lines.add("unknown108=yes");
+            case 109 -> lines.add("unknown109=yes");
+            case 110 -> lines.add("unknown110=yes");
             case 150 -> lines.add("membersop1=" + packet.gjstr());
             case 151 -> lines.add("membersop2=" + packet.gjstr());
             case 152 -> lines.add("membersop3=" + packet.gjstr());
@@ -356,7 +359,7 @@ public class LocUnpacker {
                         var length2 = packet.g1();
 
                         for (var j = 0; j < length2; j++) {
-                            var line = "multimodel=" + value + "," + packet.g2() + "," + packet.g2() + "," + packet.gSmart2or4s();
+                            var line = "multimodel=" + value + "," + packet.g2() + "," + packet.g2() + "," + Unpacker.format(Type.MODEL, packet.gSmart2or4s());
                             var n = packet.g1();
                             if (n >= 1) line += "," + packet.g1();
                             if (n >= 2) line += "," + packet.g1();
@@ -374,7 +377,7 @@ public class LocUnpacker {
                         var length2 = packet.g1();
 
                         for (var j = 0; j < length2; j++) {
-                            lines.add("multiheadmodel=" + value + "," + packet.g2() + "," + packet.g2() + "," + packet.gSmart2or4s());
+                            lines.add("multiheadmodel=" + value + "," + packet.g2() + "," + packet.g2() + "," + Unpacker.format(Type.MODEL, packet.gSmart2or4s()));
                         }
                     }
                 }
@@ -409,12 +412,35 @@ public class LocUnpacker {
                     var length = packet.g1();
 
                     for (var i = 0; i < length; i++) {
-                        var value = packet.g1();
-                        lines.add("multitint=" + value + "," + packet.g2() + "," + packet.g2() + "," + packet.g1() + "," + packet.g1() + "," + packet.g1() + "," + packet.g1());
+                        lines.add("multitint=" + packet.g2() + "," + packet.g2() + "," + packet.g1() + "," + packet.g1() + "," + packet.g1() + "," + packet.g1());
                     }
                 }
 
                 lines.add("multidefault=" + packet.g2());
+            }
+
+            case 206 -> {
+                packet.g2();
+                var count = packet.g1();
+
+                for (var i = 0; i < count; i++) {
+                    var flags = packet.g1();
+                    var field20 = (flags & 1) != 0;
+                    var field21 = (flags & 2) != 0;
+                    var field2c = (flags & 4) != 0;
+                    var field0 = packet.g4s();
+                    var field4 = packet.gFloat();
+                    var field8 = packet.g4s();
+                    var fieldc = packet.g1();
+                    var field10 = packet.g4s();
+                    var field14 = packet.g3();
+                    var field18 = packet.g2();
+                    var field1c = packet.g2();
+                    var field24 = packet.g4s();
+                    var field28 = packet.g4s();
+                    var field30 = packet.g4s();
+                    lines.add("unknown206=" + field20 + "," + field21 + "," + field2c + "," + field0 + "," + field4 + "," + field8 + "," + fieldc + "," + field10 + "," + field14 + "," + field18 + "," + field1c + "," + field24 + "," + field28 + "," + field30);
+                }
             }
 
             case 249 -> {

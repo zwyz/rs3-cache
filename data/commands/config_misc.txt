@@ -6,3 +6,5 @@
 [command,lc_param](loc $x1, param $x2)(unknown)
 [command,lc_get_multivar](loc $x1)(var_int)
 [command,bas_getanim_ready](bas $x1)(seq)
+[command,lc_width](loc $x1)(int)
+[command,lc_length](loc $x1)(int)

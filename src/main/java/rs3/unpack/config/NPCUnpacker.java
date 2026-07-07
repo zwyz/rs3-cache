@@ -273,7 +273,7 @@ public class NPCUnpacker {
                         var length2 = packet.g1();
 
                         for (var j = 0; j < length2; j++) {
-                            var line = "multimodel=" + value + "," + packet.g2() + "," + packet.g2() + "," + packet.gSmart2or4s();
+                            var line = "multimodel=" + value + "," + packet.g2() + "," + packet.g2() + "," + Unpacker.format(Type.MODEL, packet.gSmart2or4s());
                             var n = packet.g1();
                             if (n >= 1) line += "," + packet.g1();
                             if (n >= 2) line += "," + packet.g1();
@@ -291,7 +291,7 @@ public class NPCUnpacker {
                         var length2 = packet.g1();
 
                         for (var j = 0; j < length2; j++) {
-                            lines.add("multiheadmodel=" + value + "," + packet.g2() + "," + packet.g2() + "," + packet.gSmart2or4s());
+                            lines.add("multiheadmodel=" + value + "," + packet.g2() + "," + packet.g2() + "," + Unpacker.format(Type.MODEL, packet.gSmart2or4s()));
                         }
                     }
                 }
@@ -326,8 +326,7 @@ public class NPCUnpacker {
                     var length = packet.g1();
 
                     for (var i = 0; i < length; i++) {
-                        var value = packet.g1();
-                        lines.add("multitint=" + value + "," + packet.g2() + "," + packet.g2() + "," + packet.g1() + "," + packet.g1() + "," + packet.g1() + "," + packet.g1());
+                        lines.add("multitint=" + packet.g2() + "," + packet.g2() + "," + packet.g1() + "," + packet.g1() + "," + packet.g1() + "," + packet.g1());
                     }
                 }
 

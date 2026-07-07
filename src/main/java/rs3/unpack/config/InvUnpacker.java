@@ -32,6 +32,14 @@ public class InvUnpacker {
                 }
             }
 
+            case 21 -> {
+                var count = packet.g1();
+
+                for (var i = 0; i < count; i++) {
+                    lines.add("stock" + (i + 1) + "=" + Unpacker.format(Type.OBJ, packet.g3()) + "," + packet.g2()); // https://twitter.com/JagexAsh/status/1087312806435794945
+                }
+            }
+
             default -> throw new IllegalStateException("unknown opcode");
         }
     }

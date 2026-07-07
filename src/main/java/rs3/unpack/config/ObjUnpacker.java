@@ -8,6 +8,7 @@ import rs3.util.Packet;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 public class ObjUnpacker {
     private static int recolindices;
@@ -47,8 +48,17 @@ public class ObjUnpacker {
             case 9 -> {
                 if (Unpack.VERSION < 300) {
                     lines.add("unknown9=yes");
-                } else {
+                } else if (Unpack.VERSION < 949) {
                     lines.add("unknown9=" + packet.gjstr()); // todo: unused
+                } else {
+                    var count = packet.g1();
+                    var parts = new StringJoiner(",");
+
+                    for (var i = 0; i < count; i++) {
+                        parts.add(Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
+                    }
+
+                    lines.add("model=" + parts);
                 }
             }
 
@@ -104,6 +114,17 @@ public class ObjUnpacker {
             case 43 -> lines.add("minimenucolour=" + packet.g4s());
             case 44 -> recolindices = packet.g2();
             case 45 -> retexindices = packet.g2();
+            case 46 -> lines.add("model2=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
+            case 47 -> lines.add("model3=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
+            case 48 -> lines.add("model4=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
+            case 49 -> lines.add("model5=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
+            case 50 -> lines.add("model6=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
+            case 51 -> lines.add("model7=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
+            case 52 -> lines.add("model8=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
+            case 53 -> lines.add("model9=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
+            case 54 -> lines.add("model10=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
+            case 55 -> lines.add("model11=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
+            case 56 -> lines.add("model12=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
             case 65 -> lines.add("stockmarket=yes");
             case 69 -> lines.add("stockmarketlimit=" + packet.g4s());
             case 78 -> lines.add("manwear3=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
@@ -178,6 +199,25 @@ public class ObjUnpacker {
             case 168 -> lines.add("placeholder=no");
             case 178 -> lines.add("stackable=sometimes");
             case 181 -> lines.add("cost=" + packet.g8s());
+            case 182 -> lines.add("unknown182=" + Unpacker.format(Type.OBJ, packet.g3()));
+            case 190 -> lines.add("count1=" + Unpacker.format(Type.OBJ, packet.g3()) + "," + packet.g2());
+            case 191 -> lines.add("count2=" + Unpacker.format(Type.OBJ, packet.g3()) + "," + packet.g2());
+            case 192 -> lines.add("count3=" + Unpacker.format(Type.OBJ, packet.g3()) + "," + packet.g2());
+            case 193 -> lines.add("count4=" + Unpacker.format(Type.OBJ, packet.g3()) + "," + packet.g2());
+            case 194 -> lines.add("count5=" + Unpacker.format(Type.OBJ, packet.g3()) + "," + packet.g2());
+            case 195 -> lines.add("count6=" + Unpacker.format(Type.OBJ, packet.g3()) + "," + packet.g2());
+            case 196 -> lines.add("count7=" + Unpacker.format(Type.OBJ, packet.g3()) + "," + packet.g2());
+            case 197 -> lines.add("count8=" + Unpacker.format(Type.OBJ, packet.g3()) + "," + packet.g2());
+            case 198 -> lines.add("count9=" + Unpacker.format(Type.OBJ, packet.g3()) + "," + packet.g2());
+            case 199 -> lines.add("count10=" + Unpacker.format(Type.OBJ, packet.g3()) + "," + packet.g2());
+            case 201 -> lines.add("certlink=" + Unpacker.format(Type.OBJ, packet.g3()));
+            case 202 -> lines.add("certtemplate=" + Unpacker.format(Type.OBJ, packet.g3()));
+            case 203 -> lines.add("lentlink=" + Unpacker.format(Type.OBJ, packet.g3()));
+            case 204 -> lines.add("lenttemplate=" + Unpacker.format(Type.OBJ, packet.g3()));
+            case 205 -> lines.add("boughtlink=" + Unpacker.format(Type.OBJ, packet.g3()));
+            case 206 -> lines.add("boughttemplate=" + Unpacker.format(Type.OBJ, packet.g3()));
+            case 207 -> lines.add("shardlink=" + Unpacker.format(Type.OBJ, packet.g3()));
+            case 208 -> lines.add("shardtemplate=" + Unpacker.format(Type.OBJ, packet.g3()));
 
             case 249 -> {
                 var count = packet.g1();
