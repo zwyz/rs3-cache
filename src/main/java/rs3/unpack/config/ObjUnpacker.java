@@ -52,13 +52,11 @@ public class ObjUnpacker {
                     lines.add("unknown9=" + packet.gjstr()); // todo: unused
                 } else {
                     var count = packet.g1();
-                    var parts = new StringJoiner(",");
+                    lines.add("model=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
 
-                    for (var i = 0; i < count; i++) {
-                        parts.add(Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
+                    for (var i = 1; i < count; ++i) {
+                        lines.add("model" + (i + 1) + "=" + Unpacker.format(Type.MODEL, packet.gSmart2or4null()));
                     }
-
-                    lines.add("model=" + parts);
                 }
             }
 
@@ -199,7 +197,7 @@ public class ObjUnpacker {
             case 168 -> lines.add("placeholder=no");
             case 178 -> lines.add("stackable=sometimes");
             case 181 -> lines.add("cost=" + packet.g8s());
-            case 182 -> lines.add("unknown182=" + Unpacker.format(Type.OBJ, packet.g3()));
+            case 182 -> lines.add("plantemplate=" + Unpacker.format(Type.OBJ, packet.g3()));
             case 190 -> lines.add("count1=" + Unpacker.format(Type.OBJ, packet.g3()) + "," + packet.g2());
             case 191 -> lines.add("count2=" + Unpacker.format(Type.OBJ, packet.g3()) + "," + packet.g2());
             case 192 -> lines.add("count3=" + Unpacker.format(Type.OBJ, packet.g3()) + "," + packet.g2());

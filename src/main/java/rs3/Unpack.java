@@ -47,7 +47,7 @@ public class Unpack {
     public static final Gson GSON_PRETTY = new GsonBuilder().serializeSpecialFloatingPointValues().setPrettyPrinting().create();
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        unpackLive("unpacked/live", 948, 1, 0, "content.runescape.com", 43594, ClientTokenProvider.getClientToken());
+        unpackLive("unpacked/live", 949, 1, 0, "content.runescape.com", 43594, ClientTokenProvider.getClientToken());
 //        unpackOpenRS2("unpacked/2026-03-16", 946, "runescape", 2495);
     }
 
@@ -390,26 +390,22 @@ public class Unpack {
 
                 if (subject == 0xffff) {
                     names.put(group, "[" + trigger.name().toLowerCase(Locale.ROOT) + ",_]");
-                } else if (trigger.type != null) {
-                    if (subject > 0x10000 && trigger.type == Type.MAPELEMENT) {
-                        var category = subject - 0x10000;
+                } else if (subject > 0x10000 && trigger.category) {
+                    var category = subject - 0x10000;
 
-                        if (category < maxCategory) {
-                            names.put(group, "[" + trigger.name().toLowerCase(Locale.ROOT) + ",_" + Unpacker.format(Type.CATEGORY, category) + "]");
-                        }
-                    } else {
-                        if (trigger.type == Type.MAPELEMENT && subject < maxMapElement) {
-                            names.put(group, "[" + trigger.name().toLowerCase(Locale.ROOT) + "," + Unpacker.format(trigger.type, subject) + "]");
-                        } else if (trigger.type == Type.CUTSCENE && subject < maxCutscene) {
-                            names.put(group, "[" + trigger.name().toLowerCase(Locale.ROOT) + "," + Unpacker.format(trigger.type, subject) + "]");
-                        } else if (trigger.type == Type.INTERFACE && subject < maxInterface) {
-                            names.put(group, "[" + trigger.name().toLowerCase(Locale.ROOT) + "," + Unpacker.format(trigger.type, subject) + "]");
-                        } else if (trigger == ScriptTrigger.TWITCH_EVENT && subject < 4) {
-                            names.put(group, "[" + trigger.name().toLowerCase(Locale.ROOT) + "," + Unpacker.format(trigger.type, subject) + "]");
-                        } else if (trigger == ScriptTrigger.MINIMENU_EVENT && subject < 4) {
-                            names.put(group, "[" + trigger.name().toLowerCase(Locale.ROOT) + "," + Unpacker.format(trigger.type, subject) + "]");
-                        }
+                    if (category < maxCategory) {
+                        names.put(group, "[" + trigger.name().toLowerCase(Locale.ROOT) + ",_" + Unpacker.format(Type.CATEGORY, category) + "]");
                     }
+                } else if (trigger.type == Type.MAPELEMENT && subject < maxMapElement) {
+                    names.put(group, "[" + trigger.name().toLowerCase(Locale.ROOT) + "," + Unpacker.format(trigger.type, subject) + "]");
+                } else if (trigger.type == Type.CUTSCENE && subject < maxCutscene) {
+                    names.put(group, "[" + trigger.name().toLowerCase(Locale.ROOT) + "," + Unpacker.format(trigger.type, subject) + "]");
+                } else if (trigger.type == Type.INTERFACE && subject < maxInterface) {
+                    names.put(group, "[" + trigger.name().toLowerCase(Locale.ROOT) + "," + Unpacker.format(trigger.type, subject) + "]");
+                } else if (trigger.type == Type.TWITCH_EVENT && subject < 4) {
+                    names.put(group, "[" + trigger.name().toLowerCase(Locale.ROOT) + "," + Unpacker.format(trigger.type, subject) + "]");
+                } else if (trigger.type == Type.MINIMENU_EVENT && subject < 4) {
+                    names.put(group, "[" + trigger.name().toLowerCase(Locale.ROOT) + "," + Unpacker.format(trigger.type, subject) + "]");
                 }
             }
         }

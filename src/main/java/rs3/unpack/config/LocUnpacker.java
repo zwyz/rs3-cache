@@ -74,25 +74,25 @@ public class LocUnpacker {
                         lines.add("model" + (i + 1) + "=" + Unpacker.format(Type.MODEL, packet.g2()));
                     }
                 } else {
-                    var shapeCount1 = packet.g1();
+                    var shapeCountHD = packet.g1();
 
-                    for (var i = 0; i < shapeCount1; ++i) {
+                    for (var i = 0; i < shapeCountHD; ++i) {
                         var shape = Unpacker.format(Type.LOC_SHAPE, packet.g1s());
                         var modelCount = packet.g1();
 
                         for (var j = 0; j < modelCount; j++) {
-                            lines.add("modela=" + shape + "," + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
+                            lines.add("modelhd=" + shape + "," + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
                         }
                     }
 
-                    var shapeCount2 = packet.g1();
+                    var shapeCountSD = packet.g1();
 
-                    for (var i = 0; i < shapeCount2; ++i) {
+                    for (var i = 0; i < shapeCountSD; ++i) {
                         var shape = Unpacker.format(Type.LOC_SHAPE, packet.g1s());
                         var modelCount = packet.g1();
 
                         for (var j = 0; j < modelCount; j++) {
-                            lines.add("modelb=" + shape + "," + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
+                            lines.add("modelsd=" + shape + "," + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
                         }
                     }
                 }
@@ -390,7 +390,7 @@ public class LocUnpacker {
                         var length2 = packet.g1();
 
                         for (var j = 0; j < length2; j++) {
-                            lines.add("multiretex=" + value + "," + packet.g2() + "," + packet.g2() + "," + packet.g2() + "," + packet.g2());
+                            lines.add("multiretex=" + value + "," + packet.g2() + "," + packet.g2() + "," + Unpacker.format(Type.MATERIAL, packet.g2()) + "," + Unpacker.format(Type.MATERIAL, packet.g2()));
                         }
                     }
                 }
@@ -428,17 +428,17 @@ public class LocUnpacker {
                     var field20 = (flags & 1) != 0;
                     var field21 = (flags & 2) != 0;
                     var field2c = (flags & 4) != 0;
-                    var field0 = packet.g4s();
+                    var field0 = packet.gFloat();
                     var field4 = packet.gFloat();
-                    var field8 = packet.g4s();
+                    var field8 = packet.gFloat();
                     var fieldc = packet.g1();
-                    var field10 = packet.g4s();
-                    var field14 = packet.g3();
+                    var field10 = packet.gFloat();
+                    var field14 = Unpacker.formatColour(packet.g3());
                     var field18 = packet.g2();
                     var field1c = packet.g2();
-                    var field24 = packet.g4s();
-                    var field28 = packet.g4s();
-                    var field30 = packet.g4s();
+                    var field24 = packet.gFloat();
+                    var field28 = packet.gFloat();
+                    var field30 = packet.gFloat();
                     lines.add("unknown206=" + field20 + "," + field21 + "," + field2c + "," + field0 + "," + field4 + "," + field8 + "," + fieldc + "," + field10 + "," + field14 + "," + field18 + "," + field1c + "," + field24 + "," + field28 + "," + field30);
                 }
             }

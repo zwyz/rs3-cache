@@ -1,14 +1,14 @@
 package rs3.unpack;
 
 public enum ScriptTrigger {
-    OPWORLDMAPELEMENT1(10, Type.MAPELEMENT),
-    OPWORLDMAPELEMENT2(11, Type.MAPELEMENT),
-    OPWORLDMAPELEMENT3(12, Type.MAPELEMENT),
-    OPWORLDMAPELEMENT4(13, Type.MAPELEMENT),
-    OPWORLDMAPELEMENT5(14, Type.MAPELEMENT),
-    WORLDMAPELEMENTMOUSEOVER(15, Type.MAPELEMENT),
-    WORLDMAPELEMENTMOUSELEAVE(16, Type.MAPELEMENT),
-    WORLDMAPELEMENTMOUSEREPEAT(17, Type.MAPELEMENT),
+    OPWORLDMAPELEMENT1(10, Type.MAPELEMENT, true),
+    OPWORLDMAPELEMENT2(11, Type.MAPELEMENT, true),
+    OPWORLDMAPELEMENT3(12, Type.MAPELEMENT, true),
+    OPWORLDMAPELEMENT4(13, Type.MAPELEMENT, true),
+    OPWORLDMAPELEMENT5(14, Type.MAPELEMENT, true),
+    WORLDMAPELEMENTMOUSEOVER(15, Type.MAPELEMENT, true),
+    WORLDMAPELEMENTMOUSELEAVE(16, Type.MAPELEMENT, true),
+    WORLDMAPELEMENTMOUSEREPEAT(17, Type.MAPELEMENT, true),
     JCOINS_UPDATED(19),
     CUTSCENE_SUBTITLE(20, Type.CUTSCENE),
     LOYALTY_UPDATED(21),
@@ -22,18 +22,29 @@ public enum ScriptTrigger {
     TWITCH_EVENT(29, Type.TWITCH_EVENT),
     MINIMENU_EVENT(30, Type.MINIMENU_EVENT),
     PROC(73),
-    CLIENTSCRIPT(76);
+    CLIENTSCRIPT(76),
+    LOCSELECT_MOUSEOVER(77, true); // input: [coord] output: []
 
     public final int id;
     public final Type type;
+    public final boolean category;
 
-    ScriptTrigger(int id, Type type) {
+    ScriptTrigger(int id, Type type, boolean category) {
         this.id = id;
         this.type = type;
+        this.category = category;
     }
 
     ScriptTrigger(int id) {
-        this(id, null);
+        this(id, null, false);
+    }
+
+    ScriptTrigger(int id, Type type) {
+        this(id, type, false);
+    }
+
+    ScriptTrigger(int id, boolean category) {
+        this(id, null, category);
     }
 
     public static ScriptTrigger byID(int id) {

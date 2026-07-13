@@ -304,7 +304,7 @@ public class NPCUnpacker {
                         var length2 = packet.g1();
 
                         for (var j = 0; j < length2; j++) {
-                            lines.add("multiretex=" + value + "," + packet.g2() + "," + packet.g2() + "," + packet.g2() + "," + packet.g2());
+                            lines.add("multiretex=" + value + "," + packet.g2() + "," + packet.g2() + "," + Unpacker.format(Type.MATERIAL, packet.g2()) + "," + Unpacker.format(Type.MATERIAL, packet.g2()));
                         }
                     }
                 }
