@@ -100,6 +100,7 @@ public class Unpack {
         loadDebugNames(24, Type.INTERFACE);
         loadDebugNames(25, Type.INV);
         loadDebugNames(28, Type.LOC);
+        loadDebugNames(29, Type.MAPELEMENT);
         loadDebugNames(32, Type.MATERIAL);
         loadDebugNames(34, Type.MODEL);
         loadDebugNames(35, Type.NPC);
