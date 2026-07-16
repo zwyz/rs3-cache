@@ -437,6 +437,11 @@ public class Unpack {
             return; // empty archives don't get packed
         }
 
+        var gamevalsIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, Js5Archive.JS5_GAMEVALS.id, false, 0)));
+        if (Arrays.binarySearch(gamevalsIndex.groupId, group) < 0) {
+            return;
+        }
+
         int[] hashes = null;
         if (type == Type.GRAPHIC) {
             var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, Js5Archive.JS5_SPRITES.id, false, 0)));
