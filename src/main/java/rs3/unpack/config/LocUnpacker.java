@@ -425,21 +425,21 @@ public class LocUnpacker {
 
                 for (var i = 0; i < count; i++) {
                     var flags = packet.g1();
-                    var field20 = (flags & 1) != 0;
-                    var field21 = (flags & 2) != 0;
-                    var field2c = (flags & 4) != 0;
-                    var field0 = packet.gFloat();
-                    var field4 = packet.gFloat();
-                    var field8 = packet.gFloat();
-                    var fieldc = packet.g1();
-                    var field10 = packet.gFloat();
-                    var field14 = Unpacker.formatColour(packet.g3());
-                    var field18 = packet.g2();
-                    var field1c = packet.g2();
-                    var field24 = packet.gFloat();
-                    var field28 = packet.gFloat();
-                    var field30 = packet.gFloat();
-                    lines.add("unknown206=" + field20 + "," + field21 + "," + field2c + "," + field0 + "," + field4 + "," + field8 + "," + fieldc + "," + field10 + "," + field14 + "," + field18 + "," + field1c + "," + field24 + "," + field28 + "," + field30);
+                    var extendAbove = (flags & 1) != 0;
+                    var extendBelow = (flags & 2) != 0;
+                    var shadow = (flags & 4) != 0;
+                    var x = packet.gFloat();
+                    var y = packet.gFloat();
+                    var z = packet.gFloat();
+                    var radius = packet.g1();
+                    var intensity = packet.gFloat();
+                    var colour = Unpacker.formatColour(packet.g3());
+                    var lightType = Unpacker.format(Type.LIGHT, packet.g2());
+                    var phase = packet.g2s();
+                    var attenuationFalloff = packet.gFloat();
+                    var something = packet.gFloat();
+                    var shadowFactor = packet.gFloat();
+                    lines.add("pointlight=" + extendAbove + "," + extendBelow + "," + shadow + "," + x + "," + y + "," + z + "," + radius + "," + intensity + "," + colour + "," + lightType + "," + phase + "," + attenuationFalloff + "," + something + "," + shadowFactor);
                 }
             }
 
