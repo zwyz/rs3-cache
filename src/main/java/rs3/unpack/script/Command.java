@@ -179,7 +179,7 @@ public class Command {
             } else if (Unpack.VERSION < 911) {
                 commandsPath = Path.of("data/opcodes-" + Unpack.VERSION + "-" + Unpack.ID + ".txt");
             } else {
-                commandsPath = Path.of("data/opcodes-" + Unpack.VERSION + ".txt");
+                commandsPath = Path.of("data/opcodes-" + Unpack.VERSION + (Unpack.BETA ? "-beta" : "") + ".txt");
             }
 
             MISSING_OPCODES = !Files.exists(commandsPath);

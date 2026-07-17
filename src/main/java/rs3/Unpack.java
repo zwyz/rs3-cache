@@ -26,6 +26,10 @@ import java.awt.image.DataBufferInt;
 import java.awt.image.DirectColorModel;
 import java.awt.image.Raster;
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -37,7 +41,8 @@ import java.util.function.Function;
 // todo: clean this up
 public class Unpack {
     public static final boolean DUMP_CONFIG_IDS = true;
-
+    public static final HttpClient HTTP = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
+    public static boolean BETA;
     public static int VERSION;
     public static int ID;
     public static Js5ResourceProvider PROVIDER;
@@ -46,13 +51,9 @@ public class Unpack {
     public static final Gson GSON = new GsonBuilder().serializeSpecialFloatingPointValues().create();
     public static final Gson GSON_PRETTY = new GsonBuilder().serializeSpecialFloatingPointValues().setPrettyPrinting().create();
 
-    public static void main(String[] args) throws IOException, InterruptedException {
-        unpackLive("unpacked/live", 949, 1, 0, "content.runescape.com", 43594, ClientTokenProvider.getClientToken());
-//        unpackOpenRS2("unpacked/2026-03-16", 946, "runescape", 2495);
-    }
-
-    public static void unpackOpenRS2(String path, int version, String scope, int id) throws IOException {
+    public static void unpackOpenRS2(String path, int version, String scope, int id, boolean beta) throws IOException {
         VERSION = version;
+        BETA = beta;
         ID = id;
 
         if (Unpack.VERSION < 400) {
@@ -65,8 +66,46 @@ public class Unpack {
         }
     }
 
-    public static void unpackLive(String path, int version, int subversion, int language, String host, int port, String token) throws IOException {
+    public static void unpackLive(String path, String config, int language) throws IOException, InterruptedException {
+        var uri = URI.create(config);
+        var version = 0;
+        var subversion = 0;
+        var token = "";
+        var host = "";
+        var port = 0;
+        var beta = false;
+
+        var response = HTTP.send(HttpRequest.newBuilder(uri).build(), HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            throw new IOException("unexpected http response: " + response.statusCode());
+        }
+
+        for (var line : response.body().lines().toList()) {
+            if (line.startsWith("param=29=")) {
+                token = line.split("=")[2];
+            }
+
+            if (line.startsWith("param=37=")) {
+                host = line.split("=")[2];
+            }
+
+            if (line.startsWith("param=41=")) {
+                port = Integer.parseInt(line.split("=")[2]);
+            }
+
+            if (line.startsWith("server_version=")) {
+                version = Integer.parseInt(line.split("=")[1]);
+                subversion = 1;
+            }
+
+            if (line.startsWith("cache_variant_suffix=")) {
+                beta = line.split("=")[1].equals("BETA");
+            }
+        }
+
         VERSION = version;
+        BETA = beta;
         ID = -1;
 
         unpack(Path.of(path), new MemoryCacheResourceProvider(new FileSystemCacheResourceProvider(
@@ -128,7 +167,7 @@ public class Unpack {
         // load names
         loadGroupNamesScriptTrigger(12, Unpacker.SCRIPT_NAME);
         loadGroupNames(Path.of("data/names/scripts.txt"), 12, Unpacker.SCRIPT_NAME::put);
-        loadGroupNames(Path.of("data/names/graphics.txt"), 8,  (id, name) -> Unpacker.setSymbolName(Type.GRAPHIC, id, name));
+        loadGroupNames(Path.of("data/names/graphics.txt"), 8, (id, name) -> Unpacker.setSymbolName(Type.GRAPHIC, id, name));
         loadGroupNames(Path.of("data/names/binaries.txt"), 10, Unpacker.BINARY_NAME::put);
 
         // things stuff depends on

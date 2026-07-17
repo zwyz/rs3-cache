@@ -19,7 +19,7 @@ public class UnpackEverything {
             System.out.println("[Cache Unpacker] Unpacking " + name + " build " + build + " (" + (index + 1) + "/" + caches.size() + ")");
 
             if (index >= START_INDEX) {
-                Unpack.unpackOpenRS2("unpacked/" + name, build, "runescape", id);
+                Unpack.unpackOpenRS2("unpacked/" + name, build, "runescape", id, false);
             }
 
             index++;

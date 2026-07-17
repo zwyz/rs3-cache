@@ -15,7 +15,7 @@
 [command,unknown_command_5603](int $x1,int $x2,int $x3,int $x4)
 [command,unknown_command_5604](string $x1)
 [command,unknown_command_5605](string $x1,string $x2,int $x3,int $x4,int $x5,int $x6) 504
-[command,unknown_command_5605](string $x1,string $x2,int $x3,int $x4,int $x5,int $x6,string $x7,int $x8,int $x9,int $x10) 533
+[command,unknown_command_5605](string $x1,string $x2,int $x3,int $x4,int $x5,int $x6,string $x7,int $x8,int $x9,int $x10) 532
 [command,unknown_command_5605](string $x1,string $x2) 596
 [command,unknown_command_5605](string $x1,string $x2,int $x3,int $x4) 629
 [command,unknown_command_5606]
