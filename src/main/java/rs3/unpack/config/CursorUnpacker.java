@@ -22,8 +22,8 @@ public class CursorUnpacker {
                 return lines;
             }
 
-            case 1 -> lines.add("graphic=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
-            case 2 -> lines.add("hotspot=" + packet.g1() + "," + packet.g1());
+            case 1 -> lines.add("graphic=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null())); // lua spriteID
+            case 2 -> lines.add("hotspot=" + packet.g1() + "," + packet.g1()); // lua hotspotX, hotspotY
 
             default -> throw new IllegalStateException("unknown opcode");
         }

@@ -170,7 +170,7 @@ public class ObjUnpacker {
                 }
             }
 
-            case 134 -> lines.add("picksizeshift=" + packet.g1());
+            case 134 -> lines.add("picksizeshift=" + packet.g1()); // tfu
             case 139 -> lines.add("boughtlink=" + Unpacker.format(Type.OBJ, packet.g2()));
             case 140 -> lines.add("boughttemplate=" + Unpacker.format(Type.OBJ, packet.g2()));
             case 148 -> lines.add("placeholderlink=" + Unpacker.format(Type.OBJ, packet.g2()));

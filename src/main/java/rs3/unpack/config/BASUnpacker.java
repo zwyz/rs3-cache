@@ -59,7 +59,7 @@ public class BASUnpacker {
             case 42 -> lines.add("walkanim_r=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
             case 43 -> lines.add("unknown43=" + packet.g2());
             case 44 -> lines.add("unknown44=" + packet.g2());
-            case 45 -> lines.add("overlayheight=" + packet.g2());
+            case 45 -> lines.add("overlayheight=" + packet.g2()); // lua overlayHeight
             case 46 -> lines.add("crawlturn_l=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
             case 47 -> lines.add("crawlturn_r=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
             case 48 -> lines.add("runturn_l=" + Unpacker.format(Type.SEQ, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));

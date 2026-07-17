@@ -22,9 +22,9 @@ public class AchievementUnpacker {
                 return lines;
             }
 
-            case 1 -> lines.add("name=" + packet.gjstr2());
+            case 1 -> lines.add("name=" + packet.gjstr2()); // cs2 achievement_getname, lua name
 
-            case 2 -> {
+            case 2 -> { // cs2 achievement_getdesc, lua descriptions
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
@@ -32,11 +32,11 @@ public class AchievementUnpacker {
                 }
             }
 
-            case 3 -> lines.add("category=" + Unpacker.format(Type.CATEGORY, packet.g2()));
-            case 4 -> lines.add("sprite=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
-            case 5 -> lines.add("runescore=" + packet.g1());
-            case 6 -> lines.add("graceday=" + packet.g2());
-            case 7 -> lines.add("reward=" + packet.gjstr2());
+            case 3 -> lines.add("category=" + Unpacker.format(Type.CATEGORY, packet.g2())); // cs2 achievement_category, lua category
+            case 4 -> lines.add("sprite=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null())); // cs2 achievement_sprite, lua spriteID
+            case 5 -> lines.add("runescore=" + packet.g1()); // cs2 achievement_runescore, lua runeScore
+            case 6 -> lines.add("graceday=" + packet.g2()); // cs2 achievement_getgraceday, lua graceExpiryRunedate
+            case 7 -> lines.add("reward=" + packet.gjstr2()); // cs2 achievement_getreward, lua reward
 
             case 8 -> {
                 var count = packet.gSmart1or2();
@@ -56,7 +56,7 @@ public class AchievementUnpacker {
                 }
             }
 
-            case 9 -> {
+            case 9 -> { // cs2 achievement_varp_prereq_*
                 var count = packet.gSmart1or2();
 
                 for (var i = 0; i < count; i++) {
@@ -74,7 +74,7 @@ public class AchievementUnpacker {
                 }
             }
 
-            case 10 -> {
+            case 10 -> { // cs2 achievement_varbit_prereq_*
                 var count = packet.gSmart1or2();
 
                 for (var i = 0; i < count; i++) {
@@ -92,7 +92,7 @@ public class AchievementUnpacker {
                 }
             }
 
-            case 11 -> {
+            case 11 -> { // cs2 achievement_achievement_prereq_*
                 var count = packet.gSmart1or2();
 
                 for (var i = 0; i < count; i++) {
@@ -100,7 +100,7 @@ public class AchievementUnpacker {
                 }
             }
 
-            case 12 -> {
+            case 12 -> { // cs2 achievement_stat_req_*
                 var count = packet.gSmart1or2();
 
                 for (var i = 0; i < count; i++) {
@@ -118,7 +118,7 @@ public class AchievementUnpacker {
                 }
             }
 
-            case 13 -> {
+            case 13 -> { // cs2 achievement_varp_req_*
                 var count = packet.gSmart1or2();
 
                 for (var i = 0; i < count; i++) {
@@ -136,7 +136,7 @@ public class AchievementUnpacker {
                 }
             }
 
-            case 14 -> {
+            case 14 -> { // cs2 achievement_varbit_req_*
                 var count = packet.gSmart1or2();
 
                 for (var i = 0; i < count; i++) {
@@ -154,7 +154,7 @@ public class AchievementUnpacker {
                 }
             }
 
-            case 15 -> {
+            case 15 -> { // cs2 achievement_achievement_req_*
                 var count = packet.gSmart1or2();
 
                 for (var i = 0; i < count; i++) {
@@ -162,12 +162,12 @@ public class AchievementUnpacker {
                 }
             }
 
-            case 16 -> lines.add("subcat=" + Unpacker.format(Type.CATEGORY, packet.g2()));
+            case 16 -> lines.add("subcat=" + Unpacker.format(Type.CATEGORY, packet.g2())); // cs2 achievement_findsubcat, lua subCategory
             case 17 -> lines.add("locked=yes");
-            case 18 -> lines.add("hide=" + packet.g1());
-            case 19 -> lines.add("members=no");
+            case 18 -> lines.add("hide=" + packet.g1()); // cs2 achievement_gethide, lua hiddenType
+            case 19 -> lines.add("members=no"); // cs2 achievement_getmembers, lua isMembers
 
-            case 20 -> {
+            case 20 -> { // cs2 achievement_quest_prereq_*
                 var count = packet.gSmart1or2();
 
                 for (var i = 0; i < count; i++) {
@@ -175,7 +175,7 @@ public class AchievementUnpacker {
                 }
             }
 
-            case 21 -> {
+            case 21 -> { // cs2 achievement_quest_req_*
                 var count = packet.gSmart1or2();
 
                 for (var i = 0; i < count; i++) {
@@ -183,7 +183,7 @@ public class AchievementUnpacker {
                 }
             }
 
-            case 22 -> {
+            case 22 -> { // cs2 achievement_varp_testbit_prereq_*
                 var count = packet.gSmart1or2();
 
                 for (var i = 0; i < count; i++) {
@@ -191,7 +191,7 @@ public class AchievementUnpacker {
                 }
             }
 
-            case 23 -> {
+            case 23 -> { // cs2 achievement_varp_testbit_req_*
                 var count = packet.gSmart1or2();
 
                 for (var i = 0; i < count; i++) {
@@ -199,7 +199,7 @@ public class AchievementUnpacker {
                 }
             }
 
-            case 24 -> {
+            case 24 -> { // cs2 achievement_varbit_testbit_prereq_*
                 var count = packet.gSmart1or2();
 
                 for (var i = 0; i < count; i++) {
@@ -207,7 +207,7 @@ public class AchievementUnpacker {
                 }
             }
 
-            case 25 -> {
+            case 25 -> { // cs2 achievement_varp_testbit_req_*
                 var count = packet.gSmart1or2();
 
                 for (var i = 0; i < count; i++) {
@@ -215,8 +215,8 @@ public class AchievementUnpacker {
                 }
             }
 
-            case 26 -> lines.add("unknown26=" + packet.g2());
-            case 27 -> lines.add("checklist=yes");
+            case 26 -> lines.add("dbrow=" + Unpacker.format(Type.DBROW, packet.g2())); // lua name dbRowConfig
+            case 27 -> lines.add("checklist=yes"); // cs2 achievement_is_checklist
 
             case 28 -> {
                 var count = packet.gSmart1or2();

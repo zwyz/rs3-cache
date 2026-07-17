@@ -94,9 +94,9 @@ public class NPCUnpacker {
             }
 
             case 93 -> lines.add("minimap=no"); // https://twitter.com/JagexAsh/status/1763550956443111935
-            case 95 -> lines.add("vislevel=" + packet.g2());
-            case 97 -> lines.add("resizeh=" + packet.g2()); // html5 (only resize)
-            case 98 -> lines.add("resizev=" + packet.g2()); // html5 (only resize)
+            case 95 -> lines.add("vislevel=" + packet.g2()); // https://discord.com/channels/@me/917621942163492885/1527564463572783214
+            case 97 -> lines.add("resizeh=" + packet.g2()); // html5, lua api (only "resize")
+            case 98 -> lines.add("resizev=" + packet.g2()); // html5, lua api (only "resize")
             case 99 -> lines.add("alwaysontop=yes"); // https://twitter.com/JagexAsh/status/1690998554347610112
             case 100 -> lines.add("ambient=" + packet.g1s());
             case 101 -> lines.add("contrast=" + packet.g1s());
@@ -190,7 +190,7 @@ public class NPCUnpacker {
             }
 
             case 122 -> lines.add("unknown122=" + packet.g2()); // todo: removed
-            case 123 -> lines.add("overlayheight=" + packet.g2());
+            case 123 -> lines.add("overlayheight=" + packet.g2()); // lua overlayHeight
             case 125 -> lines.add("respawndir=" + packet.g1s());
             case 127 -> lines.add("bas=" + Unpacker.format(Type.BAS, packet.g2())); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
 
@@ -210,9 +210,9 @@ public class NPCUnpacker {
             case 138 -> lines.add("covermarker=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
             case 139 -> lines.add("unknown139=" + packet.gSmart2or4null());
             case 140 -> lines.add("bgsoundvolume=" + packet.g1());
-            case 141 -> lines.add("follower=yes");
+            case 141 -> lines.add("familiar=yes"); // lua isFamiliar
             case 142 -> lines.add("mapelement=" + Unpacker.format(Type.MAPELEMENT, packet.g2()));
-            case 143 -> lines.add("drawbelow=yes");
+            case 143 -> lines.add("alwaysonbottom=yes"); // lua isAlwaysOnBottom
             case 150 -> lines.add("membersop1=" + packet.gjstr());
             case 151 -> lines.add("membersop2=" + packet.gjstr());
             case 152 -> lines.add("membersop3=" + packet.gjstr());
@@ -233,10 +233,10 @@ public class NPCUnpacker {
             }
 
             case 162 -> bgsoundvorbis = true;
-            case 163 -> lines.add("picksize=" + packet.g1());
+            case 163 -> lines.add("roughbounding=" + packet.g1()); // lua roughBounding
             case 164 -> lines.add("bgsoundrate=" + packet.g2() + "," + packet.g2());
             case 165 -> lines.add("picksizeshift=" + packet.g1());
-            case 168 -> lines.add("bgsoundsize=" + packet.g1());
+            case 168 -> lines.add("bgsounddropoffrange=" + packet.g1()); // lua backgroundSoundDropoffRange
             case 169 -> lines.add("antimacro=no");
             case 170 -> lines.add("cursor1=" + Unpacker.format(Type.CURSOR, packet.g2null()));
             case 171 -> lines.add("cursor2=" + Unpacker.format(Type.CURSOR, packet.g2null()));
@@ -244,13 +244,13 @@ public class NPCUnpacker {
             case 173 -> lines.add("cursor4=" + Unpacker.format(Type.CURSOR, packet.g2null()));
             case 174 -> lines.add("cursor5=" + Unpacker.format(Type.CURSOR, packet.g2null()));
             case 175 -> lines.add("cursor6=" + Unpacker.format(Type.CURSOR, packet.g2null()));
-            case 178 -> lines.add("unknown178=no");
-            case 179 -> lines.add("clickbox=" + packet.gSmart1or2() + "," + packet.gSmart1or2() + "," + packet.gSmart1or2() + "," + packet.gSmart1or2() + "," + packet.gSmart1or2() + "," + packet.gSmart1or2());
+            case 178 -> lines.add("castsshadows=no"); // lua castsShadows
+            case 179 -> lines.add("custombounding=" + packet.gSmart1or2() + "," + packet.gSmart1or2() + "," + packet.gSmart1or2() + "," + packet.gSmart1or2() + "," + packet.gSmart1or2() + "," + packet.gSmart1or2()); // lua hasCustomBounding
             case 180 -> lines.add("unknown180=" + packet.g1());
             case 181 -> lines.add("spotshadowtexture=" + Unpacker.format(Type.MATERIAL, packet.g2()) + "," + packet.g1());
             case 182 -> lines.add("transmogfakenpc=yes");
             case 184 -> lines.add("unknown184=" + packet.g1());
-            case 185 -> lines.add("unknown185=no");
+            case 185 -> lines.add("fastpicking=no"); // lua fastPicking
 
             case 186 -> {
                 packet.g2();
@@ -349,7 +349,7 @@ public class NPCUnpacker {
             }
 
             case 252 -> lines.add("unknown252=" + packet.g2());
-            case 253 -> lines.add("unknown253=" + packet.g1());
+            case 253 -> lines.add("priorityoffset=" + packet.g1()); // lua priorityOffset
 
             default -> throw new IllegalStateException("unknown opcode");
         }

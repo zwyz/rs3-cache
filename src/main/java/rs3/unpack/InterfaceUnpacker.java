@@ -277,13 +277,13 @@ public class InterfaceUnpacker {
         }
 
         if (version >= 6) {
-            line(lines, "onbuttonclick=", decodeHook(packet), "null"); // if_setonbuttonclick
-            line(lines, "onhook51=", decodeHook(packet), "null"); // if_setonhook51
-            line(lines, "onlistselect=", decodeHook(packet), "null"); //
+            line(lines, "onbuttonpressed=", decodeHook(packet), "null"); // 949 beta enum
+            line(lines, "oncontentchanged=", decodeHook(packet), "null"); // 949 beta enum
+            line(lines, "onselectionchanged=", decodeHook(packet), "null"); // 949 beta enum
         }
 
         if (version >= 8) {
-            line(lines, "onupdated=", decodeHook(packet), "null"); // if_crmview_setonupdated
+            line(lines, "oncrmviewupdated=", decodeHook(packet), "null"); // 949 beta enum
         }
 
         if (Unpack.VERSION >= 459) {
