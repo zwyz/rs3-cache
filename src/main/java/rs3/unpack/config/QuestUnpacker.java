@@ -29,7 +29,7 @@ public class QuestUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("masterquestvar=" + Unpacker.format(Type.VAR_PLAYER, packet.g2()) + "," + packet.g4s() + "," + packet.g4s());
+                    lines.add("masterquestvarp=" + Unpacker.format(Type.VAR_PLAYER, packet.g2()) + "," + packet.g4s() + "," + packet.g4s());
                 }
             }
 
@@ -42,7 +42,13 @@ public class QuestUnpacker {
             }
 
             case 5 -> lines.add("parent=" + Unpacker.format(Type.QUEST, packet.g2()));
-            case 6 -> lines.add("type=" + packet.g1()); // cs2 quest_type, lua type
+
+            case 6 -> lines.add("type=" + switch(packet.g1()) { // cs2 quest_type, lua type
+                case 0 -> "normal";
+                case 1 -> "seasonal";
+                case 2 -> "tutorial";
+                default -> throw new IllegalStateException("invalid type");
+            });
 
             case 7 -> lines.add("difficulty=" + switch(packet.g1()) { // cs2 quest_getdifficulty, lua difficulty
                 case 0 -> "novice";
@@ -87,7 +93,7 @@ public class QuestUnpacker {
                 }
             }
 
-            case 15 -> lines.add("pointsreq=" + packet.g2()); // cs2 quest_pointsreq, lua preReqQuestPoints
+            case 15 -> lines.add("qpreq=" + packet.g2()); // cs2 quest_pointsreq, lua preReqQuestPoints
             case 17 -> lines.add("icon=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null(), false)); // lua iconID
 
             case 18 -> { // cs2 quest_varpreq_*
