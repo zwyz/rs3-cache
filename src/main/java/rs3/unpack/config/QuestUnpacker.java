@@ -29,7 +29,7 @@ public class QuestUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("mastervar=" + Unpacker.format(Type.VAR_PLAYER, packet.g2()) + "," + packet.g4s() + "," + packet.g4s());
+                    lines.add("masterquestvar=" + Unpacker.format(Type.VAR_PLAYER, packet.g2()) + "," + packet.g4s() + "," + packet.g4s());
                 }
             }
 
@@ -37,21 +37,35 @@ public class QuestUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("mastervarbit=" + Unpacker.format(Type.VAR_PLAYER_BIT, packet.g2()) + "," + packet.g4s() + "," + packet.g4s());
+                    lines.add("masterquestvarbit=" + Unpacker.format(Type.VAR_PLAYER_BIT, packet.g2()) + "," + packet.g4s() + "," + packet.g4s());
                 }
             }
 
-            case 5 -> lines.add("unknown5=" + packet.g2());
+            case 5 -> lines.add("parent=" + Unpacker.format(Type.QUEST, packet.g2()));
             case 6 -> lines.add("type=" + packet.g1()); // cs2 quest_type, lua type
-            case 7 -> lines.add("difficulty=" + packet.g1()); // cs2 quest_getdifficulty, lua difficulty
-            case 8 -> lines.add("members=yes"); // cs2 quest_getmembers, lua isMembers
-            case 9 -> lines.add("points=" + packet.g1()); // cs2 quest_points, lua questPoints
+
+            case 7 -> lines.add("difficulty=" + switch(packet.g1()) { // cs2 quest_getdifficulty, lua difficulty
+                case 0 -> "novice";
+                case 1 -> "intermediate";
+                case 2 -> "experienced";
+                case 3 -> "master";
+                case 4 -> "grandmaster";
+                case 250 -> "multi";
+                default -> throw new IllegalStateException("invalid difficulty");
+            });
+
+            case 8 -> lines.add("members=true"); // cs2 quest_getmembers, lua isMembers
+            case 9 -> lines.add("questpoints=" + packet.g1()); // cs2 quest_points, lua questPoints
 
             case 10 -> { // lua startCoordGrids
                 var count = packet.g1();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("startcoord=" + Unpacker.format(Type.COORDGRID, packet.g4s()));
+                    if (i == 0) {
+                        lines.add("mainstartcoord=" + Unpacker.format(Type.COORDGRID, packet.g4s()));
+                    } else {
+                        lines.add("startcoord=" + Unpacker.format(Type.COORDGRID, packet.g4s()));
+                    }
                 }
             }
 
@@ -74,7 +88,7 @@ public class QuestUnpacker {
             }
 
             case 15 -> lines.add("pointsreq=" + packet.g2()); // cs2 quest_pointsreq, lua preReqQuestPoints
-            case 17 -> lines.add("icon=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null())); // lua iconID
+            case 17 -> lines.add("icon=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null(), false)); // lua iconID
 
             case 18 -> { // cs2 quest_varpreq_*
                 var count = packet.g1();
