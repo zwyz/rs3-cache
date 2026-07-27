@@ -82,25 +82,32 @@ public class Unpack {
         }
 
         for (var line : response.body().lines().toList()) {
-            if (line.startsWith("param=29=")) {
-                token = line.split("=")[2];
+            String[] tokens = line.split("=", 3);
+
+            if (tokens[0].equals("param")) {
+                String param = tokens[1];
+                String value = tokens[2];
+
+                if (param.equals("29")) {
+                    token = value;
+                }
+
+                if (param.equals("37")) {
+                    host = value;
+                }
+
+                if (param.equals("41")) {
+                    port = Integer.parseInt(value);
+                }
             }
 
-            if (line.startsWith("param=37=")) {
-                host = line.split("=")[2];
-            }
-
-            if (line.startsWith("param=41=")) {
-                port = Integer.parseInt(line.split("=")[2]);
-            }
-
-            if (line.startsWith("server_version=")) {
-                version = Integer.parseInt(line.split("=")[1]);
+            if (tokens[0].equals("server_version")) {
+                version = Integer.parseInt(tokens[1]);
                 subversion = 1;
             }
 
-            if (line.startsWith("cache_variant_suffix=")) {
-                beta = line.split("=")[1].equals("BETA");
+            if (tokens[0].equals("cache_variant_suffix")) {
+                beta = tokens[1].equals("BETA");
             }
         }
 
