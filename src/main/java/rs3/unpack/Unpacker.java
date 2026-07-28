@@ -16,7 +16,7 @@ public class Unpacker {
     public static final Map<Integer, Type> PARAM_TYPE = new HashMap<>();
     public static final Map<Integer, Type> ENUM_INPUT_TYPE = new HashMap<>();
     public static final Map<Integer, Type> ENUM_OUTPUT_TYPE = new HashMap<>();
-    public static final Map<Tuple2<VarDomain, Integer>, Type> VAR_TYPE = new HashMap<>();
+    public static final Map<VarDomain, Map<Integer, Type>> VAR_TYPE = new HashMap<>();
     public static final Map<Integer, VarDomain> VARBIT_DOMAIN = new HashMap<>();
 
     public static void reset() {
@@ -29,6 +29,10 @@ public class Unpacker {
         ENUM_OUTPUT_TYPE.clear();
         VAR_TYPE.clear();
         VARBIT_DOMAIN.clear();
+
+        for (var domain : VarDomain.values()) {
+            VAR_TYPE.put(domain, new HashMap<>());
+        }
 
         setSymbolName(Type.BOOLEAN, 0, "false");
         setSymbolName(Type.BOOLEAN, 1, "true");
@@ -691,11 +695,11 @@ public class Unpacker {
     }
 
     public static void setVarType(VarDomain domain, int id, Type type) {
-        VAR_TYPE.put(new Tuple2<>(domain, id), type);
+        VAR_TYPE.get(domain).put(id, type);
     }
 
     public static Type getVarType(VarDomain domain, int id) {
-        return Objects.requireNonNull(VAR_TYPE.get(new Tuple2<>(domain, id)));
+        return Objects.requireNonNull(VAR_TYPE.get(domain).get(id));
     }
 
     public static void setVarBitDomain(int id, VarDomain domain) {
