@@ -41,6 +41,7 @@ import java.util.function.Function;
 // todo: clean this up
 public class Unpack {
     public static final boolean DUMP_CONFIG_IDS = true;
+    public static final boolean DUMP_SYMBOLS = true;
     public static final HttpClient HTTP = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
     public static boolean BETA;
     public static int VERSION;
@@ -327,6 +328,12 @@ public class Unpack {
         // maps
 //        unpackMaps(root);
         unpackWorldAreaMap(root);
+
+        if (DUMP_SYMBOLS) {
+            Path symbolsPath = Path.of(root + "/symbols");
+            Files.createDirectories(symbolsPath);
+            Symbols.dumpSymbols(symbolsPath);
+        }
     }
 
     public static void unpackLegacy(Path root, Js4ResourceProvider provider) throws IOException {
