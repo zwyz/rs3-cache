@@ -32,9 +32,9 @@ public class VarUnpacker {
 
             case 4 -> {
                 if (Unpack.VERSION < 762) {
-                    lines.add("lifetime=perm");
+                    lines.add("scope=perm");
                 } else {
-                    lines.add("lifetime=" + switch (packet.g1()) {
+                    lines.add("scope=" + switch (packet.g1()) {
                         case 0 -> "temp"; // https://twitter.com/JagexAsh/status/654366476674183168
                         case 1 -> "perm"; // https://twitter.com/JagexAsh/status/654366476674183168
                         case 2 -> "serverperm";
@@ -51,7 +51,7 @@ public class VarUnpacker {
             });
 
             case 110 -> lines.add("clientcode=" + packet.g2());
-            case 7 -> lines.add("domaindefault=no");
+            case 7 -> lines.add("legacydefaultvalue=no"); // 216 LegacyDefaultValue
             case 8 -> lines.add("wikisync=yes");
 
             default -> throw new IllegalStateException("unknown opcode");
