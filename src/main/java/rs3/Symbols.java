@@ -52,7 +52,12 @@ public class Symbols {
         }
         dumpType(Type.MODEL, path.resolve("model.sym"));
         dumpType(Type.FONTMETRICS, path.resolve("fontmetrics.sym"));
-        dumpType(Type.SYNTH, path.resolve("synth.sym"));
+        if (Unpack.VERSION < 757) {
+            dumpType(Type.SYNTH, path.resolve("synth.sym"));
+            dumpType(Type.VORBIS, path.resolve("vorbis.sym"));
+        } else {
+            dumpType(Type.SOUND, path.resolve("vorbis.sym"));
+        }
         dumpType(Type.MIDI, path.resolve("midi.sym"));
         dumpType(Type.JINGLE, path.resolve("jingle.sym"));
         dumpType(Type.CHATCAT, path.resolve("chatcat.sym"));
