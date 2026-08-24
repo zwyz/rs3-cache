@@ -36,7 +36,7 @@ public class HitmarkUnpacker {
             case 12 -> lines.add("replacemode=" + packet.g1());
             case 13 -> lines.add("damageyof=" + packet.g2s());
             case 14 -> lines.add("fadeout=" + packet.g2());
-            case 16 -> lines.add("graphicof=" + packet.g2() + "," + packet.g2());
+            case 16 -> lines.add("graphicof=" + packet.g2s() + "," + packet.g2s());
 
             case 17 -> {
                 var multivarbit = packet.g2null();
