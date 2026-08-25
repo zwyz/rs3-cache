@@ -165,6 +165,7 @@ public class Unpack {
         loadDebugNames(61, Type.VAR_PLAYER);
         loadDebugNames(64, Type.SOUND);
         loadDebugNames(69, Type.MIDI);
+        loadDebugNames(69, Type.JINGLE); // jingles and songs are in the same group
         loadDebugNames(80, Type.VAR_PLAYER_GROUP);
         loadDebugNames(89, Type.ACHIEVEMENT);
         loadDebugNames(90, Type.FONTMETRICS);
