@@ -441,15 +441,15 @@ public class Unpacker {
         if (type == Type.OVERLAYINTERFACE) return format(Type.INTERFACE, value, safe);
         if (type == Type.CLIENTINTERFACE) return format(Type.INTERFACE, value, safe);
 
-         if ((type == Type.SYNTH || type == Type.VORBIS) && Unpack.VERSION >= 757) {
-             // Starting with 757, the packer auto-converts all synths to vorbis, and synth and vorbis IDs
-             // share the same space. Starting with 862, the `[sound/bgsound/randomsound]vorbis=yes` config
-             // properties are no longer transmitted, making it impossible to know whether a config sound
-             // is a synth or vorbis.
-             //
-             // To avoid inconsistencies between configs and CS2, format them all as a merged "sound" type.
-             return format(Type.SOUND, value, safe); // [sound/bgsound/randomsound]vorbis=yes
-         }
+        if ((type == Type.SYNTH || type == Type.VORBIS) && Unpack.VERSION >= 757) {
+            // Starting with 757, the packer auto-converts all synths to vorbis, and synth and vorbis IDs
+            // share the same space. Starting with 862, the `[sound/bgsound/randomsound]vorbis=yes` config
+            // properties are no longer transmitted, making it impossible to know whether a config sound
+            // is a synth or vorbis.
+            //
+            // To avoid inconsistencies between configs and CS2, format them all as a merged "sound" type.
+            return format(Type.SOUND, value, safe); // [sound/bgsound/randomsound]vorbis=yes
+        }
 
         var name = NAME.getOrDefault(type, Map.of()).get(value);
 
