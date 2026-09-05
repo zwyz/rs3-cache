@@ -7574,7 +7574,6 @@
 [proc,sliske1_coord]
 [proc,slug2_fragment]
 [proc,sm_mes]
-[proc,small_statistics]
 [proc,smithing_draw_slider]
 [proc,smithing_interface_build_grid]
 [proc,smithing_interface_re_draw]
