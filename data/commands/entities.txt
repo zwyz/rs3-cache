@@ -64,6 +64,7 @@
 [command,locselect_rotate](int $steps)
 [command,locselect_submit]
 [command,locselect_move](coord $coord)
+[command,unknown_command_112](boolean $x1)
 [command,unknown_command_48](boolean $x1)
 [command,unknown_command_49]()(boolean)
 [command,unknown_command_51]()(boolean)

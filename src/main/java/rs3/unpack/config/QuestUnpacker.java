@@ -112,6 +112,14 @@ public class QuestUnpacker {
                 }
             }
 
+            case 22 -> {
+                var count = packet.g1();
+
+                for (var i = 0; i < count; i++) {
+                    lines.add("masterquestvarbit=" + Unpacker.format(Type.VAR_PLAYER_BIT, packet.g3()) + "," + packet.g4s() + "," + packet.g4s());
+                }
+            }
+
             case 249 -> {
                 var count = packet.g1();
 

@@ -335,6 +335,143 @@ public class NPCUnpacker {
                 lines.add("multidefault=" + packet.g2());
             }
 
+            case 187 -> {
+                var multivarbit = packet.g3null();
+
+                if (multivarbit != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER_BIT, multivarbit));
+                }
+
+                var multivarp = packet.g2null();
+
+                if (multivarp != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, multivarp));
+                }
+
+                var count = packet.gSmart1or2();
+
+                for (var i = 0; i <= count; ++i) {
+                    var multi = packet.g2null();
+
+                    if (multi != -1) {
+                        lines.add("multinpc=" + i + "," + Unpacker.format(Type.NPC, multi));
+                    }
+                }
+            }
+
+            case 188 -> {
+                var multivarbit = packet.g3null();
+
+                if (multivarbit != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER_BIT, multivarbit));
+                }
+
+                var multivarp = packet.g2null();
+
+                if (multivarp != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, multivarp));
+                }
+
+                var multidefault = packet.g2null();
+
+                if (multidefault != -1) {
+                    lines.add("multinpc=default," + Unpacker.format(Type.NPC, multidefault));
+                }
+
+                var count = packet.gSmart1or2();
+
+                for (var i = 0; i <= count; ++i) {
+                    var multi = packet.g2null();
+
+                    if (multi != -1) {
+                        lines.add("multinpc=" + i + "," + Unpacker.format(Type.NPC, multi));
+                    }
+                }
+            }
+
+            case 189 -> {
+                packet.g2();
+                var varbit = packet.g3null();
+                var varplayer = packet.g2null();
+
+                if (varbit != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER_BIT, varbit));
+                }
+
+                if (varplayer != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, varplayer));
+                }
+
+                var flags = packet.g1();
+
+                if ((flags & 1) != 0) {
+                    var length = packet.g1();
+
+                    for (var i = 0; i < length; i++) {
+                        var value = packet.g1();
+                        var length2 = packet.g1();
+
+                        for (var j = 0; j < length2; j++) {
+                            var line = "multimodel=" + value + "," + packet.g2() + "," + packet.g2() + "," + Unpacker.format(Type.MODEL, packet.gSmart2or4s());
+                            var n = packet.g1();
+                            if (n >= 1) line += "," + packet.g1();
+                            if (n >= 2) line += "," + packet.g1();
+                            if (n >= 3) line += "," + packet.g1();
+                            lines.add(line);
+                        }
+                    }
+                }
+
+                if ((flags & 2) != 0) {
+                    var length = packet.g1();
+
+                    for (var i = 0; i < length; i++) {
+                        var value = packet.g1();
+                        var length2 = packet.g1();
+
+                        for (var j = 0; j < length2; j++) {
+                            lines.add("multiheadmodel=" + value + "," + packet.g2() + "," + packet.g2() + "," + Unpacker.format(Type.MODEL, packet.gSmart2or4s()));
+                        }
+                    }
+                }
+
+                if ((flags & 4) != 0) {
+                    var length = packet.g1();
+
+                    for (var i = 0; i < length; i++) {
+                        var value = packet.g1();
+                        var length2 = packet.g1();
+
+                        for (var j = 0; j < length2; j++) {
+                            lines.add("multiretex=" + value + "," + packet.g2() + "," + packet.g2() + "," + Unpacker.format(Type.MATERIAL, packet.g2()) + "," + Unpacker.format(Type.MATERIAL, packet.g2()));
+                        }
+                    }
+                }
+
+                if ((flags & 8) != 0) {
+                    var length = packet.g1();
+
+                    for (var i = 0; i < length; i++) {
+                        var value = packet.g1();
+                        var length2 = packet.g1();
+
+                        for (var j = 0; j < length2; j++) {
+                            lines.add("multirecol=" + value + "," + packet.g2() + "," + packet.g2() + "," + packet.g2() + "," + packet.g2());
+                        }
+                    }
+                }
+
+                if ((flags & 16) != 0) {
+                    var length = packet.g1();
+
+                    for (var i = 0; i < length; i++) {
+                        lines.add("multitint=" + packet.g2() + "," + packet.g2() + "," + packet.g1() + "," + packet.g1() + "," + packet.g1() + "," + packet.g1());
+                    }
+                }
+
+                lines.add("multidefault=" + packet.g2());
+            }
+
             case 249 -> {
                 var count = packet.g1();
 

@@ -271,6 +271,7 @@ public class LocUnpacker {
             case 108 -> lines.add("unknown108=yes");
             case 109 -> lines.add("unknown109=yes");
             case 110 -> lines.add("unknown110=yes");
+            case 111 -> lines.add("unknown111=yes");
             case 150 -> lines.add("membersop1=" + packet.gjstr());
             case 151 -> lines.add("membersop2=" + packet.gjstr());
             case 152 -> lines.add("membersop3=" + packet.gjstr());
@@ -441,6 +442,143 @@ public class LocUnpacker {
                     var shadowFactor = packet.gFloat();
                     lines.add("pointlight=" + extendAbove + "," + extendBelow + "," + shadow + "," + x + "," + y + "," + z + "," + radius + "," + intensity + "," + colour + "," + lightType + "," + phase + "," + attenuationFalloff + "," + something + "," + shadowFactor);
                 }
+            }
+
+            case 207 -> { // * https://twitter.com/JagexAsh/status/737426310545481728
+                var multivarbit = packet.g3null();
+
+                if (multivarbit != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER_BIT, multivarbit));
+                }
+
+                var multivarp = packet.g2null();
+
+                if (multivarp != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, multivarp));
+                }
+
+                var count = packet.gSmart1or2();
+
+                for (var i = 0; i <= count; ++i) {
+                    var multi = packet.gSmart2or4null();
+
+                    if (multi != -1) {
+                        lines.add("multiloc=" + i + "," + Unpacker.format(Type.LOC, multi));
+                    }
+                }
+            }
+
+            case 208 -> {
+                var multivarbit = packet.g3null();
+
+                if (multivarbit != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER_BIT, multivarbit));
+                }
+
+                var multivarp = packet.g2null();
+
+                if (multivarp != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, multivarp));
+                }
+
+                var multidefault = packet.gSmart2or4null();
+
+                if (multidefault != -1) {
+                    lines.add("multiloc=default," + Unpacker.format(Type.LOC, multidefault));
+                }
+
+                var count = packet.gSmart1or2();
+
+                for (var i = 0; i <= count; ++i) {
+                    var multi = packet.gSmart2or4null();
+
+                    if (multi != -1) {
+                        lines.add("multiloc=" + i + "," + Unpacker.format(Type.LOC, multi));
+                    }
+                }
+            }
+
+            case 209 -> {
+                packet.g2();
+                var varbit = packet.g3null();
+                var varplayer = packet.g2null();
+
+                if (varbit != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER_BIT, varbit));
+                }
+
+                if (varplayer != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, varplayer));
+                }
+
+                var flags = packet.g1();
+
+                if ((flags & 1) != 0) {
+                    var length = packet.g1();
+
+                    for (var i = 0; i < length; i++) {
+                        var value = packet.g1();
+                        var length2 = packet.g1();
+
+                        for (var j = 0; j < length2; j++) {
+                            var line = "multimodel=" + value + "," + packet.g2() + "," + packet.g2() + "," + Unpacker.format(Type.MODEL, packet.gSmart2or4s());
+                            var n = packet.g1();
+                            if (n >= 1) line += "," + packet.g1();
+                            if (n >= 2) line += "," + packet.g1();
+                            if (n >= 3) line += "," + packet.g1();
+                            lines.add(line);
+                        }
+                    }
+                }
+
+                if ((flags & 2) != 0) {
+                    var length = packet.g1();
+
+                    for (var i = 0; i < length; i++) {
+                        var value = packet.g1();
+                        var length2 = packet.g1();
+
+                        for (var j = 0; j < length2; j++) {
+                            lines.add("multiheadmodel=" + value + "," + packet.g2() + "," + packet.g2() + "," + Unpacker.format(Type.MODEL, packet.gSmart2or4s()));
+                        }
+                    }
+                }
+
+                if ((flags & 4) != 0) {
+                    var length = packet.g1();
+
+                    for (var i = 0; i < length; i++) {
+                        var value = packet.g1();
+                        var length2 = packet.g1();
+
+                        for (var j = 0; j < length2; j++) {
+                            lines.add("multiretex=" + value + "," + packet.g2() + "," + packet.g2() + "," + Unpacker.format(Type.MATERIAL, packet.g2()) + "," + Unpacker.format(Type.MATERIAL, packet.g2()));
+                        }
+                    }
+                }
+
+                if ((flags & 8) != 0) {
+                    var length = packet.g1();
+
+                    for (var i = 0; i < length; i++) {
+                        var value = packet.g1();
+                        var length2 = packet.g1();
+
+                        for (var j = 0; j < length2; j++) {
+                            lines.add("multirecol=" + value + "," + packet.g2() + "," + packet.g2() + "," + packet.g2() + "," + packet.g2());
+                        }
+                    }
+                }
+
+                if ((flags & 16) != 0) {
+                    var length = packet.g1();
+
+                    for (var i = 0; i < length; i++) {
+                        lines.add("multitint=" + packet.g2() + "," + packet.g2() + "," + packet.g1() + "," + packet.g1() + "," + packet.g1() + "," + packet.g1());
+                    }
+                }
+
+                lines.add("multidefault=" + packet.g2());
             }
 
             case 249 -> {

@@ -61,6 +61,32 @@ public class QuickChatPhraseUnpacker {
 
             case 4 -> lines.add("unknown4=no");
 
+            case 5 -> {
+                var count = packet.g1();
+
+                for (var i = 0; i < count; i++) {
+                    var command = packet.g2();
+
+                    lines.add("dynamiccommand=" + switch (command) {
+                        case 0 -> "listdialog," + Unpacker.format(Type.ENUM, packet.gvarint2()); // nxt name
+                        case 1 -> "objdialog"; // nxt name
+                        case 2 -> "countdialog";
+                        case 4 -> "stat_base," + Unpacker.format(Type.STAT, packet.gvarint2());
+                        case 6 -> "enum_string," + Unpacker.format(Type.ENUM, packet.gvarint2()) + "," + Unpacker.format(Type.VAR_PLAYER, packet.gvarint2()); // nxt name
+                        case 7 -> "enum_string_clan," + Unpacker.format(Type.ENUM, packet.gvarint2()); // nxt name
+                        case 8 -> "var_player_int," + Unpacker.format(Type.VAR_PLAYER, packet.gvarint2());
+                        case 9 -> "var_player_bit," + Unpacker.format(Type.VAR_PLAYER_BIT, packet.gvarint2());
+                        case 10 -> "objtradedialog"; // nxt name
+                        case 11 -> "enum_string_statbase," + Unpacker.format(Type.ENUM, packet.gvarint2()) + "," + Unpacker.format(Type.STAT, packet.gvarint2()); // nxt name
+                        case 12 -> "unknown_12";
+                        case 13 -> "unknown_13";
+                        case 14 -> "var_world_int," + Unpacker.format(Type.VAR_WORLD, packet.gvarint2());
+                        case 15 -> "combat_level";
+                        case 16 -> "enum_string_var_player_bit," + Unpacker.format(Type.ENUM, packet.gvarint2()) + "," + Unpacker.format(Type.VAR_PLAYER_BIT, packet.gvarint2());
+                        default -> throw new IllegalStateException("invalid dynamiccommand " + command);
+                    });
+                }
+            }
             default -> throw new IllegalStateException("unknown opcode");
         }
     }

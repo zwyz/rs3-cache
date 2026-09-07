@@ -92,8 +92,63 @@ public class HitmarkUnpacker {
                 }
             }
 
-            case 19 -> lines.add("damagescaleto=" + packet.g2());
-            case 20 -> lines.add("damagescalefrom=" + packet.g2());
+            case 19 -> lines.add("damagescaleto=" + packet.g2s());
+            case 20 -> lines.add("damagescalefrom=" + packet.g2s());
+
+            case 21 -> {
+                var multivarbit = packet.g3null();
+
+                if (multivarbit != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER_BIT, multivarbit));
+                }
+
+                var multivarp = packet.g2null();
+
+                if (multivarp != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, multivarp));
+                }
+
+                var count = packet.g1();
+
+                for (var i = 0; i <= count; ++i) {
+                    var multi = packet.g2null();
+
+                    if (multi != -1) {
+                        lines.add("multimark=" + i + "," + Unpacker.format(Type.HITMARK, multi));
+                    }
+                }
+            }
+
+            case 22 -> {
+                var multivarbit = packet.g3null();
+
+                if (multivarbit != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER_BIT, multivarbit));
+                }
+
+                var multivarp = packet.g2null();
+
+                if (multivarp != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, multivarp));
+                }
+
+                var multidefault = packet.g2null();
+
+                if (multidefault != -1) {
+                    lines.add("multimark=default," + Unpacker.format(Type.HITMARK, multidefault));
+                }
+
+                var count = packet.g1();
+
+                for (var i = 0; i <= count; ++i) {
+                    var multi = packet.g2null();
+
+                    if (multi != -1) {
+                        lines.add("multimark=" + i + "," + Unpacker.format(Type.HITMARK, multi));
+                    }
+                }
+            }
+
             default -> throw new IllegalStateException("unknown opcode");
         }
     }

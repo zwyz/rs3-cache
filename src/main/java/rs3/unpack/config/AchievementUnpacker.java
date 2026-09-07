@@ -239,6 +239,58 @@ public class AchievementUnpacker {
             case 31 -> lines.add("unknown31=" + packet.g1());
             case 32 -> lines.add("unknown32=" + packet.g1() + "," + packet.g1() + "," + packet.g1());
 
+            case 33 -> { // cs2 achievement_varbit_prereq_*
+                var count = packet.gSmart1or2();
+
+                for (var i = 0; i < count; i++) {
+                    var a = packet.g1();
+                    var b = packet.gSmart2or4s();
+                    var c = packet.gjstr2();
+                    var line = "varbitprereq=" + a + "," + b + "," + c;
+                    var count2 = packet.gSmart1or2();
+
+                    for (var j = 0; j < count2; j++) {
+                        line += "," + Unpacker.format(Type.VAR_PLAYER_BIT, packet.g3());
+                    }
+
+                    lines.add(line);
+                }
+            }
+
+            case 34 -> { // cs2 achievement_varbit_testbit_prereq_*
+                var count = packet.gSmart1or2();
+
+                for (var i = 0; i < count; i++) {
+                    lines.add("varbittestbitprereq=" + packet.g1() + "," + Unpacker.format(Type.VAR_PLAYER_BIT, packet.g3()) + "," + packet.g1() + "," + packet.gjstr2() + "," + packet.g1());
+                }
+            }
+
+            case 35 -> { // cs2 achievement_varbit_req_*
+                var count = packet.gSmart1or2();
+
+                for (var i = 0; i < count; i++) {
+                    var a = packet.g1();
+                    var b = packet.gSmart2or4s();
+                    var c = packet.gjstr2();
+                    var line = "varbitreq=" + a + "," + b + "," + c;
+                    var count2 = packet.gSmart1or2();
+
+                    for (var j = 0; j < count2; j++) {
+                        line += "," + Unpacker.format(Type.VAR_PLAYER_BIT, packet.g3());
+                    }
+
+                    lines.add(line);
+                }
+            }
+
+            case 36 -> { // cs2 achievement_varp_testbit_req_*
+                var count = packet.gSmart1or2();
+
+                for (var i = 0; i < count; i++) {
+                    lines.add("varbittestbitreq=" + packet.g1() + "," + Unpacker.format(Type.VAR_PLAYER_BIT, packet.g3()) + "," + packet.g1() + "," + packet.gjstr2() + "," + packet.g1());
+                }
+            }
+
             default -> throw new IllegalStateException("unknown opcode");
         }
     }

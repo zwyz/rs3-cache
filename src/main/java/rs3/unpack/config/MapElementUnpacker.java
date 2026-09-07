@@ -151,7 +151,7 @@ public class MapElementUnpacker {
                 var multidefault = packet.g2null();
 
                 if (multidefault != -1) {
-                    lines.add("multimel=default," + Unpacker.format(Type.HITMARK, multidefault));
+                    lines.add("multimel=default," + Unpacker.format(Type.MAPELEMENT, multidefault));
                 }
 
                 var count = packet.g1();
@@ -160,7 +160,7 @@ public class MapElementUnpacker {
                     var multi = packet.g2null();
 
                     if (multi != -1) {
-                        lines.add("multimel=" + i + "," + Unpacker.format(Type.HITMARK, multi));
+                        lines.add("multimel=" + i + "," + Unpacker.format(Type.MAPELEMENT, multi));
                     }
                 }
             }
@@ -190,6 +190,82 @@ public class MapElementUnpacker {
                     } else {
                         var param = packet.g3();
                         lines.add("param=" + Unpacker.format(Type.PARAM, param) + "," + Unpacker.format(Unpacker.getParamType(param), packet.g4s()));
+                    }
+                }
+            }
+
+            case 250 -> {
+                var varbit = packet.g3null();
+                var var = packet.g2null();
+
+                if (var != -1) {
+                    lines.add("condition=" + Unpacker.format(Type.VAR_PLAYER, var) + "," + packet.g4s() + "," + packet.g4s());
+                } else {
+                    lines.add("condition=" + Unpacker.format(Type.VAR_PLAYER_BIT, varbit) + "," + packet.g4s() + "," + packet.g4s());
+                }
+            }
+
+            case 251 -> {
+                var varbit = packet.g3null();
+                var var = packet.g2null();
+
+                if (var != -1) {
+                    lines.add("condition2=" + Unpacker.format(Type.VAR_PLAYER, var) + "," + packet.g4s() + "," + packet.g4s());
+                } else {
+                    lines.add("condition2=" + Unpacker.format(Type.VAR_PLAYER_BIT, varbit) + "," + packet.g4s() + "," + packet.g4s());
+                }
+            }
+
+            case 252 -> { // 216 GetMultiME
+                var multivarbit = packet.g3null();
+
+                if (multivarbit != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER_BIT, multivarbit));
+                }
+
+                var multivarp = packet.g2null();
+
+                if (multivarp != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, multivarp));
+                }
+
+                var count = packet.g1();
+
+                for (var i = 0; i <= count; ++i) {
+                    var multi = packet.g2null();
+
+                    if (multi != -1) {
+                        lines.add("multimel=" + i + "," + Unpacker.format(Type.MAPELEMENT, multi));
+                    }
+                }
+            }
+
+            case 253 -> {
+                var multivarbit = packet.g3null();
+
+                if (multivarbit != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER_BIT, multivarbit));
+                }
+
+                var multivarp = packet.g2null();
+
+                if (multivarp != -1) {
+                    lines.add("multivar=" + Unpacker.format(Type.VAR_PLAYER, multivarp));
+                }
+
+                var multidefault = packet.g2null();
+
+                if (multidefault != -1) {
+                    lines.add("multimel=default," + Unpacker.format(Type.MAPELEMENT, multidefault));
+                }
+
+                var count = packet.g1();
+
+                for (var i = 0; i <= count; ++i) {
+                    var multi = packet.g2null();
+
+                    if (multi != -1) {
+                        lines.add("multimel=" + i + "," + Unpacker.format(Type.MAPELEMENT, multi));
                     }
                 }
             }

@@ -301,6 +301,11 @@ public class Packet {
         return (arr[pos - 1] & 255) + ((arr[pos - 3] & 255) << 16) + ((arr[pos - 2] & 255) << 8);
     }
 
+    public int g3null() {
+        var result = g3();
+        return result == 0xffffff ? -1 : result;
+    }
+
     public int g3s() {
         pos += 3;
         var var1 = (arr[pos - 1] & 255) + ((arr[pos - 3] & 255) << 16) + ((arr[pos - 2] & 255) << 8);

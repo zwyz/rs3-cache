@@ -116,8 +116,11 @@ public class CompiledScript {
         } else if (command == PUSH_VARBIT || command == POP_VARBIT) {
             if (Unpack.VERSION < 800) {
                 return new VarBitReference(VarDomain.PLAYER, packet.g4s(), false);
-            } else {
+            } else if (Unpack.VERSION < 950) {
                 var value = packet.g2();
+                return new VarBitReference(Unpacker.getVarBitDomain(value), value, packet.g1() == 1); // varbit
+            } else {
+                var value = packet.g3();
                 return new VarBitReference(Unpacker.getVarBitDomain(value), value, packet.g1() == 1); // varbit
             }
         } else if (command == PUSH_VARC_INT || command == POP_VARC_INT) {
