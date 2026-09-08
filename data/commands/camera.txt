@@ -5,7 +5,7 @@
 [command,cam_getangle_xa]()(int)
 [command,cam_getangle_ya]()(int)
 [command,cam_reset]
-[command,cam2_legacycam_ready](boolean $x1)
+[command,cam2_legacycam_ready]()(boolean)
 [command,cam_moveto](coord $x1,int $x2,int $x3,int $x4)
 [command,cam_lookat](coord $x1,int $x2,int $x3,int $x4)
 [command,cam_followcoord](coord $x1)
@@ -32,8 +32,8 @@
 [command,cam2_setpositionmode](int $x1)
 [command,cam2_setlookatacceleration](int $x1,int $x2)
 [command,cam2_setpositionacceleration](int $x1,int $x2)
-[command,cam2_setlookatmaxspeed](int $x1,int $x2,int $x3)
-[command,cam2_setpositionmaxspeed](int $x1,int $x2,int $x3)
+[command,cam2_setlookatmaxspeed](int $x1,int $x2)
+[command,cam2_setpositionmaxspeed](int $x1,int $x2)
 [command,cam2_setlookatpoint_point](coordfine $x1)
 [command,cam2_setfieldofview](int $x1,int $x2)
 [command,cam2_setpositionpoint_point](coordfine $x1)
@@ -41,13 +41,13 @@
 [command,cam2_setlookatspline_spline]
 [command,cam2_setpositionspline_spline]
 [command,cam2_getpositionentity_lookatangleoffsets](int $x1)(int,int)
-[command,cam2_getpositionentity_lookatangle](int $x1)
+[command,cam2_getpositionentity_lookatangle]()(int)
 [command,cam2_getpositionentity_lookatdistance]()(int)
 [command,cam2_getpositionentity_angleoffsets]()(int,int)
 [command,cam2_setpositionentity_player](int $x1,int $x2,int $x3,int $x4,int $x5,boolean $x6,int $x7)
-[command,cam2_setpositionentity_player](int $x1,int $x2,int $x3,int $x4,int $x5,boolean $x6,int $x7,int $x8) 919
+[command,cam2_setpositionentity_player](int $x1,int $x2,int $x3,int $x4,int $x5,boolean $x6,int $x7,int $x8) 912
 [command,cam2_setpositionentity_npc](int $x1,int $x2,int $x3,int $x4,int $x5,boolean $x6,int $x7)
-[command,cam2_setpositionentity_npc](int $x1,int $x2,int $x3,int $x4,int $x5,boolean $x6,int $x7,int $x8) 919
+[command,cam2_setpositionentity_npc](int $x1,int $x2,int $x3,int $x4,int $x5,boolean $x6,int $x7,int $x8) 912
 [command,cam2_setlookatentity_player](int $x1,int $x2,int $x3,boolean $x4)
 [command,cam2_setlookatentity_npc](int $x1,int $x2,int $x3,boolean $x4)
 [command,cam2_setlinearmovementmode](int $x1)

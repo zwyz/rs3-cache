@@ -55,4 +55,5 @@
 [command,gl_version_major]()(int)
 [command,gl_version_minor]()(int)
 [command,unknown_command_111]()(int)
+[command,unknown_command_113](int $x1)
 [command,modewhere]()(int)

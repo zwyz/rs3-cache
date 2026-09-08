@@ -1,6 +1,9 @@
-[command,get_active_minimenu_entry]()(int,string,string,string)
-[command,get_second_minimenu_entry]()(int,string,string,string)
-[command,get_minimenu_length]()(int,int)
+[command,get_active_minimenu_entry]()(string)
+[command,get_active_minimenu_entry]()(int,string,string,string) 685
+[command,get_second_minimenu_entry]()(string)
+[command,get_second_minimenu_entry]()(int,string,string,string) 685
+[command,get_minimenu_length]()(int)
+[command,get_minimenu_length]()(int,int) 685
 [command,get_minimenu_target]()(boolean,string,string)
 [command,minimenuopen](component $x1,int $x2)(boolean)
 [command,npc_find_active_minimenu_entry]()(boolean)

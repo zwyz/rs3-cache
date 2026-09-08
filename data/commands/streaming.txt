@@ -4,7 +4,8 @@
 [command,ttv_library_getstate]()(int)
 [command,ttv_library_request]()(int)
 [command,ttv_stream_getstate]()(int)
-[command,ttv_stream_start](int $x1,int $x2,int $x3,int $x4)(int)
+[command,ttv_stream_start](int $x1,int $x2,boolean $x3)(int)
+[command,ttv_stream_start](int $x1,int $x2,int $x3,int $x4)(int) 815
 [command,ttv_stream_stop]()(int)
 [command,ttv_stream_settitle](string $x1)(int)
 [command,ttv_stream_setsmoothresize](boolean $x1)

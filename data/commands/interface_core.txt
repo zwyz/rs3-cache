@@ -16,6 +16,8 @@
 [command,if_exists](int $x1,int $x2,component $x3)(int)
 [command,cc_findbycategory](component $x1,int $x2,int $x3)(int)
 [command,if_find](component $x1)(boolean)
+[command,entity_if_find](component $x1)(boolean)
+[command,set_entity_if](interface $x1)
 [command,if_getlayer](component $x1)(component)
 [command,cc_getlayer]()(component)
 [command,if_createchild](iftype $x1,int $x2,int $x3,component $x4)

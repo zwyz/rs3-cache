@@ -20,16 +20,18 @@
 [command,detail_lightingquality](int $x1)
 [command,detailcanmod_ambientocclusion]()(boolean)
 [command,detailcanset_ambientocclusion](int $x1)(int)
-[command,detailget_ambientocclusion]()(int)
-[command,detail_ambientocclusion](int $x1)
+[command,detailget_ambientocclusion]()(boolean)
+[command,detailget_ambientocclusion]()(int) 869
+[command,detail_ambientocclusion](boolean $x1)
+[command,detail_ambientocclusion](int $x1) 869
 [command,detailget_brightness]()(int)
 [command,detail_brightness](int $x1)
 [command,detailget_customcursors]()(boolean)
 [command,detail_customcursors](boolean $x1)
 [command,detailget_removeroofs_option]()(boolean)
+[command,detailget_removeroofs_option]()(int) 836
 [command,detail_removeroofs_option](boolean $x1)
-[command,detailget_removeroofs_option]()(int) 800
-[command,detail_removeroofs_option](int $x1) 800
+[command,detail_removeroofs_option](int $x1) 836
 [command,detail_removeroofs_option_override](int $x1)
 [command,detailcanmod_dof]()(boolean)
 [command,detailcanset_dof](int $x1)(int)
@@ -57,11 +59,11 @@
 [command,detail_groundblending](boolean $x1)
 [command,detailcanmod_texturing]()(boolean)
 [command,detailcanset_texturing](boolean $x1)(int)
+[command,detailcanset_texturing](int $x1)(int) 869
 [command,detailget_texturing]()(boolean)
+[command,detailget_texturing]()(int) 876
 [command,detail_texturing](boolean $x1)
-[command,detailcanset_texturing](int $x1)(int) 900
-[command,detailget_texturing]()(int) 900
-[command,detail_texturing](int $x1) 900
+[command,detail_texturing](int $x1) 876
 [command,detailcanmod_hardshadows]()(boolean)
 [command,detailcanset_hardshadows](int $x1)(int)
 [command,detailget_hardshadows]()(int)
@@ -164,9 +166,9 @@
 [command,detailget_cpuusage]()(int)
 [command,detail_cpuusage](int $x1)
 [command,detailget_performance_metric]()(int)
-[command,detailget_canchoosesafemode]()(int)
-[command,detailget_safemode]()(int)
-[command,detailget_chosesafemode]()(int)
+[command,detailget_canchoosesafemode]()(boolean)
+[command,detailget_safemode]()(boolean)
+[command,detailget_chosesafemode]()(boolean)
 [command,profile_cpu]()(int)
 [command,setdefaultwindowmode](int $x1)
 [command,detailget_flickering_on]()(boolean)

@@ -1,5 +1,6 @@
 [command,worldmap_3dview_enable](string $x1)
-[command,worldmap_3dview_enable](wma $x1) 537
+[command,worldmap_3dview_enable](boolean $x1) 537
+[command,worldmap_3dview_enable](wma $x1) 777
 [command,worldmap_3dview_disable]
 [command,worldmap_3dview_setloddistance](int $x1,int $x2)
 [command,worldmap_3dview_setlighting](int $x1,int $x2,int $x3,int $x4,int $x5)
@@ -25,9 +26,9 @@
 [command,worldmap_closemap]
 [command,worldmap_3dview_active]()(boolean)
 [command,worldmap_3dview_getloddistance]()(int)
-[command,worldmap_getcategorypriority]()(boolean)
+[command,worldmap_getcategorypriority](int $x1)(int)
 [command,worldmap_3dview_gettextfont](int $x1)(fontmetrics)
-[command,worldmap_3dview_getscreenposition](int $x1)(int,int)
+[command,worldmap_3dview_getscreenposition](int $x1,int $x2)(int,int)
 [command,worldmap_getdisabletextsize](int $x1)(boolean)
 [command,worldmap_getdisabletype](int $x1)(boolean)
 [command,worldmap_getzoom]()(int)
@@ -58,7 +59,7 @@
 [command,worldmap_getdisableelement](mapelement $x1)(boolean)
 [command,worldmap_getcurrentmap]()(string)
 [command,worldmap_getcurrentmap]()(wma) 537
-[command,worldmap_findnearestelement](mapelement $x1,coord $x2)
+[command,worldmap_findnearestelement](mapelement $x1,coord $x2)(mapelement)
 [command,worldmap_jumptosourcecoord_instant](coord $x1)
 [command,worldmap_jumptodisplaycoord_instant](coord $x1)
 [command,worldmap_setflashloops](int $x1)

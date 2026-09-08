@@ -1,12 +1,13 @@
 [command,db_listall](dbtable $x1)(int)
 [command,db_find](dbcolumn $x1, unknown $x2)
-[command,db_find](dbcolumn $x1, unknown $x2, basevartype $x3) 919
+[command,db_find](dbcolumn $x1, unknown $x2, basevartype $x3) 917
 [command,db_find_with_count](dbcolumn $x1, unknown $x2)(int)
-[command,db_find_with_count](dbcolumn $x1, unknown $x2, basevartype $x3)(int) 919
+[command,db_find_with_count](dbcolumn $x1, unknown $x2, basevartype $x3)(int) 917
 [command,db_findnext]()(dbrow)
 [command,db_getfield]
 [command,db_getfieldcount](dbrow $x1, dbcolumn $x2)(int)
-[command,db_find_refine](dbcolumn $x1, unknown $x2, basevartype $x3)(int)
+[command,db_find_refine](dbcolumn $x1, unknown $x2)(int)
+[command,db_find_refine](dbcolumn $x1, unknown $x2, basevartype $x3)(int) 917
 [command,db_find_get](int $x1)(dbrow)
 [command,db_getrowtable](dbrow $x1)(dbtable)
 [command,db_filter_find](dbfilter $x1, dbcolumn $x2, boolean $x3, int $x4, int $x5)(int)
