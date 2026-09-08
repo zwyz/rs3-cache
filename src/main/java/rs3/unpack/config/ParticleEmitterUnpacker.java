@@ -105,6 +105,7 @@ public class ParticleEmitterUnpacker {
             }
 
             case 36 -> lines.add("unknown36=yes");
+            case 37 -> lines.add("unknown37=yes");
 
             default -> throw new IllegalStateException("unknown opcode");
         }
