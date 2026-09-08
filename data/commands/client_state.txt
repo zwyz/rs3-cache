@@ -52,4 +52,4 @@
 [command,get_selfyangle]()(int)
 [command,playerdemo]()(boolean)
 [command,map_build_complete]()(boolean)
-[command,unknown_command_112](boolean $x1)
+[command,map_setkeeplods](boolean $x1)

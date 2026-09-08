@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 
 public class CommandUpdater {
-    private static final int VERSION = 949;
+    private static final int VERSION = 950;
     private static final int MODE = 1;
     private static final boolean MANGLED = true;
 

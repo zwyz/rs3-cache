@@ -2279,4 +2279,4 @@ locselect_findnext,1120
 locselect_rotate,907
 locselect_submit,1194
 locselect_move,1601
-unknown_command_112,2067
+map_setkeeplods,2067
