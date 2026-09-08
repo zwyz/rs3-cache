@@ -190,6 +190,10 @@ public class Command {
             }
 
             for (var line : Files.readAllLines(commandsPath)) {
+                if (line.isBlank() || line.startsWith("//")) {
+                    continue;
+                }
+
                 var parts = line.split(",");
 
                 if (parts.length >= 3) {
