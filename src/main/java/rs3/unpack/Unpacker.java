@@ -4,7 +4,6 @@ import rs3.Unpack;
 import rs3.unpack.script.ScriptUnpacker;
 import rs3.util.CP1252;
 import rs3.util.Packet;
-import rs3.util.Tuple2;
 
 import java.util.*;
 
@@ -483,22 +482,12 @@ public class Unpacker {
                 return quote(format(Type.INTERFACE, itf, false) + ":com_" + com, safe);
             }
         } else if (type == Type.DBCOLUMN) {
-            int table;
-            int column;
-            int tuple;
-
-            if (Unpack.VERSION < 911) {
-                table = value >>> 8;
-                column = value & 0xFF;
-                tuple = -1;
-            } else {
-                table = value >>> 12;
-                column = value >>> 4 & 255;
-                tuple = (value & 15) - 1;
-            }
+            int table = DBUtil.getTable(value);
+            int column = DBUtil.getColumn(value);
+            int tuple = DBUtil.getTupleIndex(value);
 
             if (tuple != -1) {
-                return quote(format(Type.DBCOLUMN, (table << 12) | (column << 4), false) + ":" + tuple, safe);
+                return quote(format(Type.DBCOLUMN, DBUtil.getPackedColumn(table, column), false) + ":" + tuple, safe);
             } else {
                 return quote(format(Type.DBTABLE, table, false) + ":col" + column, safe);
             }
@@ -687,11 +676,7 @@ public class Unpacker {
     }
 
     public static List<Type> getDBColumnTypeTuple(int column) {
-        if (Unpack.VERSION < 911) {
-            return getDBColumnTypeTuple(column >>> 8, column & 255, -1);
-        } else {
-            return getDBColumnTypeTuple(column >>> 12, column >>> 4 & 255, (column & 15) - 1);
-        }
+        return getDBColumnTypeTuple(DBUtil.getTable(column), DBUtil.getColumn(column), DBUtil.getTupleIndex(column));
     }
 
     public static void setVarType(VarDomain domain, int id, Type type) {

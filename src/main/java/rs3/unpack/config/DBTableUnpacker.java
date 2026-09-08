@@ -1,5 +1,6 @@
 package rs3.unpack.config;
 
+import rs3.unpack.DBUtil;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.util.Packet;
@@ -37,13 +38,13 @@ public class DBTableUnpacker {
                     }
 
                     Unpacker.setDBColumnType(id, column, types);
-                    lines.add("column=" + Unpacker.formatDBColumnShort((id << 12) | (column << 4)) + "," + types.stream().map(t -> t.name).collect(Collectors.joining(",")));
+                    lines.add("column=" + Unpacker.formatDBColumnShort(DBUtil.getPackedColumn(id, column)) + "," + types.stream().map(t -> t.name).collect(Collectors.joining(",")));
 
                     if (hasdefault) {
                         var defaultCount = packet.gSmart1or2();
 
                         for (var entry = 0; entry < defaultCount; entry++) {
-                            var sb = new StringBuilder("default=" + Unpacker.formatDBColumnShort((id << 12) | (column << 4)));
+                            var sb = new StringBuilder("default=" + Unpacker.formatDBColumnShort(DBUtil.getPackedColumn(id, column)));
 
                             for (var type : types) {
                                 sb.append(",").append(switch (type.base) {
@@ -71,7 +72,7 @@ public class DBTableUnpacker {
                         if (op == 1) {
                             var tupleLength = packet.g1();
                             columnType[col] = new Type[tupleLength];
-                            var sb = new StringBuilder("column=" + Unpacker.formatDBColumnShort((id << 12) | (col << 4)));
+                            var sb = new StringBuilder("column=" + Unpacker.formatDBColumnShort(DBUtil.getPackedColumn(id, col)));
 
                             for (int tup = 0; tup < tupleLength; tup++) {
                                 columnType[col][tup] = Type.byID(packet.gSmart1or2());
@@ -85,7 +86,7 @@ public class DBTableUnpacker {
 
                             for (int def = 0; def < defaultCount; def++) {
                                 var tupleLength = columnType[col].length;
-                                var sb = new StringBuilder("default=" + Unpacker.formatDBColumnShort((id << 12) | (col << 4)));
+                                var sb = new StringBuilder("default=" + Unpacker.formatDBColumnShort(DBUtil.getPackedColumn(id, col)));
 
                                 for (int tup = 0; tup < tupleLength; tup++) {
                                     var type = columnType[col][def];

@@ -1,5 +1,6 @@
 package rs3.unpack.config;
 
+import rs3.unpack.DBUtil;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.util.Packet;
@@ -37,7 +38,7 @@ public class DBRowUnpacker {
                     var count = packet.gSmart1or2();
 
                     for (var i = 0; i < count; i++) {
-                        var sb = new StringBuilder("data=" + Unpacker.formatDBColumnShort((table << 12) | (column << 4)));
+                        var sb = new StringBuilder("data=" + Unpacker.formatDBColumnShort(DBUtil.getPackedColumn(table, column)));
 
                         for (var type : types) {
                             sb.append(",").append(switch (type.base) {

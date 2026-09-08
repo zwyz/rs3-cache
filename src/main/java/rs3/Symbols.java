@@ -247,7 +247,7 @@ public class Symbols {
             for (var columnEntry : columns.entrySet()) {
                 var columnId = columnEntry.getKey();
                 var types = columnEntry.getValue();
-                var basePackedId = tableId << 12 | columnId << 4;
+                var basePackedId = DBUtil.getPackedColumn(tableId, columnId);
 
                 var name = Unpacker.format(Type.DBCOLUMN, basePackedId, false);
 
@@ -256,7 +256,7 @@ public class Symbols {
                         append(name).append('\t').
                         append(typesJoined).append('\n');
 
-                for (int i = 0; i < Math.min(types.size(), 14); i++) {
+                for (int i = 0; i < Math.min(types.size(), 15); i++) {
                     var typeAtIndex = types.get(i);
                     builder.append(tableId).append(':').append(columnId).append(':').append(i).append('\t').
                             append(name).append(":").append(i).append('\t').
