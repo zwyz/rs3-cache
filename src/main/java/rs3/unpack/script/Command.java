@@ -31,7 +31,14 @@ public class Command {
     }
 
     public static Command byId(int id) {
-        return Objects.requireNonNull(BY_ID.get(id));
+        var command = BY_ID.get(id);
+
+        if (command == null) {
+            throw new IllegalStateException("no command for opcode " + id + " in the opcode table for build "
+                    + Unpack.VERSION + " cache " + Unpack.ID);
+        }
+
+        return command;
     }
 
     private static Command defineCommand(String name) {
