@@ -231,7 +231,7 @@ public class Type {
     // === 910 end ===
 
     // unknown id
-    public static final Type UNKNOWN100 = new Type("unknown100", BaseVarType.INTEGER);
+    public static final Type UNKNOWN100 = new Type("unknown100", BaseVarType.LONG);
     public static final Type VFX = new Type("vfx", BaseVarType.INTEGER);
     public static final Type MESANIM = new Type("mesanim", BaseVarType.INTEGER);
     public static final Type UNDERLAY = new Type("underlay", BaseVarType.INTEGER);
