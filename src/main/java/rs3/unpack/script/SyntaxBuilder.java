@@ -269,7 +269,7 @@ public class SyntaxBuilder {
         }
 
         if (command == RUNJAVASCRIPT) {
-            var argumentTypes = new ArrayList<>(JavaScriptCommand.byID((int) stack.get(stack.size() - 1).operand).params);
+            var argumentTypes = new ArrayList<>(JavaScriptCommand.byID((int) stack.get(stack.size() - 1).operand, Unpack.VERSION).params);
             argumentTypes.add(Type.INT);
             buildCommand(code, index, command, operand, argumentTypes, List.of());
             return;
@@ -287,8 +287,8 @@ public class SyntaxBuilder {
             var hookIndex = argumentTypes.lastIndexOf(Type.HOOK);
 
             var signature = ((String) stack.get(stack.size() - (argumentTypes.size() - hookIndex)).operand).codePoints().mapToObj(c -> {
-                if (Unpack.VERSION < 800) {
-                    return Type.byCharOrID(c);
+                if (Unpack.VERSION < 829) {
+                    return Type.byChar(c);
                 } else {
                     return switch (c) {
                         case 'i' -> Type.UNKNOWN_INT;
@@ -313,7 +313,8 @@ public class SyntaxBuilder {
                     case "if_setonstattransmit", "cc_setonstattransmit" -> Type.STAT;
                     case "if_setoninvtransmit", "cc_setoninvtransmit" -> Type.INV;
                     case "if_setonvartransmit", "cc_setonvartransmit" -> Type.VAR_PLAYER;
-                    case "if_setonvarctransmit", "cc_setonvarctransmit", "if_setonvarcstrtransmit", "cc_setonvarcstrtransmit" -> Type.VAR_CLIENT;
+                    case "if_setonvarctransmit", "cc_setonvarctransmit" -> Type.VAR_CLIENT;
+                    case "if_setonvarcstrtransmit", "cc_setonvarcstrtransmit" -> Unpack.VERSION < 751 ? Type.VAR_CLIENT_STRING : Type.VAR_CLIENT;
                     default -> throw new IllegalStateException("unexpected transmit list for command " + command);
                 }));
 

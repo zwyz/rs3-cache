@@ -836,7 +836,7 @@ public class Unpack {
 
             var files = Js5Util.unpackGroup(archiveIndex, group, groups[group]);
             var lines = new ArrayList<String>();
-            boolean scripted = false;
+            boolean scripted = Unpack.VERSION >= 566;
 
             for (var file : files.keySet()) {
                 var data = files.get(file);

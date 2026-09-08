@@ -30,7 +30,7 @@ public class WorldMapUnpacker {
 
     private static void unpack(Js5ArchiveIndex index, Path root) throws IOException {
         int detailsId;
-        if (Unpack.VERSION > 742) {
+        if (Unpack.VERSION > 815) {
             detailsId = 0;
         } else {
             detailsId = index.findGroup("details");

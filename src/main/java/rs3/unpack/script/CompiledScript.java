@@ -95,7 +95,7 @@ public class CompiledScript {
         } else if (command == PUSH_LONG_CONSTANT) {
             return packet.g8s(); // long
         } else if (command == PUSH_CONSTANT_STRING) {
-            if (Unpack.VERSION < 800) {
+            if (Unpack.VERSION < 751) {
                 return packet.gjstr();
             } else {
                 return switch (packet.g1()) {
@@ -108,13 +108,13 @@ public class CompiledScript {
         } else if (command == PUSH_INT_LOCAL || command == POP_INT_LOCAL || command == PUSH_STRING_LOCAL || command == POP_STRING_LOCAL || command == PUSH_LONG_LOCAL || command == POP_LONG_LOCAL) {
             return packet.g4s(); // local
         } else if (command == PUSH_VAR || command == POP_VAR) {
-            if (Unpack.VERSION < 800) {
+            if (Unpack.VERSION < 751) {
                 return new VarReference(VarDomain.PLAYER, packet.g4s(), false);
             } else {
                 return new VarReference(VarDomain.byID(packet.g1()), packet.g2(), packet.g1() == 1); // var
             }
         } else if (command == PUSH_VARBIT || command == POP_VARBIT) {
-            if (Unpack.VERSION < 800) {
+            if (Unpack.VERSION < 751) {
                 return new VarBitReference(VarDomain.PLAYER, packet.g4s(), false);
             } else if (Unpack.VERSION < 950) {
                 var value = packet.g2();

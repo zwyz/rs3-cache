@@ -368,6 +368,10 @@ public class TypePropagator {
             if (node instanceof Node.VarType(VarDomain domain, var id) && Unpack.VERSION < 751) {
                 Unpacker.setVarType(domain, id, ScriptUnpacker.chooseDisplayType(typeof(node)));
             }
+
+            if (node instanceof Node.VarClientType(var id)) {
+                Unpacker.setVarType(VarDomain.CLIENT, id, ScriptUnpacker.chooseDisplayType(typeof(node)));
+            }
         }
     }
 

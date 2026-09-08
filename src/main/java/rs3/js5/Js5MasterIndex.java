@@ -10,7 +10,7 @@ public class Js5MasterIndex {
         var packet = new Packet(data);
         var archiveCount = 0;
 
-        if (Unpack.VERSION < 456) {
+        if (Unpack.VERSION < 459) {
             archiveCount = data.length / 4;
         } else if (Unpack.VERSION < 605) {
             archiveCount = data.length / 8;
@@ -27,7 +27,7 @@ public class Js5MasterIndex {
             var unknown = 0;
             var whirlpool = (byte[]) null;
 
-            if (Unpack.VERSION >= 456) {
+            if (Unpack.VERSION >= 459) {
                 version = packet.g4s();
             }
 

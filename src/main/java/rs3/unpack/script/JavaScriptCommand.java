@@ -20,14 +20,17 @@ public enum JavaScriptCommand {
     REQUEST_FRIEND_CHAT_FILTER_REPLY(11, List.of(INT)),
     REQUEST_CLAN_CHAT_FILTER_REPLY(12, List.of(INT)),
     GET_CHAT_CROWN_IMAGE_ID_REPLY(13, List.of(INT)),
-    REQUEST_GE_SINGLE_SLOT_REPLY(14, List.of(INT, OBJ, STRING, STRING, INT, INT, INT, INT, INT, INT, INT, BOOLEAN, OBJ, INT, OBJ, INT)),
+    REQUEST_GE_SINGLE_SLOT_REPLY(14, List.of(INT, OBJ, STRING, STRING, INT, INT, INT, INT, INT, INT, INT, BOOLEAN)),
+    REQUEST_GE_SINGLE_SLOT_REPLY_V2(14, List.of(INT, OBJ, STRING, STRING, INT, INT, INT, INT, INT, INT, INT, BOOLEAN, OBJ, INT, OBJ, INT), 810),
     GE_UPDATE_NOTIFICATION(15, List.of(INT, INT, INT)),
     IS_TRADE_RESTRICTED_REPLY(16, List.of(BOOLEAN)),
-    REQUEST_DDS_LIST_ITEM_REPLY(17, List.of(INT, STRING, INT, INT, INT, BOOLEAN, INT)),
+    REQUEST_DDS_LIST_ITEM_REPLY(17, List.of(INT, STRING, INT, INT, INT, BOOLEAN)),
+    REQUEST_DDS_LIST_ITEM_REPLY_V2(17, List.of(INT, STRING, INT, INT, INT, BOOLEAN, INT), 805),
     REQUEST_DD_INFO_REPLY(18, List.of(BOOLEAN, INT, STRING, INT, INT, INT, BOOLEAN, STRING, STRING, STRING, STRING, STRING, STRING, STRING, STRING, STRING, STRING, STRING, STRING, STRING, STRING, STRING)),
     REQUEST_BANK_TABS_REPLY(19, List.of(INT, INT, INT, INT, INT, INT, INT, INT, STRING, STRING, STRING, STRING, STRING, STRING, STRING, STRING, INT, INT)),
     REQUEST_BANK_SLOT_REPLY(20, List.of(INT, OBJ, STRING, INT, BOOLEAN, BOOLEAN, INT)),
-    SET_BANK_DETAILS(21, List.of(INV, INT, INV)),
+    SET_BANK_DETAILS(21, List.of(INV, INT)),
+    SET_BANK_DETAILS_V2(21, List.of(INV, INT, INV), 810),
     REQUEST_BANK_SEARCH_REPLY(22, List.of(INT, OBJ, INT, INT)),
     GET_ITEM_DETAILS_REPLY(23, List.of(OBJ, STRING, STRING, INT, BOOLEAN, BOOLEAN, INT, BOOLEAN)),
     MAKE_BUY_OFFER_REPLY(24, List.of(BOOLEAN, INT)),
@@ -45,19 +48,33 @@ public enum JavaScriptCommand {
 
     public final int id;
     public final List<Type> params;
+    public final int versionStart;
 
-    JavaScriptCommand(int id, List<Type> params) {
+    JavaScriptCommand(int id, List<Type> params, int versionStart) {
         this.id = id;
         this.params = params;
+        this.versionStart = versionStart;
     }
 
-    public static JavaScriptCommand byID(int id) {
+    JavaScriptCommand(int id, List<Type> params) {
+        this(id, params, 0);
+    }
+
+    public static JavaScriptCommand byID(int id, int version) {
+        JavaScriptCommand best = null;
+
         for (var value : values()) {
-            if (value.id == id) {
-                return value;
+            if (value.id == id && value.versionStart <= version) {
+                if (best == null || value.versionStart > best.versionStart) {
+                    best = value;
+                }
             }
         }
 
-        throw new IllegalArgumentException("id " + id);
+        if (best == null) {
+            throw new IllegalArgumentException("id " + id);
+        }
+
+        return best;
     }
 }

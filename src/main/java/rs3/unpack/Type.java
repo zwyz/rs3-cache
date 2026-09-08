@@ -777,6 +777,6 @@ public class Type {
     }
 
     public static Type byCharOrID(int value) {
-        return Unpack.VERSION < 751 ? byChar(value) : byID(value);
+        return Unpack.VERSION < 829 ? byChar(value) : byID(value);
     }
 }

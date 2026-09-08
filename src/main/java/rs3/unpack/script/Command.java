@@ -183,7 +183,7 @@ public class Command {
 
             if (Unpack.VERSION < 685) {
                 commandsPath = Path.of("data/opcodes-unscrambled.txt");
-            } else if (Unpack.VERSION < 911) {
+            } else if (Unpack.VERSION < 917) {
                 commandsPath = Path.of("data/opcodes-" + Unpack.VERSION + "-" + Unpack.ID + ".txt");
             } else {
                 commandsPath = Path.of("data/opcodes-" + Unpack.VERSION + (Unpack.BETA ? "-beta" : "") + ".txt");
