@@ -501,8 +501,8 @@ activechatphrase_setdynamicobj,816
 chatphrase_getdynamiccommandparam_enum,191
 chatphrase_find,405
 chatphrase_findnext,336
-unknown_command_5074,8
-unknown_command_5075,411
+activechatphrase_sendclanchannel_affined,8
+activechatphrase_sendclanchannel_listened,411
 keyheld_ctrl,388
 keyheld_shift,596
 worldmap_setzoom,309

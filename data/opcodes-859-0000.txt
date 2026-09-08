@@ -1197,7 +1197,7 @@ ttv_webcam_flip,1152
 ttv_livestreams_update,278
 ttv_livestreams_getstream_start,1139
 ttv_livestreams_getstream_next,107
-ttv_setdebugouput,585
+ttv_setdebugoutput,585
 ttv_hasprerequisites,970
 os_ismac,517
 os_iswindows,280
@@ -1217,8 +1217,8 @@ telemetry_get_column_index,1031
 telemetry_get_column_id,1048
 telemetry_get_grid_value,335
 telemetry_is_grid_processor_set,247
-member5992,1043
-member5993,472
-member5994,858
-member5995,1110
-member5996,544
+emoji_add,1043
+emoji_remove,472
+emoji_removeall,858
+emoji_substitute,1110
+emoji_enable_auto_chatline,544

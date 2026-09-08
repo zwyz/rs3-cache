@@ -655,8 +655,8 @@ chatphrase_getdynamiccommandparam_enum,487
 chatphrase_find,961
 chatphrase_findnext,794
 chatphrase_findrestart,810
-unknown_command_5074,213
-unknown_command_5075,308
+activechatphrase_sendclanchannel_affined,213
+activechatphrase_sendclanchannel_listened,308
 keyheld_alt,894
 keyheld_ctrl,58
 keyheld_shift,979
