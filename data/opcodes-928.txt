@@ -325,8 +325,8 @@ cc_list_setentryicon,551
 cc_list_setentryicons,435
 cc_list_getentryheight,1401
 cc_list_setentryheight,1543
-cc_list_setdropdownbuttonparams,1486
-cc_list_getdropdownbuttonparams,476
+cc_list_getdropdownbuttonparams,1486
+cc_list_setdropdownbuttonparams,476
 if_list_setenabled,1544
 if_list_setvisible,1887
 if_list_getenabled,1319
