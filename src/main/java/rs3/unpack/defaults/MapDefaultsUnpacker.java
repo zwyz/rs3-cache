@@ -1,6 +1,5 @@
-package rs3.unpack.config;
+package rs3.unpack.defaults;
 
-import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.util.Packet;
@@ -8,11 +7,10 @@ import rs3.util.Packet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AudioDefaultsUnpacker {
-    public static List<String> unpack(int id, byte[] data) {
+public class MapDefaultsUnpacker {
+    public static List<String> unpack(byte[] data) {
         var lines = new ArrayList<String>();
         var packet = new Packet(data);
-        lines.add("[audiodefaults_" + id + "]");
 
         while (true) switch (packet.g1()) {
             case 0 -> {
@@ -23,7 +21,8 @@ public class AudioDefaultsUnpacker {
                 return lines;
             }
 
-            case 1 -> lines.add("titlescreensong=" + Unpacker.format(Type.MIDI, Unpack.VERSION >= 912 ? packet.g4s() : packet.g2()));
+            case 1 -> lines.add("defaultenvironmentmap=" + Unpacker.format(Type.MATERIAL, packet.g2())); // 216 GetDefaultEnvironmentMap
+            case 10 -> lines.add("defaultwatertype=" + Unpacker.format(Type.WATER, packet.g2())); // 216 GetDefaultWaterType
 
             default -> throw new IllegalStateException("unknown opcode");
         }

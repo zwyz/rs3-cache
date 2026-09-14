@@ -1,4 +1,4 @@
-package rs3.unpack.config;
+package rs3.unpack.defaults;
 
 import rs3.unpack.Unpacker;
 import rs3.util.Packet;
@@ -6,11 +6,11 @@ import rs3.util.Packet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WearPosDefaultsUnpacker {
-    public static List<String> unpack(int id, byte[] data) {
+public class WearposDefaultsUnpacker {
+    public static List<String> unpack(byte[] data) {
         var lines = new ArrayList<String>();
         var packet = new Packet(data);
-        lines.add("[wearposdefaults_" + id + "]");
+        var wearposcount = 0;
 
         while (true) switch (packet.g1()) {
             case 0 -> {
@@ -22,20 +22,20 @@ public class WearPosDefaultsUnpacker {
             }
 
             case 1 -> {
-                var count = packet.g1();
+                wearposcount = packet.g1();
                 var line = new ArrayList<String>();
 
-                for (var i = 0; i < count; i++) {
+                for (var i = 0; i < wearposcount; i++) {
                     line.add(String.valueOf(packet.g1()));
                 }
 
-                lines.add("unknown1=" + String.join(",", line));
+                lines.add("wearpostype=" + String.join(",", line));
             }
 
-            case 3 -> lines.add("lefthand=" + Unpacker.formatWearPos(packet.g1()));
-            case 4 -> lines.add("righthand=" + Unpacker.formatWearPos(packet.g1()));
+            case 3 -> lines.add("replaceheldleft=" + Unpacker.formatWearPos(packet.g1())); // 216 GetReplaceHeldLeftWearPos
+            case 4 -> lines.add("replaceheldright=" + Unpacker.formatWearPos(packet.g1())); // 216 GetReplaceHeldRightWearPos
 
-            case 5 -> {
+            case 5 -> { // 216 GetReplaceHeldLeftResetWearPos
                 var count = packet.g1();
                 var line = new ArrayList<String>();
 
@@ -43,10 +43,10 @@ public class WearPosDefaultsUnpacker {
                     line.add(Unpacker.formatWearPos(packet.g1()));
                 }
 
-                lines.add("lefthandextra=" + String.join(",", line));
+                lines.add("replaceheldleftreset=" + String.join(",", line));
             }
 
-            case 6 -> {
+            case 6 -> { // 216 GetReplaceHeldRightResetWearPos
                 var count = packet.g1();
                 var line = new ArrayList<String>();
 
@@ -54,7 +54,17 @@ public class WearPosDefaultsUnpacker {
                     line.add(Unpacker.formatWearPos(packet.g1()));
                 }
 
-                lines.add("righthandextra=" + String.join(",", line));
+                lines.add("replaceheldrightreset=" + String.join(",", line));
+            }
+
+            case 7 -> {
+                var line = new ArrayList<String>();
+
+                for (var i = 0; i < wearposcount; i++) {
+                    line.add(Unpacker.formatWearPos(packet.g1()));
+                }
+
+                lines.add("unknown7=" + String.join(",", line));
             }
 
             default -> throw new IllegalStateException("unknown opcode");

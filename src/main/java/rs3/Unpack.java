@@ -9,6 +9,7 @@ import rs3.js5.*;
 import rs3.unpack.*;
 import rs3.unpack.config.*;
 import rs3.unpack.cutscene2d.Cutscene2D;
+import rs3.unpack.defaults.*;
 import rs3.unpack.font.FontMetrics;
 import rs3.unpack.map.MapSquare;
 import rs3.unpack.script.Command;
@@ -132,6 +133,7 @@ public class Unpack {
 
         Files.createDirectories(root);
         Files.createDirectories(root.resolve("config"));
+        Files.createDirectories(root.resolve("defaults"));
         Files.createDirectories(root.resolve("script"));
         Files.createDirectories(root.resolve("interface"));
 
@@ -296,11 +298,14 @@ public class Unpack {
         WorldMapUnpacker.unpack(root.resolve("worldmap"));
 
         // defaults
-        unpackDefaults(28, 3, GraphicsDefaultsUnpacker::unpack, root.resolve("config/graphics.defaults"));
-        unpackDefaults(28, 4, AudioDefaultsUnpacker::unpack, root.resolve("config/audio.defaults"));
-        unpackDefaults(28, 6, WearPosDefaultsUnpacker::unpack, root.resolve("config/wearpos.defaults"));
-        unpackDefaults(28, 10, WorldMapDefaultsUnpacker::unpack, root.resolve("config/worldmap.defaults"));
-        unpackDefaults(28, 12, TitleDefaultsUnpacker::unpack, root.resolve("config/title.defaults"));
+        unpackDefaultsGroup(28, 1, MapDefaultsUnpacker::unpack, root.resolve("defaults/map.defaults"));
+        unpackDefaultsGroup(28, 3, GraphicsDefaultsUnpacker::unpack, root.resolve("defaults/graphics.defaults"));
+        unpackDefaultsGroup(28, 4, AudioDefaultsUnpacker::unpack, root.resolve("defaults/audio.defaults"));
+        unpackDefaultsGroup(28, 6, WearposDefaultsUnpacker::unpack, root.resolve("defaults/wearpos.defaults"));
+        unpackDefaultsGroup(28, 7, MiniMenuDefaultsUnpacker::unpack, root.resolve("defaults/minimenu.defaults"));
+        unpackDefaultsGroup(28, 9, SkillDefaultsUnpacker::unpack, root.resolve("defaults/skill.defaults"));
+        unpackDefaultsGroup(28, 10, WorldMapDefaultsUnpacker::unpack, root.resolve("defaults/worldmap.defaults"));
+        unpackDefaultsGroup(28, 12, CustomizationDefaultsUnpacker::unpack, root.resolve("defaults/customization.defaults"));
 
         // scripts
         if (!Command.MISSING_OPCODES) unpackScripts(12, root.resolve("script"));
@@ -775,27 +780,26 @@ public class Unpack {
         Files.write(result, lines);
     }
 
-    private static void unpackDefaults(int archive, int group, BiFunction<Integer, byte[], List<String>> unpack, Path result) throws IOException {
-        var lines = new ArrayList<String>();
+    private static void unpackDefaultsGroup(int archive, int group, Function<byte[], List<String>> unpack, Path result) throws IOException {
+        var files = loadGroupFiles(archive, group);
 
+        if (files != null) {
+            Files.write(result, unpack.apply(files.get(0)));
+        }
+    }
+
+    private static Map<Integer, byte[]> loadGroupFiles(int archive, int group) {
         if (archive >= MASTER_INDEX.getArchiveCount() || MASTER_INDEX.getArchiveData(archive).getCrc() == 0) {
-            return; // empty archives don't get packed
+            return null;
         }
 
         var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
 
         if (Arrays.binarySearch(archiveIndex.groupId, group) < 0) {
-            return; // empty groups don't get packed
+            return null;
         }
 
-        var files = Js5Util.unpackGroup(archiveIndex, group, PROVIDER.get(archive, group, false, 0));
-
-        for (var file : files.keySet()) {
-            lines.addAll(unpack.apply(file, files.get(file)));
-            lines.add("");
-        }
-
-        Files.write(result, lines);
+        return Js5Util.unpackGroup(archiveIndex, group, PROVIDER.get(archive, group, false, 0));
     }
 
     private static void unpackConfigArchive(int archive, int bits, BiFunction<Integer, byte[], List<String>> unpack, Path result) throws IOException {

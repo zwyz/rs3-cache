@@ -651,11 +651,7 @@ public class InterfaceUnpacker {
 
 
     private static void decodeTextPart(String prefix, ArrayList<String> lines, Packet packet, int version, int defaultAlignH, int defaultAlignV, String defaultTextShadow) {
-        if (Unpack.VERSION < 800) {
-            line(lines, prefix + "textfont=", Unpacker.format(Type.GRAPHIC, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()), "null"); // if_settextfont
-        } else {
-            line(lines, prefix + "textfont=", Unpacker.format(Type.FONTMETRICS, packet.gSmart2or4null()), "null"); // if_settextfont
-        }
+        line(lines, prefix + "textfont=", Unpacker.format(Unpack.VERSION < 751 ? Type.GRAPHIC : Type.FONTMETRICS, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()), "null"); // if_settextfont
 
         if (version >= 2) {
             line(lines, prefix + "fontmono=", (packet.g1() == 1 ? "yes" : "no"), "yes"); // if_setfontmono
