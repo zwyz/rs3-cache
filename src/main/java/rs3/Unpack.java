@@ -299,10 +299,13 @@ public class Unpack {
 
         // defaults
         unpackDefaultsGroup(28, 1, MapDefaultsUnpacker::unpack, root.resolve("defaults/map.defaults"));
+        unpackDefaultsGroup(28, 2, Unknown2DefaultsUnpacker::unpack, root.resolve("defaults/unknown2.defaults"));
         unpackDefaultsGroup(28, 3, GraphicsDefaultsUnpacker::unpack, root.resolve("defaults/graphics.defaults"));
         unpackDefaultsGroup(28, 4, AudioDefaultsUnpacker::unpack, root.resolve("defaults/audio.defaults"));
+        unpackDefaultsGroup(28, 5, Unknown5DefaultsUnpacker::unpack, root.resolve("defaults/unknown5.defaults"));
         unpackDefaultsGroup(28, 6, WearposDefaultsUnpacker::unpack, root.resolve("defaults/wearpos.defaults"));
         unpackDefaultsGroup(28, 7, MiniMenuDefaultsUnpacker::unpack, root.resolve("defaults/minimenu.defaults"));
+        unpackDefaultsGroup(28, 8, CutsceneDefaultsUnpacker::unpack, root.resolve("defaults/cutscene.defaults"));
         unpackDefaultsGroup(28, 9, SkillDefaultsUnpacker::unpack, root.resolve("defaults/skill.defaults"));
         unpackDefaultsGroup(28, 10, WorldMapDefaultsUnpacker::unpack, root.resolve("defaults/worldmap.defaults"));
         unpackDefaultsGroup(28, 12, CustomizationDefaultsUnpacker::unpack, root.resolve("defaults/customization.defaults"));
