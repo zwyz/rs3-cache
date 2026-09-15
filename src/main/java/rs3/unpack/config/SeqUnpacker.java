@@ -192,11 +192,11 @@ public class SeqUnpacker {
             case 16 -> lines.add("unknown16=yes");
             case 17 -> lines.add("unknown17=" + packet.g1());
             case 18 -> soundvorbis = true;
-            case 19 -> lines.add("unknown19=" + packet.g1() + "," + packet.g1());
-            case 119 -> lines.add("unknown19=" + packet.g2() + "," + packet.g1());
-            case 20 -> lines.add("unknown20=" + packet.g1() + "," + packet.g2() + "," + packet.g2());
-            case 120 -> lines.add("unknown20=" + packet.g2() + "," + packet.g2() + "," + packet.g2());
-            case 22 -> lines.add("unknown22=" + packet.g1());
+            case 19 -> lines.add("soundvolume=" + packet.g1() + "," + packet.g1()); // 216 GetVolume
+            case 119 -> lines.add("soundvolume=" + packet.g2() + "," + packet.g1()); // 216 GetVolume
+            case 20 -> lines.add("soundrandomrate=" + packet.g1() + "," + packet.g2() + "," + packet.g2()); // 216 GetRandomRateForSound
+            case 120 -> lines.add("soundrandomrate=" + packet.g2() + "," + packet.g2() + "," + packet.g2()); // 216 GetRandomRateForSound
+            case 22 -> lines.add("tertiaryvolumefactor=" + packet.g1()); // 216 GetTertiaryVolumeFactor
             case 23 -> lines.add("unknown23=" + packet.g2());
             case 24 -> lines.add("group=" + Unpacker.format(Type.SEQGROUP, packet.g2()));
             case 25 -> lines.add("keyframeset=" + packet.g2());

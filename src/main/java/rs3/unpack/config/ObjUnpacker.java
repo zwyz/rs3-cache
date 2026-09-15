@@ -105,7 +105,7 @@ public class ObjUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; ++i) {
-                    lines.add("unknown42=" + packet.g1s());
+                    lines.add("recolourpalette=" + packet.g1s());
                 }
             }
 
@@ -160,7 +160,7 @@ public class ObjUnpacker {
             case 128 -> lines.add("cursor2=" + (packet.g1() + 1) + "," + Unpacker.format(Type.CURSOR, packet.g2()));
             case 129 -> lines.add("icursor1=" + (packet.g1() + 1) + "," + Unpacker.format(Type.CURSOR, packet.g2()));
             case 130 -> lines.add("icursor2=" + (packet.g1() + 1) + "," + Unpacker.format(Type.CURSOR, packet.g2()));
-            case 131 -> lines.add("unknown131=" + packet.gjstr());
+            case 131 -> lines.add("secondarydesc=" + packet.gjstr());
 
             case 132 -> {
                 var count = packet.g1();
@@ -186,14 +186,14 @@ public class ObjUnpacker {
             case 153 -> lines.add("icursor4=" + Unpacker.format(Type.CURSOR, packet.g2()));
             case 154 -> lines.add("icursor5=" + Unpacker.format(Type.CURSOR, packet.g2()));
             case 156 -> lines.add("shadow=no"); // todo
-            case 157 -> lines.add("unknown157=yes");
+            case 157 -> lines.add("randomposition=yes"); // 216 HasRandomPosition
 
             case 161 -> lines.add("shardlink=" + Unpacker.format(Type.OBJ, packet.g2()));
             case 162 -> lines.add("shardtemplate=" + Unpacker.format(Type.OBJ, packet.g2()));
             case 163 -> lines.add("shardcount=" + packet.g2());
             case 164 -> lines.add("shardname=" + packet.gjstr());
             case 165 -> lines.add("stackable=never");
-            case 167 -> lines.add("unknown167=yes");
+            case 167 -> lines.add("nevertradeable=yes");
             case 168 -> lines.add("placeholder=no");
             case 178 -> lines.add("stackable=sometimes");
             case 181 -> lines.add("cost=" + packet.g8s());

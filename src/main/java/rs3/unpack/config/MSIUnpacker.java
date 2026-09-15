@@ -23,10 +23,10 @@ public class MSIUnpacker {
             }
 
             case 1 -> lines.add("graphic=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
-            case 2 -> lines.add("unknown2=" + packet.g3());
-            case 3 -> lines.add("unknown3=yes");
-            case 4 -> lines.add("unknown4=yes");
-            case 5 -> lines.add("unknown5=yes");
+            case 2 -> lines.add("colour=" + packet.g3()); // 216 GetTint
+            case 3 -> lines.add("enlarge=yes"); // 216 GetResize
+            case 4 -> lines.add("graphic=" + Unpacker.format(Type.GRAPHIC, -1)); // 216 GetSpriteID
+            case 5 -> lines.add("hideonminimap=yes"); // 216 GetHideOnMinimap
 
             default -> throw new IllegalStateException("unknown opcode");
         }

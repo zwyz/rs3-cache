@@ -47,7 +47,7 @@ public class WaterUnpacker {
             case 12 -> lines.add("basergba=0x%08x".formatted(packet.g4s()));
 
             // jag::WaterType::DecodeFoamParams
-            case 9 -> lines.add("water_foam_scale=" + packet.g2());
+            case 9 -> lines.add("foam_material=" + packet.g2()); // 216 GetFoamMaterialID
             case 14 -> lines.add("water_depth_foam=" + packet.g2());
 
             // jag::WaterType::DecodeLightingReflectionParams
@@ -124,7 +124,7 @@ public class WaterUnpacker {
             case 80 -> decodeNormalMapParams(lines, 5, 7, packet);
 
             // jag::WaterType::DecodeEmissiveParams
-            case 86 -> lines.add("emisive_map_material=" + packet.g2());
+            case 86 -> lines.add("emissive_map_material=" + packet.g2()); // 216 GetEmissiveMapMaterialID
             case 88 -> lines.add("emissive_uv_scale=" + packet.gFloat() + "," + packet.gFloat());
             case 89 -> lines.add("emissive_rgb=" + packet.g4s());
             case 90 -> lines.add("emissive_scale=" + packet.gFloat());
@@ -162,14 +162,14 @@ public class WaterUnpacker {
 
     private static void decodeNormalMapParams(List<String> lines, int target, int op, Packet packet) {
         switch (op) {
-            case 0 -> lines.add("normal_map_params" + (target + 1) + "_unknown33=" + Unpacker.formatYesNo(packet.g1()));
-            case 1 -> lines.add("normal_map_params" + (target + 1) + "_unknown34 =" + packet.gFloat());
-            case 2 -> lines.add("normal_map_params" + (target + 1) + "_unknown35=" + packet.gFloat());
-            case 3 -> lines.add("normal_map_params" + (target + 1) + "_unknown36=" + packet.gFloat());
-            case 4 -> lines.add("normal_map_params" + (target + 1) + "_unknown37=" + packet.gFloat() + "," + packet.gFloat());
-            case 5 -> lines.add("normal_map_params" + (target + 1) + "_unknown38=" + packet.gFloat() + "," + packet.gFloat());
-            case 6 -> lines.add("normal_map_params" + (target + 1) + "_unknown39=" + packet.gFloat());
-            case 7 -> lines.add("normal_map_params" + (target + 1) + "_unknown40=" + packet.gFloat());
+            case 0 -> lines.add("normal_map_params" + (target + 1) + "_enabled=" + Unpacker.formatYesNo(packet.g1()));
+            case 1 -> lines.add("normal_map_params" + (target + 1) + "_sample_weight=" + packet.gFloat());
+            case 2 -> lines.add("normal_map_params" + (target + 1) + "_flow_speed=" + packet.gFloat());
+            case 3 -> lines.add("normal_map_params" + (target + 1) + "_uv_distortion=" + packet.gFloat());
+            case 4 -> lines.add("normal_map_params" + (target + 1) + "_uv_scale=" + packet.gFloat() + "," + packet.gFloat());
+            case 5 -> lines.add("normal_map_params" + (target + 1) + "_uv_offset=" + packet.gFloat() + "," + packet.gFloat());
+            case 6 -> lines.add("normal_map_params" + (target + 1) + "_uv_rotation_degrees=" + packet.gFloat());
+            case 7 -> lines.add("normal_map_params" + (target + 1) + "_flow_rotation_degrees=" + packet.gFloat());
             default -> throw new IllegalStateException("unknown normal map target");
         }
     }

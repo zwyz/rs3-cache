@@ -222,22 +222,22 @@ public class AchievementUnpacker {
                 var count = packet.gSmart1or2();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("unknown28=" + packet.gSmart1or2());
+                    lines.add("prereqitemstocomplete=" + packet.gSmart1or2()); // 216 AchievementType::PostDecode
                 }
             }
 
-            case 29 -> lines.add("unknown29=" + packet.g1());
+            case 29 -> lines.add("numprereqgroupstocomplete=" + packet.g1()); // 216 PostDecode assertion: m_numPrereqGroupsToComplete > -1
 
             case 30 -> {
                 var count = packet.gSmart1or2();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("unknown22=" + packet.gSmart1or2());
+                    lines.add("reqgroupitemstocomplete=" + packet.gSmart1or2()); // 216 ValidateReqGroupItemsToComplete
                 }
             }
 
-            case 31 -> lines.add("unknown31=" + packet.g1());
-            case 32 -> lines.add("unknown32=" + packet.g1() + "," + packet.g1() + "," + packet.g1());
+            case 31 -> lines.add("numreqgroupstocomplete=" + packet.g1()); // 216 PostDecode assertion: m_numReqGroupsToComplete > -1
+            case 32 -> lines.add("tally=" + packet.g1() + "," + packet.g1() + "," + packet.g1()); // 216 GetTallyProgress
 
             case 33 -> { // cs2 achievement_varbit_prereq_*
                 var count = packet.gSmart1or2();

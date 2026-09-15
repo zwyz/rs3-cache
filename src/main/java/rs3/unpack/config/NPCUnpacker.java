@@ -70,7 +70,7 @@ public class NPCUnpacker {
             case 32 -> lines.add("op3=" + packet.gjstr()); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
             case 33 -> lines.add("op4=" + packet.gjstr()); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
             case 34 -> lines.add("op5=" + packet.gjstr()); // https://discord.com/channels/@me/698790755363323904/1203639168836833340
-            case 39 -> lines.add("unknown39=" + packet.g1());
+            case 39 -> lines.add("contrast=" + packet.g1s()); // same encoding as opcode 101
             case 40 -> Unpacker.unpackRecol(packet, lines, recolindices);
             case 41 -> Unpacker.unpackRetex(packet, lines, retexindices);
 
@@ -78,7 +78,7 @@ public class NPCUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; ++i) {
-                    lines.add("unknown42=" + packet.g1s());
+                    lines.add("recolourpalette=" + packet.g1s());
                 }
             }
 
@@ -246,10 +246,10 @@ public class NPCUnpacker {
             case 175 -> lines.add("cursor6=" + Unpacker.format(Type.CURSOR, packet.g2null()));
             case 178 -> lines.add("castsshadows=no"); // lua castsShadows
             case 179 -> lines.add("custombounding=" + packet.gSmart1or2() + "," + packet.gSmart1or2() + "," + packet.gSmart1or2() + "," + packet.gSmart1or2() + "," + packet.gSmart1or2() + "," + packet.gSmart1or2()); // lua hasCustomBounding
-            case 180 -> lines.add("unknown180=" + packet.g1());
+            case 180 -> lines.add("fadeinduration=" + packet.g1()); // 216 GetFadeInDuration (encoded in 20 ms units)
             case 181 -> lines.add("spotshadowtexture=" + Unpacker.format(Type.MATERIAL, packet.g2()) + "," + packet.g1());
             case 182 -> lines.add("transmogfakenpc=yes");
-            case 184 -> lines.add("unknown184=" + packet.g1());
+            case 184 -> lines.add("highlightoverride=" + packet.g1()); // 216 GetHighlightOverride
             case 185 -> lines.add("fastpicking=no"); // lua fastPicking
 
             case 186 -> {
@@ -485,7 +485,7 @@ public class NPCUnpacker {
                 }
             }
 
-            case 252 -> lines.add("unknown252=" + packet.g2());
+            case 252 -> lines.add("animationstatemachine=" + packet.g2()); // 216 GetAnimationStateMachineID
             case 253 -> lines.add("priorityoffset=" + packet.g1()); // lua priorityOffset
 
             default -> throw new IllegalStateException("unknown opcode");

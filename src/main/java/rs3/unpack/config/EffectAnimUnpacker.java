@@ -87,7 +87,7 @@ public class EffectAnimUnpacker {
                 if (Unpack.VERSION < 465) {
                     lines.add("recol7s=" + packet.g2());
                 } else {
-                    lines.add("unknown46=yes");
+                    lines.add("castsshadows=no"); // 216 CastsShadows
                 }
             }
 

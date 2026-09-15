@@ -125,7 +125,7 @@ public class LocUnpacker {
                 var count = packet.g1();
 
                 for (var i = 0; i < count; ++i) {
-                    lines.add("unknown42=" + packet.g1s());
+                    lines.add("recolourpalette=" + packet.g1s());
                 }
             }
 
@@ -250,7 +250,7 @@ public class LocUnpacker {
 
             case 96 -> lines.add("unknown96=yes");
             case 97 -> lines.add("msirotate=yes");
-            case 98 -> lines.add("unknown98=yes");
+            case 98 -> lines.add("hasparticles=yes"); // 216 HasParticles
             case 99 -> lines.add("cursor1=" + (packet.g1() + 1) + "," + Unpacker.format(Type.CURSOR, packet.g2()));
             case 100 -> lines.add("cursor2=" + (packet.g1() + 1) + "," + Unpacker.format(Type.CURSOR, packet.g2()));
             case 101 -> lines.add("msiangle=" + packet.g1());
@@ -293,7 +293,7 @@ public class LocUnpacker {
             case 164 -> lines.add("postoffsetx=" + packet.g2s());
             case 165 -> lines.add("postoffsety=" + packet.g2s());
             case 166 -> lines.add("postoffsetz=" + packet.g2s());
-            case 167 -> lines.add("unknown167=" + packet.g2());
+            case 167 -> lines.add("raiseobjectgrounddecor=" + packet.g2()); // 216 GetRaiseObjectGroundDecor
             case 168 -> bgsoundvorbis = true;
             case 169 -> randomsoundvorbis = true;
             case 170 -> lines.add("unknown170=" + packet.gSmart1or2());
@@ -302,7 +302,7 @@ public class LocUnpacker {
             case 177 -> lines.add("unknown177=yes");
             case 178 -> lines.add("bgsounddropoffrange=" + packet.g1());
             case 179 -> lines.add("unknown179=yes"); // todo: bgsound
-            case 186 -> lines.add("unknown186=" + packet.g1());
+            case 186 -> lines.add("raiseentities=" + packet.g1()); // 216 RaiseEntities
             case 188 -> lines.add("findable=yes"); // jag::game::LocType::IsFindable
             case 189 -> lines.add("antimacro=yes");
             case 190 -> lines.add("cursor1=" + Unpacker.format(Type.CURSOR, packet.g2()));
@@ -323,11 +323,11 @@ public class LocUnpacker {
 
             case 197 -> lines.add("indoorsoverride=" + packet.g1());
             case 198 -> lines.add("runetek5only=yes");
-            case 199 -> lines.add("unknown199=no");
+            case 199 -> lines.add("castsshadows=no"); // 216 CastsShadows
             case 200 -> lines.add("highdetailonly=yes");
             case 201 -> lines.add("custombounding=" + packet.gSmart1or2s() + "," + packet.gSmart1or2s() + "," + packet.gSmart1or2s() + "," + packet.gSmart1or2s() + "," + packet.gSmart1or2s() + "," + packet.gSmart1or2s());
             case 202 -> lines.add("highlightoverride=" + packet.gSmart1or2());
-            case 203 -> lines.add("unknown203=yes");
+            case 203 -> lines.add("fastpicking=no"); // 216 UseFastPickingTests
 
             case 204 -> {
                 var count = packet.g1();

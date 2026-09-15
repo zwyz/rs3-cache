@@ -23,10 +23,10 @@ public class BillboardUnpacker {
             }
 
             case 1 -> lines.add("material=" + Unpacker.format(Type.MATERIAL, packet.g2null()));
-            case 2 -> lines.add("unknown2=" + packet.g2() + "," + packet.g2());
+            case 2 -> lines.add("size=" + packet.g2() + "," + packet.g2()); // encoded as width - 1, height - 1
             case 3 -> lines.add("unknown3=" + packet.g1s());
-            case 4 -> lines.add("unknown4=" + packet.g1());
-            case 5 -> lines.add("unknown5=" + packet.g1());
+            case 4 -> lines.add("sourceblendmode=" + packet.g1());
+            case 5 -> lines.add("destinationblendmode=" + packet.g1());
             case 6 -> lines.add("unknown6=yes");
             case 7 -> lines.add("unknown7=yes");
 

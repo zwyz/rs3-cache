@@ -45,21 +45,21 @@ public class QuickChatPhraseUnpacker {
                         case 4 -> "stat_base," + Unpacker.format(Type.STAT, packet.g2());
                         case 6 -> "enum_string," + Unpacker.format(Type.ENUM, packet.g2()) + "," + Unpacker.format(Type.VAR_PLAYER, packet.g2()); // nxt name
                         case 7 -> "enum_string_clan," + Unpacker.format(Type.ENUM, packet.g2()); // nxt name
-                        case 8 -> "var_player_int," + Unpacker.format(Type.VAR_PLAYER, packet.g2());
-                        case 9 -> "var_player_bit," + Unpacker.format(Type.VAR_PLAYER_BIT, packet.g2());
+                        case 8 -> "var_player_int," + Unpacker.format(Type.VAR_PLAYER, packet.g2()); // 216 TOSTRING_VARP
+                        case 9 -> "var_player_bit," + Unpacker.format(Type.VAR_PLAYER_BIT, packet.g2()); // 216 TOSTRING_VARBIT
                         case 10 -> "objtradedialog"; // nxt name
                         case 11 -> "enum_string_statbase," + Unpacker.format(Type.ENUM, packet.g2()) + "," + Unpacker.format(Type.STAT, packet.g2()); // nxt name
-                        case 12 -> "unknown_12";
-                        case 13 -> "unknown_13";
-                        case 14 -> "var_world_int," + Unpacker.format(Type.VAR_WORLD, packet.g2());
-                        case 15 -> "combat_level";
-                        case 16 -> "enum_string_var_player_bit," + Unpacker.format(Type.ENUM, packet.g2()) + "," + Unpacker.format(Type.VAR_PLAYER_BIT, packet.g2());
+                        case 12 -> "acc_getcount_world"; // 216 ACC_GETCOUNT_WORLD
+                        case 13 -> "acc_getmeancombatlevel"; // 216 ACC_GETMEANCOMBATLEVEL
+                        case 14 -> "var_world_int," + Unpacker.format(Type.VAR_WORLD, packet.g2()); // 216 TOSTRING_SHARED
+                        case 15 -> "combat_level"; // 216 ACTIVECOMBATLEVEL
+                        case 16 -> "enum_string_var_player_bit," + Unpacker.format(Type.ENUM, packet.g2()) + "," + Unpacker.format(Type.VAR_PLAYER_BIT, packet.g2()); // 216 ENUM_STRING_VARBIT
                         default -> throw new IllegalStateException("invalid dynamiccommand " + command);
                     });
                 }
             }
 
-            case 4 -> lines.add("unknown4=no");
+            case 4 -> lines.add("searchable=no"); // 216 IsSearchable
 
             case 5 -> {
                 var count = packet.g1();
@@ -74,15 +74,15 @@ public class QuickChatPhraseUnpacker {
                         case 4 -> "stat_base," + Unpacker.format(Type.STAT, packet.gvarint2());
                         case 6 -> "enum_string," + Unpacker.format(Type.ENUM, packet.gvarint2()) + "," + Unpacker.format(Type.VAR_PLAYER, packet.gvarint2()); // nxt name
                         case 7 -> "enum_string_clan," + Unpacker.format(Type.ENUM, packet.gvarint2()); // nxt name
-                        case 8 -> "var_player_int," + Unpacker.format(Type.VAR_PLAYER, packet.gvarint2());
-                        case 9 -> "var_player_bit," + Unpacker.format(Type.VAR_PLAYER_BIT, packet.gvarint2());
+                        case 8 -> "var_player_int," + Unpacker.format(Type.VAR_PLAYER, packet.gvarint2()); // 216 TOSTRING_VARP
+                        case 9 -> "var_player_bit," + Unpacker.format(Type.VAR_PLAYER_BIT, packet.gvarint2()); // 216 TOSTRING_VARBIT
                         case 10 -> "objtradedialog"; // nxt name
                         case 11 -> "enum_string_statbase," + Unpacker.format(Type.ENUM, packet.gvarint2()) + "," + Unpacker.format(Type.STAT, packet.gvarint2()); // nxt name
-                        case 12 -> "unknown_12";
-                        case 13 -> "unknown_13";
-                        case 14 -> "var_world_int," + Unpacker.format(Type.VAR_WORLD, packet.gvarint2());
-                        case 15 -> "combat_level";
-                        case 16 -> "enum_string_var_player_bit," + Unpacker.format(Type.ENUM, packet.gvarint2()) + "," + Unpacker.format(Type.VAR_PLAYER_BIT, packet.gvarint2());
+                        case 12 -> "acc_getcount_world"; // 216 ACC_GETCOUNT_WORLD
+                        case 13 -> "acc_getmeancombatlevel"; // 216 ACC_GETMEANCOMBATLEVEL
+                        case 14 -> "var_world_int," + Unpacker.format(Type.VAR_WORLD, packet.gvarint2()); // 216 TOSTRING_SHARED
+                        case 15 -> "combat_level"; // 216 ACTIVECOMBATLEVEL
+                        case 16 -> "enum_string_var_player_bit," + Unpacker.format(Type.ENUM, packet.gvarint2()) + "," + Unpacker.format(Type.VAR_PLAYER_BIT, packet.gvarint2()); // 216 ENUM_STRING_VARBIT
                         default -> throw new IllegalStateException("invalid dynamiccommand " + command);
                     });
                 }

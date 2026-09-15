@@ -40,7 +40,7 @@ public class QuickChatCatUnpacker {
                 }
             }
 
-            case 4 -> lines.add("unknown4=yes");
+            case 4 -> lines.add("searchable=yes");
 
             default -> throw new IllegalStateException("unknown opcode");
         }

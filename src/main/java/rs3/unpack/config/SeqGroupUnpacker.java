@@ -43,11 +43,11 @@ public class SeqGroupUnpacker {
             }
 
             case 4 -> {
-                lines.add("unknown4default=" + packet.g1());
+                lines.add("jointweightdefault=" + packet.g1()); // 216 GetJointWeights
                 var count = packet.gSmart1or2();
 
                 for (var i = 0; i < count; i++) {
-                    lines.add("unknown4=" + packet.gSmart1or2() + "," + packet.g1());
+                    lines.add("jointweight=" + packet.gSmart1or2() + "," + packet.g1()); // 216 GetJointWeights
                 }
             }
 

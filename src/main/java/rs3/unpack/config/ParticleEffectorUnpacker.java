@@ -22,14 +22,14 @@ public class ParticleEffectorUnpacker {
                 return lines;
             }
 
-            case 1 -> lines.add("unknown1=" + packet.g2());
+            case 1 -> lines.add("angle=" + packet.g2());
             case 2 -> lines.add("unknown2=" + packet.g1());
-            case 3 -> lines.add("unknown3=" + packet.g4s() + "," + packet.g4s() + "," + packet.g4s());
-            case 4 -> lines.add("unknown4=" + packet.g1() + "," + packet.g4s());
-            case 6 -> lines.add("unknown6=" + packet.g1());
+            case 3 -> lines.add("forcedirection=" + packet.g4s() + "," + packet.g4s() + "," + packet.g4s());
+            case 4 -> lines.add("falloff=" + packet.g1() + "," + packet.g4s());
+            case 6 -> lines.add("forcetype=" + packet.g1());
             case 8 -> lines.add("unknown8=yes");
             case 9 -> lines.add("unknown9=yes");
-            case 10 -> lines.add("unknown10=yes");
+            case 10 -> lines.add("reversedirection=yes");
 
             default -> throw new IllegalStateException("unknown opcode");
         }

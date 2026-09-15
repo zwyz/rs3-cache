@@ -76,9 +76,9 @@ public class BASUnpacker {
                     var line = "randomreadyanim=" + Unpacker.format(Type.SEQ, anim) + "," + weight;
 
                     if (Unpack.VERSION >= 916) {
-                        var unknownCount = packet.g1();
+                        var previousReadyCount = packet.g1();
 
-                        for (var j = 0; j < unknownCount; j++) {
+                        for (var j = 0; j < previousReadyCount; j++) {
                             line += "," + packet.g1();
                         }
                     }

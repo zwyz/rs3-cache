@@ -35,10 +35,10 @@ public class HeadbarUnpacker {
             case 11 -> lines.add("fadeout=" + packet.g2()); // https://twitter.com/JagexAsh/status/1654124199194288137
             case 12 -> lines.add("fullplayergroupteam=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
             case 13 -> lines.add("emptyplayergroupteam=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
-            case 14 -> lines.add("unknown14=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
-            case 15 -> lines.add("unknown15=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
-            case 16 -> lines.add("unknown16=yes");
-            case 17 -> lines.add("unknown17=" + packet.g1());
+            case 14 -> lines.add("leftcapsprite=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
+            case 15 -> lines.add("rightcapsprite=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
+            case 16 -> lines.add("tilefill=yes");
+            case 17 -> lines.add("stackoffset=" + packet.g1());
             default -> throw new IllegalStateException("unknown opcode");
         }
     }
