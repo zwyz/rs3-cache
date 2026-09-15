@@ -23,8 +23,8 @@ public class MSIUnpacker {
             }
 
             case 1 -> lines.add("graphic=" + Unpacker.format(Type.GRAPHIC, packet.gSmart2or4null()));
-            case 2 -> lines.add("colour=" + packet.g3()); // 216 GetTint
-            case 3 -> lines.add("enlarge=yes"); // 216 GetResize
+            case 2 -> lines.add("tint=" + packet.g3()); // 216 GetTint
+            case 3 -> lines.add("resize=yes"); // 216 GetResize
             case 4 -> lines.add("graphic=" + Unpacker.format(Type.GRAPHIC, -1)); // 216 GetSpriteID
             case 5 -> lines.add("hideonminimap=yes"); // 216 GetHideOnMinimap
 

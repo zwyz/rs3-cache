@@ -193,7 +193,7 @@ public class ObjUnpacker {
             case 163 -> lines.add("shardcount=" + packet.g2());
             case 164 -> lines.add("shardname=" + packet.gjstr());
             case 165 -> lines.add("stackable=never");
-            case 167 -> lines.add("nevertradeable=yes");
+            case 167 -> lines.add("certtradeable=yes");
             case 168 -> lines.add("placeholder=no");
             case 178 -> lines.add("stackable=sometimes");
             case 181 -> lines.add("cost=" + packet.g8s());
