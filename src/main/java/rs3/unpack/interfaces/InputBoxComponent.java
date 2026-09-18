@@ -19,13 +19,17 @@ public class InputBoxComponent extends Component {
         unknown200 = packet.g2();
         unknown201 = packet.g1();
 
-        if (Unpack.VERSION < 450) {
+        if (Unpack.VERSION < 414) {
             textalignh = packet.g1(); // actually `centre = g1() == 1`
-            legacyfont = packet.g1();
         } else {
             textalignh = packet.g1();
             textalignv = packet.g1();
             textlineheight = packet.g1();
+        }
+
+        if (Unpack.VERSION < 418) {
+            legacyfont = packet.g1();
+        } else {
             textfont = packet.g2null();
         }
 

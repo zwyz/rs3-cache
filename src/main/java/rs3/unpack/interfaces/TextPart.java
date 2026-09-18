@@ -22,13 +22,17 @@ public class TextPart {
 
     public void decode(Packet packet, int version) {
         if (version == -2) {
-            if (Unpack.VERSION < 450) {
-                textalignh = packet.g1(); // actually `centre = g1() == 1`
-                legacyfont = packet.g1();
+            if (Unpack.VERSION < 414) {
+                textalignh = packet.g1(); // todo: actually `centre = g1() == 1`
             } else {
                 textalignh = packet.g1();
                 textalignv = packet.g1();
                 textlineheight = packet.g1();
+            }
+
+            if (Unpack.VERSION < 418) {
+                legacyfont = packet.g1();
+            } else {
                 textfont = packet.g2null();
             }
 
