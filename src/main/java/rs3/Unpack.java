@@ -358,6 +358,15 @@ public class Unpack {
         unpackLegacyConfig(config, "param", ParamUnpacker::unpack, root.resolve("config/dump.param"));
         unpackLegacyConfig(config, "seq", SeqUnpacker::unpack, root.resolve("config/dump.seq"));
         unpackLegacyConfig(config, "spotanim", EffectAnimUnpacker::unpack, root.resolve("config/dump.spot"));
+        unpackLegacyConfig(config, "varp", VarPlayerUnpacker::unpack, root.resolve("config/dump.varp"));
+        unpackLegacyConfig(config, "varbit", VarPlayerBitUnpacker::unpack, root.resolve("config/dump.varbit"));
+        unpackLegacyConfig(config, "mes", EnumUnpacker::unpack, root.resolve("config/dump.enum"));
+
+        if (DUMP_SYMBOLS) {
+            Path symbolsPath = Path.of(root + "/symbols");
+            Files.createDirectories(symbolsPath);
+            Symbols.dumpSymbols(symbolsPath);
+        }
     }
 
     private static void unpackLegacyConfig(Jagfile jagfile, String name, BiFunction<Integer, byte[], List<String>> unpacker, Path path) throws IOException {
@@ -381,6 +390,10 @@ public class Unpack {
         var lines = new ArrayList<String>();
 
         for (var i = 0; i < count; i++) {
+            if (DUMP_CONFIG_IDS) {
+                lines.add("// " + i);
+            }
+
             var start = offsets[i];
             var end = i == count - 1 ? data.length : offsets[i + 1];
             var file = Arrays.copyOfRange(data, start, end);

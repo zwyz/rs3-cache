@@ -12,10 +12,11 @@ public class FloorOverlayUnpacker {
     public static List<String> unpack(int id, byte[] data) {
         var lines = new ArrayList<String>();
         var packet = new Packet(data);
-        lines.add("[" + Unpacker.format(Type.OVERLAY, id) + "]");
 
         while (true) switch (packet.g1()) {
             case 0 -> {
+                lines.addFirst("[" + Unpacker.format(Type.OVERLAY, id) + "]");
+
                 if (packet.pos != packet.arr.length) {
                     throw new IllegalStateException("end of file not reached");
                 }
@@ -28,14 +29,14 @@ public class FloorOverlayUnpacker {
 
             case 3 -> {
                 if (Unpack.VERSION < 400) {
-                    lines.add("unknown3=yes"); // todo
+                    lines.add("overlay=yes");
                 } else {
                     lines.add("material=" + Unpacker.format(Type.MATERIAL, packet.g2null()));
                 }
             }
 
             case 5 -> lines.add("occlude=no");
-            case 6 -> lines.add("debugname=" + packet.gjstr());
+            case 6 -> Unpacker.setSymbolName(Type.OVERLAY, id, packet.gjstr());
             case 7 -> lines.add("mapcolour=0x" + Integer.toHexString(packet.g3()));
             case 8 -> lines.add("unknown8=yes");
             case 9 -> lines.add("texturescale=" + packet.g2());
