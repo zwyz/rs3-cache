@@ -173,43 +173,43 @@ public class Unpack {
         Files.createDirectories(root.resolve("script"));
         Files.createDirectories(root.resolve("interface"));
 
-        loadDebugNames(0, Type.COMPONENT);
-        loadDebugNames(5, Type.BAS);
-        loadDebugNames(9, Type.CATEGORY);
-        loadDebugNames(12, Type.CURSOR);
-        loadDebugNames(14, Type.DBROW);
-        loadDebugNames(15, Type.DBTABLE);
-        loadDebugNames(16, Type.ENUM);
-        loadDebugNames(20, Type.HEADBAR);
-        loadDebugNames(21, Type.HITMARK);
-        loadDebugNames(24, Type.INTERFACE);
-        loadDebugNames(25, Type.INV);
-        loadDebugNames(28, Type.LOC);
-        loadDebugNames(29, Type.MAPELEMENT);
-        loadDebugNames(32, Type.MATERIAL);
-        loadDebugNames(34, Type.MODEL);
-        loadDebugNames(35, Type.NPC);
-        loadDebugNames(36, Type.OBJ);
-        loadDebugNames(37, Type.PARAM);
-        loadDebugNames(41, Type.QUEST);
-        loadDebugNames(44, Type.SEQ);
-        loadDebugNames(49, Type.GRAPHIC);
-        loadDebugNames(50, Type.STRUCT);
-        loadDebugNames(55, Type.VAR_CLAN);
-        loadDebugNames(56, Type.VAR_CLAN_SETTING);
-        loadDebugNames(57, Type.VAR_CLIENT);
-        loadDebugNames(59, Type.VAR_NPC);
-        loadDebugNames(60, Type.VAR_OBJECT);
-        loadDebugNames(61, Type.VAR_PLAYER);
-        loadDebugNames(64, Type.SOUND);
-        loadDebugNames(69, Type.MIDI);
-        loadDebugNames(69, Type.JINGLE); // jingles and songs are in the same group
-        loadDebugNames(80, Type.VAR_PLAYER_GROUP);
-        loadDebugNames(89, Type.ACHIEVEMENT);
-        loadDebugNames(90, Type.FONTMETRICS);
-        loadDebugNames(92, Type.STYLESHEET);
-        loadDebugNames(96, Type.UI_ANIM_CURVE);
-        loadDebugNames(97, Type.UI_ANIM);
+        loadAssetNames(0, Type.COMPONENT);
+        loadAssetNames(5, Type.BAS);
+        loadAssetNames(9, Type.CATEGORY);
+        loadAssetNames(12, Type.CURSOR);
+        loadAssetNames(14, Type.DBROW);
+        loadAssetNames(15, Type.DBTABLE);
+        loadAssetNames(16, Type.ENUM);
+        loadAssetNames(20, Type.HEADBAR);
+        loadAssetNames(21, Type.HITMARK);
+        loadAssetNames(24, Type.INTERFACE);
+        loadAssetNames(25, Type.INV);
+        loadAssetNames(28, Type.LOC);
+        loadAssetNames(29, Type.MAPELEMENT);
+        loadAssetNames(32, Type.MATERIAL);
+        loadAssetNames(34, Type.MODEL);
+        loadAssetNames(35, Type.NPC);
+        loadAssetNames(36, Type.OBJ);
+        loadAssetNames(37, Type.PARAM);
+        loadAssetNames(41, Type.QUEST);
+        loadAssetNames(44, Type.SEQ);
+        loadAssetNames(49, Type.GRAPHIC);
+        loadAssetNames(50, Type.STRUCT);
+        loadAssetNames(55, Type.VAR_CLAN);
+        loadAssetNames(56, Type.VAR_CLAN_SETTING);
+        loadAssetNames(57, Type.VAR_CLIENT);
+        loadAssetNames(59, Type.VAR_NPC);
+        loadAssetNames(60, Type.VAR_OBJECT);
+        loadAssetNames(61, Type.VAR_PLAYER);
+        loadAssetNames(64, Type.SOUND);
+        loadAssetNames(69, Type.MIDI);
+        loadAssetNames(69, Type.JINGLE); // jingles and songs are in the same group
+        loadAssetNames(80, Type.VAR_PLAYER_GROUP);
+        loadAssetNames(89, Type.ACHIEVEMENT);
+        loadAssetNames(90, Type.FONTMETRICS);
+        loadAssetNames(92, Type.STYLESHEET);
+        loadAssetNames(96, Type.UI_ANIM_CURVE);
+        loadAssetNames(97, Type.UI_ANIM);
 
         // load names
         loadGroupNamesScriptTrigger(12, Unpacker.SCRIPT_NAME);
@@ -628,12 +628,12 @@ public class Unpack {
         }
     }
 
-    private static void loadDebugNames(int group, Type type) {
-        if (Js5Archive.JS5_GAMEVALS.id >= MASTER_INDEX.getArchiveCount() || MASTER_INDEX.getArchiveData(Js5Archive.JS5_GAMEVALS.id).getCrc() == 0) {
+    private static void loadAssetNames(int group, Type type) {
+        if (Js5Archive.JS5_ASSETNAMES.id >= MASTER_INDEX.getArchiveCount() || MASTER_INDEX.getArchiveData(Js5Archive.JS5_ASSETNAMES.id).getCrc() == 0) {
             return; // empty archives don't get packed
         }
 
-        var gamevalsIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, Js5Archive.JS5_GAMEVALS.id, false, 0)));
+        var gamevalsIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, Js5Archive.JS5_ASSETNAMES.id, false, 0)));
         if (Arrays.binarySearch(gamevalsIndex.groupId, group) < 0) {
             return;
         }
@@ -644,7 +644,7 @@ public class Unpack {
             hashes = archiveIndex.groupNameHash;
         }
 
-        var data = Js5Util.decompress(PROVIDER.get(Js5Archive.JS5_GAMEVALS.id, group, false, 0));
+        var data = Js5Util.decompress(PROVIDER.get(Js5Archive.JS5_ASSETNAMES.id, group, false, 0));
         var buf = new Packet(data);
 
         var packType = buf.g4s();

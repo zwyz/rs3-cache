@@ -53,7 +53,7 @@ public enum Js5Archive {
     JS5_ANIMSTATEMACHINES(62),
     JS5_UI_ANIMATIONS(65),
     JS5_CUTSCENES2D(66),
-    JS5_GAMEVALS(67);
+    JS5_ASSETNAMES(67);
 
     public final int id;
 
