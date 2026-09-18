@@ -301,7 +301,12 @@ public class Unpack {
         WorldMapUnpacker.unpack(root.resolve("worldmap"));
 
         // defaults
-        unpackDefaultsGroup(28, 1, MapDefaultsUnpacker::unpack, root.resolve("defaults/map.defaults"));
+        if (Unpack.VERSION < 757) {
+            unpackDefaultsGroup(28, 1, Unknown1DefaultsUnpacker::unpack, root.resolve("defaults/unknown1.defaults"));
+        } else {
+            unpackDefaultsGroup(28, 1, MapDefaultsUnpacker::unpack, root.resolve("defaults/map.defaults"));
+        }
+
         unpackDefaultsGroup(28, 2, Unknown2DefaultsUnpacker::unpack, root.resolve("defaults/unknown2.defaults"));
         unpackDefaultsGroup(28, 3, GraphicsDefaultsUnpacker::unpack, root.resolve("defaults/graphics.defaults"));
         unpackDefaultsGroup(28, 4, AudioDefaultsUnpacker::unpack, root.resolve("defaults/audio.defaults"));
