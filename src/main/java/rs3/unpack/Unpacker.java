@@ -17,6 +17,7 @@ public class Unpacker {
     public static final Map<Integer, Type> ENUM_OUTPUT_TYPE = new HashMap<>();
     public static final Map<VarDomain, Map<Integer, Type>> VAR_TYPE = new HashMap<>();
     public static final Map<Integer, VarDomain> VARBIT_DOMAIN = new HashMap<>();
+    public static final Map<Integer, Integer> COMPONENT_INTERFACE = new HashMap<>();
 
     public static void reset() {
         NAME.clear();
@@ -28,6 +29,7 @@ public class Unpacker {
         ENUM_OUTPUT_TYPE.clear();
         VAR_TYPE.clear();
         VARBIT_DOMAIN.clear();
+        COMPONENT_INTERFACE.clear();
 
         for (var domain : VarDomain.values()) {
             VAR_TYPE.put(domain, new HashMap<>());
@@ -476,6 +478,10 @@ public class Unpacker {
         } else if (type == Type.COMPONENT) {
             if (value == -1) {
                 return "null";
+            } else if (Unpack.VERSION < 400) {
+                var itf = COMPONENT_INTERFACE.get(value);
+                var com = value;
+                return quote(format(Type.INTERFACE, itf, false) + ":com_" + com, safe);
             } else {
                 var itf = value >> 16;
                 var com = value & 0xffff;
@@ -693,6 +699,14 @@ public class Unpacker {
 
     public static VarDomain getVarBitDomain(int id) {
         return Objects.requireNonNull(VARBIT_DOMAIN.get(id));
+    }
+
+    public static void setComponentInterface(int com, int itf) {
+        COMPONENT_INTERFACE.put(com, itf);
+    }
+
+    public static int getComponentInterface(int com) {
+        return COMPONENT_INTERFACE.get(com);
     }
 
     public static void unpackRecol(Packet packet, ArrayList<String> lines, int indices) {

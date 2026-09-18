@@ -11,6 +11,9 @@ import rs3.unpack.config.*;
 import rs3.unpack.cutscene2d.Cutscene2D;
 import rs3.unpack.defaults.*;
 import rs3.unpack.font.FontMetrics;
+import rs3.unpack.interfaces.Component;
+import rs3.unpack.interfaces.InterfaceUnpacker;
+import rs3.unpack.interfaces.LayerComponent;
 import rs3.unpack.map.MapSquare;
 import rs3.unpack.script.Command;
 import rs3.unpack.script.ScriptUnpacker;
@@ -348,6 +351,7 @@ public class Unpack {
     public static void unpackLegacy(Path root, Js4ResourceProvider provider) throws IOException {
         Files.createDirectories(root);
         Files.createDirectories(root.resolve("config"));
+        Files.createDirectories(root.resolve("interface"));
         var config = new Jagfile(provider.get(0, 2));
         unpackLegacyConfig(config, "idk", IDKUnpacker::unpack, root.resolve("config/dump.idk"));
         unpackLegacyConfig(config, "flo", FloorOverlayUnpacker::unpack, root.resolve("config/dump.flo"));
@@ -361,6 +365,7 @@ public class Unpack {
         unpackLegacyConfig(config, "varp", VarPlayerUnpacker::unpack, root.resolve("config/dump.varp"));
         unpackLegacyConfig(config, "varbit", VarPlayerBitUnpacker::unpack, root.resolve("config/dump.varbit"));
         unpackLegacyConfig(config, "mes", EnumUnpacker::unpack, root.resolve("config/dump.enum"));
+        upackLegacyInterfaces(new Jagfile(provider.get(0, 3)), root.resolve("interface"));
 
         if (DUMP_SYMBOLS) {
             Path symbolsPath = Path.of(root + "/symbols");
@@ -402,6 +407,61 @@ public class Unpack {
         }
 
         Files.write(path, lines);
+    }
+
+    private static void upackLegacyInterfaces(Jagfile jagfile, Path path) throws IOException {
+        // decode everything
+        var packet = new Packet(jagfile.read("data", null));
+        var itf = -1;
+        var components = new Component[packet.g2()];
+        var interfaces = new LinkedHashMap<Integer, ArrayList<Component>>();
+        var currentInterface = new ArrayList<Component>();
+
+        while (packet.pos < packet.arr.length) {
+            int com = packet.g2();
+
+            if (com == 65535) {
+                if (itf != -1) interfaces.put(itf, currentInterface);
+                currentInterface = new ArrayList<>();
+                itf = packet.g2();
+                com = packet.g2();
+            }
+
+            Unpacker.setComponentInterface(com, itf);
+            var component = Component.decode(com, packet);
+            currentInterface.add(component);
+            components[com] = component;
+        }
+
+        if (itf != -1) interfaces.put(itf, currentInterface);
+
+        // set layer/x/y fields
+        for (var component : components) {
+            if (component instanceof LayerComponent layer) {
+                for (var i = 0; i < layer.children.length; i++) {
+                    var child = components[layer.children[i]];
+                    child.layer = component.id;
+                    child.x = layer.childX[i];
+                    child.y = layer.childY[i];
+                }
+            }
+        }
+
+        // save to files todo: the order the interfaces were originally packed in should be output somewhere
+        for (var entry : interfaces.entrySet()) {
+            var lines = new ArrayList<String>();
+
+            for (var component : entry.getValue()) {
+                if (DUMP_CONFIG_IDS) {
+                    lines.add("// " + entry.getKey() + ":" + component.id);
+                }
+
+                lines.addAll(InterfaceUnpacker.unpack(component));
+                lines.add("");
+            }
+
+            Files.write(path.resolve(Unpacker.format(Type.INTERFACE, entry.getKey()) + ".if"), lines);
+        }
     }
 
     private static void loadGroupNames(Path path, int archive, BiConsumer<Integer, String> consumer) throws IOException {

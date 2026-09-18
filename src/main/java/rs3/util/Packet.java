@@ -271,6 +271,11 @@ public class Packet {
         return result == 0xffff ? -1 : result;
     }
 
+    public int g2special() {
+        var value = g1();
+        return value == 0 ? -1 : ((value - 1) << 8) + g1();
+    }
+
     public int g2s() {
         pos += 2;
         var var1 = ((arr[pos - 2] & 255) << 8) + (arr[pos - 1] & 255);
