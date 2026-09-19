@@ -18,7 +18,7 @@ public class LayerComponent extends Component {
             hide = packet.g1() == 1;
 
             if (Unpack.VERSION < 410) {
-                int count = packet.g2();
+                int count = Unpack.VERSION >= 244 ? packet.g2() : packet.g1();
                 children = new int[count];
                 childX = new int[count];
                 childY = new int[count];
