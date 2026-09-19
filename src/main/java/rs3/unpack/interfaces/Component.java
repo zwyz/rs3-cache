@@ -163,7 +163,7 @@ public abstract class Component {
 
         width = packet.g2();
         height = packet.g2();
-        legacytrans = packet.g1();
+        if (Unpack.VERSION >= 243) legacytrans = packet.g1();
 
         if (Unpack.VERSION >= 400) {
             layer = packet.g2null();

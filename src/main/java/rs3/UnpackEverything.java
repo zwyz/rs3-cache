@@ -15,11 +15,14 @@ public class UnpackEverything {
             var parts = cache.split(",");
             var build = Integer.parseInt(parts[0]);
             var name = parts[1];
-            var id = Integer.parseInt(parts[2]);
             System.out.println("[Cache Unpacker] Unpacking " + name + " build " + build + " (" + (index + 1) + "/" + caches.size() + ")");
 
             if (index >= START_INDEX) {
-                Unpack.unpackOpenRS2("unpacked/" + name, build, "runescape", id, false);
+                if (build < 226) {
+                    Unpack.unpackOldOpenRS2("unpacked/" + name, build, parts[2]);
+                } else {
+                    Unpack.unpackOpenRS2("unpacked/" + name, build, "runescape", Integer.parseInt(parts[2]), false);
+                }
             }
 
             index++;

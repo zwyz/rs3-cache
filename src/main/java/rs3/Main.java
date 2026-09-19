@@ -22,7 +22,7 @@ public class Main {
         if (args.length == 1 && args[0].equals("openrs2")) {
             for (var line : Files.readAllLines(Path.of("data/caches.txt"))) {
                 var parts = line.split(",");
-                System.out.println(parts[1] + " (build " + parts[0] + ", id " + parts[2] + ")");
+                System.out.println(parts[1] + " (build " + parts[0] + ", source " + parts[2] + ")");
             }
 
             return;
@@ -33,7 +33,12 @@ public class Main {
                 var parts = line.split(",");
 
                 if (parts[1].equals(args[1])) {
-                    Unpack.unpackOpenRS2(args[2], Integer.parseInt(parts[0]), "runescape", Integer.parseInt(parts[2]), false);
+                    if (Integer.parseInt(parts[0]) < 226) {
+                        Unpack.unpackOldOpenRS2(args[2], Integer.parseInt(parts[0]), parts[2]);
+                    } else {
+                        Unpack.unpackOpenRS2(args[2], Integer.parseInt(parts[0]), "runescape", Integer.parseInt(parts[2]), false);
+                    }
+
                     return;
                 }
             }

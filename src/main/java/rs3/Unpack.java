@@ -29,6 +29,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.awt.image.DirectColorModel;
 import java.awt.image.Raster;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -41,6 +42,7 @@ import java.util.concurrent.StructuredTaskScope;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.zip.ZipInputStream;
 
 // todo: clean this up
 public class Unpack {
@@ -69,6 +71,52 @@ public class Unpack {
                     new OpenRS2Js5ResourceProvider(scope, id))
             ));
         }
+    }
+
+    public static void unpackOldOpenRS2(String path, int build, String url) throws IOException, InterruptedException {
+        VERSION = build;
+        BETA = false;
+        ID = -1;
+
+        var cache = downloadZip(url);
+        unpackLegacy(Path.of(path), new Jagfile(cache.get("archives/config")), new Jagfile(cache.get("archives/interface")));
+    }
+
+    private static Map<String, byte[]> downloadZip(String url) throws IOException, InterruptedException {
+        var path = Path.of(System.getProperty("user.home") + "/.rscache/" + Integer.toHexString(url.hashCode()) + ".zip");
+        byte[] data;
+
+        if (Files.exists(path)) {
+            data = Files.readAllBytes(path);
+        } else {
+            var response = HTTP.send(HttpRequest.newBuilder(URI.create(url)).build(), HttpResponse.BodyHandlers.ofByteArray());
+
+            if (response.statusCode() != 200) {
+                throw new IOException("received response " + response.statusCode() + " for " + url);
+            }
+
+            Files.write(path, response.body());
+            data = response.body();
+        }
+
+        var files = new HashMap<String, byte[]>();
+
+        try (var zis = new ZipInputStream(new ByteArrayInputStream(data))) {
+            while (true) {
+                var entry = zis.getNextEntry();
+
+                if (entry == null) {
+                    break;
+                }
+
+                if (!entry.isDirectory()) {
+                    var name = entry.getName();
+                    files.put(name.substring(name.indexOf('/') + 1), zis.readAllBytes());
+                }
+            }
+        }
+
+        return files;
     }
 
     public static void unpackLive(String path, String config, int language) throws IOException, InterruptedException {
@@ -353,11 +401,18 @@ public class Unpack {
         }
     }
 
+
     public static void unpackLegacy(Path root, Js4ResourceProvider provider) throws IOException {
+        var config = new Jagfile(provider.get(0, 2));
+        var interfaces = new Jagfile(provider.get(0, 3));
+        unpackLegacy(root, config, interfaces);
+    }
+
+    public static void unpackLegacy(Path root, Jagfile config, Jagfile interfaces) throws IOException {
         Files.createDirectories(root);
         Files.createDirectories(root.resolve("config"));
         Files.createDirectories(root.resolve("interface"));
-        var config = new Jagfile(provider.get(0, 2));
+
         unpackLegacyConfig(config, "idk", IDKUnpacker::unpack, root.resolve("config/dump.idk"));
         unpackLegacyConfig(config, "flo", FloorOverlayUnpacker::unpack, root.resolve("config/dump.flo"));
         unpackLegacyConfig(config, "loc", LocUnpacker::unpack, root.resolve("config/dump.loc"));
@@ -370,7 +425,8 @@ public class Unpack {
         unpackLegacyConfig(config, "varp", VarPlayerUnpacker::unpack, root.resolve("config/dump.varp"));
         unpackLegacyConfig(config, "varbit", VarPlayerBitUnpacker::unpack, root.resolve("config/dump.varbit"));
         unpackLegacyConfig(config, "mes", EnumUnpacker::unpack, root.resolve("config/dump.enum"));
-        upackLegacyInterfaces(new Jagfile(provider.get(0, 3)), root.resolve("interface"));
+
+        upackLegacyInterfaces(interfaces, root.resolve("interface"));
 
         if (DUMP_SYMBOLS) {
             Path symbolsPath = Path.of(root + "/symbols");

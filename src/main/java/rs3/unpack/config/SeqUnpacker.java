@@ -80,7 +80,14 @@ public class SeqUnpacker {
                 lines.add("walkmerge=" + String.join(",", result));
             }
 
-            case 4 -> lines.add("stretches=yes");
+            case 4 -> {
+                if (Unpack.VERSION < 204) {
+                    lines.add("unknown4=" + packet.g2());
+                } else {
+                    lines.add("stretches=yes");
+                }
+            }
+
             case 5 -> lines.add("priority=" + packet.g1());
             case 6 -> {
                 var value = packet.g2();
