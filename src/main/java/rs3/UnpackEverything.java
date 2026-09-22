@@ -19,7 +19,7 @@ public class UnpackEverything {
 
             if (index >= START_INDEX) {
                 if (build < 226) {
-                    Unpack.unpackOldOpenRS2("unpacked/" + name, build, parts[2]);
+                    Unpack.unpackPre226("unpacked/" + name, build, parts[2]);
                 } else {
                     Unpack.unpackOpenRS2("unpacked/" + name, build, "runescape", Integer.parseInt(parts[2]), false);
                 }

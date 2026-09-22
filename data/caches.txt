@@ -1,6 +1,12 @@
-194,2004-01-09,https://archive.openrs2.org/pub/caches/runescape/194.zip
-204,2004-03-17,https://archive.openrs2.org/pub/caches/runescape/204.zip
-225,2004-05-18,https://archive.openrs2.org/pub/caches/runescape/225.zip
+186,2003-12-05,https://archive2.lostcity.rs/caches/577/cache.zip
+194,2004-01-07,https://archive2.lostcity.rs/caches/65/cache.zip
+204,2004-03-17,https://archive2.lostcity.rs/caches/66/cache.zip
+215,2004-04-06,https://archive2.lostcity.rs/caches/67/cache.zip
+217,2004-04-16,https://archive2.lostcity.rs/caches/68/cache.zip
+218,2004-04-20,https://archive2.lostcity.rs/caches/69/cache.zip
+222,2004-05-05,https://archive2.lostcity.rs/caches/71/cache.zip
+224,2004-05-11,https://archive2.lostcity.rs/caches/72/cache.zip
+225,2004-05-18,https://archive2.lostcity.rs/caches/73/cache.zip
 243,2004-06-21,2173
 244,2004-06-28,1901
 244,2004-07-05,2013

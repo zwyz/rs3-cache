@@ -2,6 +2,8 @@ package rs3;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.compress.archivers.zip.ZipFile;
+import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import rs3.js4.Jagfile;
 import rs3.js4.Js4ResourceProvider;
 import rs3.js4.OpenRS2Js4ResourceProvider;
@@ -29,7 +31,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.awt.image.DirectColorModel;
 import java.awt.image.Raster;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -42,7 +43,6 @@ import java.util.concurrent.StructuredTaskScope;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.zip.ZipInputStream;
 
 // todo: clean this up
 public class Unpack {
@@ -73,16 +73,18 @@ public class Unpack {
         }
     }
 
-    public static void unpackOldOpenRS2(String path, int build, String url) throws IOException, InterruptedException {
+    public static void unpackPre226(String path, int build, String url) throws IOException, InterruptedException {
         VERSION = build;
         BETA = false;
         ID = -1;
 
         var cache = downloadZip(url);
-        unpackLegacy(Path.of(path), new Jagfile(cache.get("archives/config")), new Jagfile(cache.get("archives/interface")));
+        var configs = cache.getInputStream(cache.getEntry("config")).readAllBytes();
+        var interfaces = cache.getInputStream(cache.getEntry("interface")).readAllBytes();
+        unpackLegacy(Path.of(path), new Jagfile(configs), new Jagfile(interfaces));
     }
 
-    private static Map<String, byte[]> downloadZip(String url) throws IOException, InterruptedException {
+    private static ZipFile downloadZip(String url) throws IOException, InterruptedException {
         var path = Path.of(System.getProperty("user.home") + "/.rscache/" + Integer.toHexString(url.hashCode()) + ".zip");
         byte[] data;
 
@@ -99,24 +101,7 @@ public class Unpack {
             data = response.body();
         }
 
-        var files = new HashMap<String, byte[]>();
-
-        try (var zis = new ZipInputStream(new ByteArrayInputStream(data))) {
-            while (true) {
-                var entry = zis.getNextEntry();
-
-                if (entry == null) {
-                    break;
-                }
-
-                if (!entry.isDirectory()) {
-                    var name = entry.getName();
-                    files.put(name.substring(name.indexOf('/') + 1), zis.readAllBytes());
-                }
-            }
-        }
-
-        return files;
+        return new ZipFile(new SeekableInMemoryByteChannel(data));
     }
 
     public static void unpackLive(String path, String config, int language) throws IOException, InterruptedException {
@@ -412,6 +397,7 @@ public class Unpack {
         Files.createDirectories(root);
         Files.createDirectories(root.resolve("config"));
         Files.createDirectories(root.resolve("interface"));
+        Unpacker.reset(); // todo: make non-static
 
         unpackLegacyConfig(config, "idk", IDKUnpacker::unpack, root.resolve("config/dump.idk"));
         unpackLegacyConfig(config, "flo", FloorOverlayUnpacker::unpack, root.resolve("config/dump.flo"));
