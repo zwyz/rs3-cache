@@ -70,7 +70,7 @@ public class Symbols {
             dumpConfigWithValue(Js5ConfigGroup.VARPLAYERTYPE, Type.VAR_PLAYER, Unpacker.VAR_TYPE.get(VarDomain.PLAYER), path.resolve("varp.sym"));
             dumpConfigWithValue(Js5ConfigGroup.VARCLIENTTYPE, Type.VAR_CLIENT, Unpacker.VAR_TYPE.get(VarDomain.CLIENT), path.resolve("varc.sym"));
             dumpConfigWithValue(Js5ConfigGroup.VARCLANTYPE, Type.VAR_CLAN, Unpacker.VAR_TYPE.get(VarDomain.CLAN), path.resolve("varclan.sym"));
-            dumpConfigWithValue(Js5ConfigGroup.UNKNOWN_54, Type.VAR_CLAN_SETTING, Unpacker.VAR_TYPE.get(VarDomain.CLAN_SETTING), path.resolve("varclansetting.sym"));
+            dumpConfigWithValue(Js5ConfigGroup.VARCLANSETTING, Type.VAR_CLAN_SETTING, Unpacker.VAR_TYPE.get(VarDomain.CLAN_SETTING), path.resolve("varclansetting.sym"));
         } else {
             dumpConfigWithValue(Js5ConfigGroup.PARAMTYPE, Type.PARAM, Unpacker.PARAM_TYPE, path.resolve("param.sym"));
             dumpConfigWithValue(Js5ConfigGroup.VAR_PLAYER, Type.VAR_PLAYER, Unpacker.VAR_TYPE.get(VarDomain.PLAYER), path.resolve("varp.sym"));

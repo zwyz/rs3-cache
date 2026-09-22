@@ -224,6 +224,7 @@ public class Unpack {
             } else {
                 unpackConfigArchive(22, 10, VarPlayerBitUnpacker::unpack, root.resolve("config/dump.varbit"));
             }
+
             unpackConfigGroup(2, 15, VarClientStringUnpacker::unpack, root.resolve("config/dump.varcstr"));
             unpackConfigGroup(2, 16, VarPlayerUnpacker::unpack, root.resolve("config/dump.varp"));
             unpackConfigGroup(2, 19, VarClientUnpacker::unpack, root.resolve("config/dump.varc"));
@@ -233,8 +234,19 @@ public class Unpack {
             unpackConfigGroup(2, 23, VarSharedStringUnpacker::unpack, root.resolve("config/dump.varsstr"));
             unpackConfigGroup(2, 24, VarNpcUnpacker::unpack, root.resolve("config/dump.varn"));
             unpackConfigGroup(2, 25, VarNpcBitUnpacker::unpack, root.resolve("config/dump.varnbit"));
-            unpackConfigGroup(2, 47, VarClanUnpacker::unpack, root.resolve("config/dump.varclan"));
+            unpackConfigGroup(2, 37, Config37Unpacker::unpack, root.resolve("config/dump.config37")); // todo: varplong?
+            unpackConfigGroup(2, 38, Config38Unpacker::unpack, root.resolve("config/dump.config38")); // todo: ?
+            unpackConfigGroup(2, 39, Config39Unpacker::unpack, root.resolve("config/dump.config39")); // todo: varnlong?
+            unpackConfigGroup(2, 43, Config43Unpacker::unpack, root.resolve("config/dump.varcon")); // todo: varcon?
+            unpackConfigGroup(2, 44, Config44Unpacker::unpack, root.resolve("config/dump.config44")); // todo: varconbit?
+            unpackConfigGroup(2, 45, Config45Unpacker::unpack, root.resolve("config/dump.config45")); // todo: varconlong?
+            unpackConfigGroup(2, 47, VarClanUnpacker::unpack, root.resolve("config/dump.varclan")); // todo: ?
+            unpackConfigGroup(2, 50, Config50Unpacker::unpack, root.resolve("config/dump.config50")); // todo: varregion?
+            unpackConfigGroup(2, 51, Config51Unpacker::unpack, root.resolve("config/dump.config51")); // todo: varregionlong?
+            unpackConfigGroup(2, 53, Config53Unpacker::unpack, root.resolve("config/dump.config53")); // todo: varregionbit?
             unpackConfigGroup(2, 54, VarClanSettingUnpacker::unpack, root.resolve("config/dump.varclansetting"));
+            unpackConfigGroup(2, 74, Config74Unpacker::unpack, root.resolve("config/dump.config74")); // todo: ?
+            // todo: where is varworld?
         } else {
             unpackConfigGroup(2, 60, (id, data) -> VarUnpacker.unpack(VarDomain.PLAYER, id, data), root.resolve("config/dump.varp"));
             unpackConfigGroup(2, 61, (id, data) -> VarUnpacker.unpack(VarDomain.NPC, id, data), root.resolve("config/dump.varn"));
@@ -244,7 +256,7 @@ public class Unpack {
             unpackConfigGroup(2, 65, (id, data) -> VarUnpacker.unpack(VarDomain.OBJECT, id, data), root.resolve("config/dump.varobj"));
             unpackConfigGroup(2, 66, (id, data) -> VarUnpacker.unpack(VarDomain.CLAN, id, data), root.resolve("config/dump.varclan"));
             unpackConfigGroup(2, 67, (id, data) -> VarUnpacker.unpack(VarDomain.CLAN_SETTING, id, data), root.resolve("config/dump.varclansetting"));
-            unpackConfigGroup(2, 68, (id, data) -> VarUnpacker.unpack(VarDomain.CONTROLLER, id, data), root.resolve("config/dump.varcontroller")); // client ignores
+            unpackConfigGroup(2, 68, (id, data) -> VarUnpacker.unpack(VarDomain.CONTROLLER, id, data), root.resolve("config/dump.varcon")); // client ignores
             unpackConfigGroup(2, 75, (id, data) -> VarUnpacker.unpack(VarDomain.GLOBAL, id, data), root.resolve("config/dump.varglobal")); // client ignores
             unpackConfigGroup(2, 80, (id, data) -> VarUnpacker.unpack(VarDomain.PLAYER_GROUP, id, data), root.resolve("config/dump.varplayergroup"));
             unpackConfigGroup(2, 69, VarBitUnpacker::unpack, root.resolve("config/dump.varbit"));

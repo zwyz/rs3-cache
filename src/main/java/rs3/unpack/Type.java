@@ -239,6 +239,16 @@ public class Type {
     public static final Type LIGHT = new Type("light", BaseVarType.INTEGER);
     public static final Type WATER = new Type("water", BaseVarType.INTEGER);
     public static final Type BILLBOARD = new Type("billboard", BaseVarType.INTEGER);
+    public static final Type CONFIG37 = new Type("config37", BaseVarType.INTEGER);
+    public static final Type CONFIG38 = new Type("config38", BaseVarType.INTEGER);
+    public static final Type CONFIG39 = new Type("config39", BaseVarType.INTEGER);
+    public static final Type CONFIG43 = new Type("config43", BaseVarType.INTEGER);
+    public static final Type CONFIG44 = new Type("config44", BaseVarType.INTEGER);
+    public static final Type CONFIG45 = new Type("config45", BaseVarType.INTEGER);
+    public static final Type CONFIG50 = new Type("config50", BaseVarType.INTEGER);
+    public static final Type CONFIG51 = new Type("config51", BaseVarType.INTEGER);
+    public static final Type CONFIG53 = new Type("config53", BaseVarType.INTEGER);
+    public static final Type CONFIG74 = new Type("config74", BaseVarType.INTEGER);
 
     // special
     public static final Type TYPE = new Type("type", BaseVarType.INTEGER);
