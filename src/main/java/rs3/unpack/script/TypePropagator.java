@@ -5,6 +5,7 @@ import rs3.unpack.ScriptTrigger;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.unpack.VarDomain;
+import rs3.unpack.interfaces.Component;
 
 import java.util.*;
 import java.util.stream.IntStream;
@@ -265,6 +266,27 @@ public class TypePropagator {
 
         // visit children
         expression.visitChildren(c -> run(script, c));
+    }
+
+    public void visitHook(Object[] hook) {
+        var script = (int) hook[0];
+        for (var i = 1; i < hook.length; i++) {
+            if (hook[i] instanceof Integer value) {
+                var type = switch (value) {
+                    case Integer.MIN_VALUE + 3 -> Type.COMPONENT;
+                    case Integer.MIN_VALUE + 6 -> Type.COMPONENT;
+                    case Integer.MIN_VALUE + 8 -> Type.INT_KEY;
+                    case Integer.MIN_VALUE + 9 -> Type.CHAR;
+                    default -> Type.UNKNOWN_INT;
+                };
+
+                emitEqual(parameter(script, i - 1), type);
+            } else if (hook[i] instanceof Long) {
+                emitEqual(parameter(script, i - 1), Type.LONG);
+            } else if (hook[i] instanceof String) {
+                emitEqual(parameter(script, i - 1), Type.STRING);
+            }
+        }
     }
 
     public void finish(Set<Integer> scripts) {

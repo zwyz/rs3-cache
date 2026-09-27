@@ -26,6 +26,7 @@ public abstract class Component {
     public int aspectwidth = 1;
     public int aspectheight = 1;
     public int layer = -1;
+    public int mouseoverlayer = -1; // if1 only
     public boolean hide;
     public boolean noclickthrough;
     public int stylesheet = -1;
@@ -33,7 +34,6 @@ public abstract class Component {
 
     // if1 only
     public int legacytrans;
-    public int mouseoverlayer = -1;
     public int[] scriptComparison = new int[0];
     public int[] scriptComparisonValue = new int[0];
     public int[][] scriptInstructions = new int[0][];
@@ -56,6 +56,7 @@ public abstract class Component {
     public int dragdeadtime;
     public int events;
     public List<ParamEntry> params = new ArrayList<>();
+    public List<Object[]> hooks = new ArrayList<>();
     public Object[] onload;
     public Object[] onmouseover;
     public Object[] onmouseleave;
@@ -392,7 +393,7 @@ public abstract class Component {
 
     protected abstract void decodeSpecific(Packet packet);
 
-    private static Object[] decodeHook(Packet packet) {
+    private Object[] decodeHook(Packet packet) {
         var count = packet.g1();
 
         if (count == 0) {
@@ -413,6 +414,7 @@ public abstract class Component {
             };
         }
 
+        hooks.add(hook);
         return hook;
     }
 

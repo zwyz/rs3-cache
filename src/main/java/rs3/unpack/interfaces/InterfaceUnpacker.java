@@ -4,24 +4,12 @@ import rs3.Unpack;
 import rs3.unpack.Type;
 import rs3.unpack.Unpacker;
 import rs3.unpack.script.ScriptUnpacker;
-import rs3.util.Packet;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class InterfaceUnpacker {
-    public static List<String> unpack(int id, byte[] data) {
-        var packet = new Packet(data);
-        var component = Component.decode(id, packet);
-
-        if (packet.pos != packet.arr.length) {
-            throw new IllegalStateException("end of file not reached");
-        }
-
-        return unpack(component);
-    }
-
     public static List<String> unpack(Component component) {
         var lines = new ArrayList<String>();
         lines.add("[" + Unpacker.formatComponentShort(component.id) + "]");
@@ -170,37 +158,32 @@ public class InterfaceUnpacker {
             }
         }
 
-        if (component.onload != null) lines.add("onload=" + formatHook(component.onload));
-        if (component.onmouseover != null) lines.add("onmouseover=" + formatHook(component.onmouseover)); // if_setonmouseover
-        if (component.onmouseleave != null) lines.add("onmouseleave=" + formatHook(component.onmouseleave)); // if_setonmouseleave
-        if (component.ontargetleave != null) lines.add("ontargetleave=" + formatHook(component.ontargetleave)); // if_setontargetleave
-        if (component.ontargetenter != null) lines.add("ontargetenter=" + formatHook(component.ontargetenter)); // if_setontargetenter
-        if (component.onvartransmit != null) lines.add("onvartransmit=" + formatHook(component.onvartransmit)); // if_setonvartransmit
-        if (component.oninvtransmit != null) lines.add("oninvtransmit=" + formatHook(component.oninvtransmit)); // if_setoninvtransmit
-        if (component.onstattransmit != null) lines.add("onstattransmit=" + formatHook(component.onstattransmit)); // if_setonstattransmit
-        if (component.ontimer != null) lines.add("ontimer=" + formatHook(component.ontimer)); // if_setontimer
-        if (component.onop != null) lines.add("onop=" + formatHook(component.onop)); // if_setonop
-        if (component.onopt != null) lines.add("onopt=" + formatHook(component.onopt)); // if_setonopt
-        if (component.onmouserepeat != null) lines.add("onmouserepeat=" + formatHook(component.onmouserepeat)); // if_setonmouserepeat
-        if (component.onclick != null) lines.add("onclick=" + formatHook(component.onclick)); // if_setonclick
-        if (component.onclickrepeat != null) lines.add("onclickrepeat=" + formatHook(component.onclickrepeat)); // if_setonclickrepeat
-        if (component.onrelease != null) lines.add("onrelease=" + formatHook(component.onrelease)); // if_setonrelease
-        if (component.onhold != null) lines.add("onhold=" + formatHook(component.onhold)); // if_setonhold
-        if (component.ondrag != null) lines.add("ondrag=" + formatHook(component.ondrag)); // if_setondrag
-        if (component.ondragcomplete != null) lines.add("ondragcomplete=" + formatHook(component.ondragcomplete)); // if_setondragcomplete
-        if (component.ondragcancel != null) lines.add("ondragcancel=" + formatHook(component.ondragcancel));
-        if (component.onscrollwheel != null) lines.add("onscrollwheel=" + formatHook(component.onscrollwheel)); // if_setonscrollwheel
-        if (component.onvarctransmit != null) lines.add("onvarctransmit=" + formatHook(component.onvarctransmit)); // if_setonvarctransmit
-        if (component.onvarcstrtransmit != null) lines.add("onvarcstrtransmit=" + formatHook(component.onvarcstrtransmit)); // if_setonvarcstrtransmit
-        if (component.onbuttonpressed != null) lines.add("onbuttonpressed=" + formatHook(component.onbuttonpressed)); // 949 beta enum
-        if (component.oncontentchanged != null) lines.add("oncontentchanged=" + formatHook(component.oncontentchanged)); // 949 beta enum
-        if (component.onselectionchanged != null) lines.add("onselectionchanged=" + formatHook(component.onselectionchanged)); // 949 beta enum
-        if (component.oncrmviewupdated != null) lines.add("oncrmviewupdated=" + formatHook(component.oncrmviewupdated)); // 949 beta enum
-        if (component.onvartransmitlist != null) lines.add("onvartransmitlist=" + formatTransmitList(component.onvartransmitlist, Type.VAR_PLAYER));
-        if (component.oninvtransmitlist != null) lines.add("oninvtransmitlist=" + formatTransmitList(component.oninvtransmitlist, Type.INV));
-        if (component.onstattransmitlist != null) lines.add("onstattransmitlist=" + formatTransmitList(component.onstattransmitlist, Type.STAT));
-        if (component.onvarctransmitlist != null) lines.add("onvarctransmitlist=" + formatTransmitList(component.onvarctransmitlist, Type.VAR_CLIENT));
-        if (component.onvarcstrtransmitlist != null) lines.add("onvarcstrtransmitlist=" + formatTransmitList(component.onvarcstrtransmitlist, Type.VAR_CLIENT_STRING));
+        if (component.onload != null) lines.add("onload=" + formatHook(component.onload, null, null));
+        if (component.onmouseover != null) lines.add("onmouseover=" + formatHook(component.onmouseover, null, null)); // if_setonmouseover
+        if (component.onmouseleave != null) lines.add("onmouseleave=" + formatHook(component.onmouseleave, null, null)); // if_setonmouseleave
+        if (component.ontargetleave != null) lines.add("ontargetleave=" + formatHook(component.ontargetleave, null, null)); // if_setontargetleave
+        if (component.ontargetenter != null) lines.add("ontargetenter=" + formatHook(component.ontargetenter, null, null)); // if_setontargetenter
+        if (component.onvartransmit != null) lines.add("onvartransmit=" + formatHook(component.onvartransmit, component.onvartransmitlist, Type.VAR_PLAYER)); // if_setonvartransmit
+        if (component.oninvtransmit != null) lines.add("oninvtransmit=" + formatHook(component.oninvtransmit, component.oninvtransmitlist, Type.INV)); // if_setoninvtransmit
+        if (component.onstattransmit != null) lines.add("onstattransmit=" + formatHook(component.onstattransmit, component.onstattransmitlist, Type.STAT)); // if_setonstattransmit
+        if (component.ontimer != null) lines.add("ontimer=" + formatHook(component.ontimer, null, null)); // if_setontimer
+        if (component.onop != null) lines.add("onop=" + formatHook(component.onop, null, null)); // if_setonop
+        if (component.onopt != null) lines.add("onopt=" + formatHook(component.onopt, null, null)); // if_setonopt
+        if (component.onmouserepeat != null) lines.add("onmouserepeat=" + formatHook(component.onmouserepeat, null, null)); // if_setonmouserepeat
+        if (component.onclick != null) lines.add("onclick=" + formatHook(component.onclick, null, null)); // if_setonclick
+        if (component.onclickrepeat != null) lines.add("onclickrepeat=" + formatHook(component.onclickrepeat, null, null)); // if_setonclickrepeat
+        if (component.onrelease != null) lines.add("onrelease=" + formatHook(component.onrelease, null, null)); // if_setonrelease
+        if (component.onhold != null) lines.add("onhold=" + formatHook(component.onhold, null, null)); // if_setonhold
+        if (component.ondrag != null) lines.add("ondrag=" + formatHook(component.ondrag, null, null)); // if_setondrag
+        if (component.ondragcomplete != null) lines.add("ondragcomplete=" + formatHook(component.ondragcomplete, null, null)); // if_setondragcomplete
+        if (component.ondragcancel != null) lines.add("ondragcancel=" + formatHook(component.ondragcancel, null, null));
+        if (component.onscrollwheel != null) lines.add("onscrollwheel=" + formatHook(component.onscrollwheel, null, null)); // if_setonscrollwheel
+        if (component.onvarctransmit != null) lines.add("onvarctransmit=" + formatHook(component.onvarctransmit, component.onvarctransmitlist, Type.VAR_CLIENT)); // if_setonvarctransmit
+        if (component.onvarcstrtransmit != null) lines.add("onvarcstrtransmit=" + formatHook(component.onvarcstrtransmit, component.onvarcstrtransmitlist, Type.VAR_CLIENT_STRING)); // if_setonvarcstrtransmit
+        if (component.onbuttonpressed != null) lines.add("onbuttonpressed=" + formatHook(component.onbuttonpressed, null, null)); // 949 beta enum
+        if (component.oncontentchanged != null) lines.add("oncontentchanged=" + formatHook(component.oncontentchanged, null, null)); // 949 beta enum
+        if (component.onselectionchanged != null) lines.add("onselectionchanged=" + formatHook(component.onselectionchanged, null, null)); // 949 beta enum
+        if (component.oncrmviewupdated != null) lines.add("oncrmviewupdated=" + formatHook(component.oncrmviewupdated, null, null)); // 949 beta enum
 
         return lines;
     }
@@ -256,23 +239,39 @@ public class InterfaceUnpacker {
         return e;
     }
 
-    private static String formatHook(Object[] hook) {
-        var script = (Integer) hook[0];
-        var arguments = new ArrayList<String>();
+    private static String formatHook(Object[] hook, int[] transmitList, Type transmitType) {
+        if (hook == null) {
+            return "null";
+        }
 
-        for (var i = 0; i < hook.length - 1; ++i) {
-            if (!ScriptUnpacker.SCRIPT_PARAMETERS.isEmpty()) {
-                arguments.add(formatHookArgument(hook[i + 1], ScriptUnpacker.SCRIPT_PARAMETERS.get(script).get(i)));
-            } else {
-                arguments.add(String.valueOf(hook[i + 1])); // missing opcodes mode
+        var script = (int) hook[0];
+        var sb = new StringBuilder();
+        sb.append(Unpacker.format(Type.CLIENTSCRIPT, script));
+
+        if (hook.length > 1) {
+            sb.append('(');
+            var parameters = ScriptUnpacker.SCRIPT_PARAMETERS.get(script);
+
+            for (var i = 1; i < hook.length; i++) {
+                if (i > 1) sb.append(", ");
+                sb.append(formatHookArgument(hook[i], parameters.get(i - 1)));
             }
+
+            sb.append(')');
         }
 
-        if (arguments.isEmpty()) {
-            return Unpacker.format(Type.CLIENTSCRIPT, script);
-        } else {
-            return Unpacker.format(Type.CLIENTSCRIPT, script) + "(" + String.join(", ", arguments) + ")";
+        if (transmitList != null) {
+            sb.append('{');
+
+            for (var i = 0; i < transmitList.length; ++i) {
+                if (i > 0) sb.append(", ");
+                sb.append(Unpacker.format(transmitType, transmitList[i]));
+            }
+
+            sb.append('}');
         }
+
+        return sb.toString();
     }
 
     private static String formatHookArgument(Object value, Type type) {
@@ -299,20 +298,6 @@ public class InterfaceUnpacker {
         return "\"" + value + "\"";
     }
 
-    private static String formatTransmitList(int[] list, Type type) {
-        var sb = new StringBuilder();
-
-        for (var i = 0; i < list.length; ++i) {
-            if (i > 0) {
-                sb.append(",");
-            }
-
-            sb.append(Unpacker.format(type, list[i]));
-        }
-
-        return sb.toString();
-    }
-
     private static void unpackLayer(ArrayList<String> lines, LayerComponent component) {
         if (component.scrollwidth != 0) lines.add("scrollwidth=" + component.scrollwidth); // if_getscrollwidth
         if (component.scrollheight != 0) lines.add("scrollheight=" + component.scrollheight); // if_getscrollheight
@@ -325,8 +310,8 @@ public class InterfaceUnpacker {
         if (component.legacyfont != -1) lines.add("textfont=" + formatLegacyFont(component.legacyfont));
         if (component.textfont != -1) lines.add("textfont=" + Unpacker.format(Unpack.VERSION < 751 ? Type.GRAPHIC : Type.FONTMETRICS, component.textfont)); // if_settextfont
         if (component.textlineheight != 0) lines.add("textlineheight=" + component.textlineheight);
-        if (component.textalignh != 0) lines.add("textalignh=" + component.textalignh); // if_settextalign
-        if (component.textalignv != 0) lines.add("textalignv=" + component.textalignv); // if_settextalign
+        if (component.textalignh != 0) lines.add("textalignh=" + formatAlignH(component.textalignh)); // if_settextalign
+        if (component.textalignv != 0) lines.add("textalignv=" + formatAlignV(component.textalignv)); // if_settextalign
         if (component.textshadow) lines.add("textshadow=yes"); // if_settextshadow
         lines.add("colour=" + Unpacker.formatColour(component.colour)); // if_setcolour
     }
@@ -346,6 +331,10 @@ public class InterfaceUnpacker {
                 lines.add("slot" + (i + 1) + "=" + component.slotoffsetx[i] + "," + component.slotoffsety[i] + "," + component.legacysloticon[i]);
             }
         }
+
+        for (var i = 0; i < component.objops.length; i++) {
+            if (!component.objops[i].isEmpty()) lines.add("op" + (i + 1) + "=" + component.objops[i]);
+        }
     }
 
     private static void unpackGraphic(ArrayList<String> lines, GraphicComponent component) {
@@ -353,7 +342,7 @@ public class InterfaceUnpacker {
     }
 
     private static void unpackInvText(ArrayList<String> lines, InvTextComponent component) {
-        if (component.textalignh != 0) lines.add("textalignh=" + component.textalignh); // if_settextalign
+        if (component.textalignh != 0) lines.add("textalignh=" + formatAlignH(component.textalignh)); // if_settextalign
         if (component.legacyfont != -1) lines.add("textfont=" + formatLegacyFont(component.legacyfont));
         if (component.textfont != -1) lines.add("textfont=" + Unpacker.format(Unpack.VERSION < 751 ? Type.GRAPHIC : Type.FONTMETRICS, component.textfont)); // if_settextfont
         if (component.textshadow) lines.add("textshadow=yes"); // if_settextshadow
@@ -361,6 +350,10 @@ public class InterfaceUnpacker {
         if (component.paddingx != 0) lines.add("paddingx=" + component.paddingx);
         if (component.paddingy != 0) lines.add("paddingy=" + component.paddingy);
         if (component.interactable) lines.add("interactable=yes");
+
+        for (var i = 0; i < component.objops.length; i++) {
+            if (!component.objops[i].isEmpty()) lines.add("op" + (i + 1) + "=" + component.objops[i]);
+        }
     }
 
     private static void unpackTooltip(ArrayList<String> lines, TooltipComponent component) {
@@ -402,11 +395,11 @@ public class InterfaceUnpacker {
 
     private static void unpackRectangle(ArrayList<String> lines, RectangleComponent component) {
         lines.add("colour=" + Unpacker.formatColour(component.colour)); // if_setcolour
-        if (component.fill) lines.add("fill=yes"); // if_setfill
-        if (component.trans != 0) lines.add("trans=" + component.trans); // if_settrans
         if (component.colouractive != 0) lines.add("colouractive=" + Unpacker.formatColour(component.colouractive)); // if1 only
         if (component.mouseovercolour != 0) lines.add("mouseovercolour=" + Unpacker.formatColour(component.mouseovercolour)); // if1 only
         if (component.mouseovercolouractive != 0) lines.add("mouseovercolouractive=" + Unpacker.formatColour(component.mouseovercolouractive)); // if1 only
+        if (component.fill) lines.add("fill=yes"); // if_setfill
+        if (component.trans != 0) lines.add("trans=" + component.trans); // if_settrans
     }
 
     private static void unpackLine(ArrayList<String> lines, LineComponent component) {
@@ -537,12 +530,12 @@ public class InterfaceUnpacker {
     private static void unpackTextPart(String prefix, ArrayList<String> lines, TextPart text) {
         if (text.legacyfont != -1) lines.add(prefix + "textfont=" + formatLegacyFont(text.legacyfont));
         if (text.textfont != -1) lines.add(prefix + "textfont=" + Unpacker.format(Unpack.VERSION < 751 ? Type.GRAPHIC : Type.FONTMETRICS, text.textfont)); // if_settextfont
-        if (!text.fontmono) lines.add(prefix + "fontmono=no"); // if_setfontmono
+        if (text.fontmono) lines.add(prefix + "fontmono=no"); // if_setfontmono
         if (!text.text.isEmpty()) lines.add(prefix + "text=" + text.text); // if_settext
         if (text.textactive != null && !text.textactive.isEmpty()) lines.add(prefix + "textactive=" + text.textactive); // if1 only
         if (text.textlineheight != 0) lines.add(prefix + "textlineheight=" + text.textlineheight); // todo
-        if (text.textalignh != 0) lines.add(prefix + "textalignh=" + text.textalignh); // if_settextalign
-        if (text.textalignv != 0) lines.add(prefix + "textalignv=" + text.textalignv); // if_settextalign
+        if (text.textalignh != 0) lines.add(prefix + "textalignh=" + formatAlignH(text.textalignh)); // if_settextalign
+        if (text.textalignv != 0) lines.add(prefix + "textalignv=" + formatAlignV(text.textalignv)); // if_settextalign
         if (text.textshadow) lines.add(prefix + "textshadow=yes"); // if_settextshadow
         if (text.colour != 0xffffff) lines.add(prefix + "colour=" + Unpacker.formatColour(text.colour)); // if_setcolour
         if (text.colouractive != 0) lines.add(prefix + "colouractive=" + Unpacker.formatColour(text.colouractive)); // if1 only
@@ -576,7 +569,7 @@ public class InterfaceUnpacker {
         if (sprite.vflip) lines.add(prefix + "vflip=yes"); // if_setvflip
         if (sprite.hflip) lines.add(prefix + "hflip=yes"); // if_sethflip
         if (sprite.colour != 0xffffff) lines.add(prefix + "colour=" + Unpacker.formatColour(sprite.colour)); // if_setcolour
-        if (sprite.clickmask) lines.add(prefix + "clickmask=" + (sprite.clickmask ? "yes" : "no")); // if_setclickmask
+        if (sprite.clickmask) lines.add(prefix + "clickmask=yes"); // if_setclickmask
 
         var edge = sprite.edge; // if_graphic_setedge
 
@@ -627,6 +620,26 @@ public class InterfaceUnpacker {
             case 4 -> "proportion_centre";
             case 5 -> "proportion_bottom";
             default -> throw new IllegalStateException("Unexpected value: " + widthmode);
+        };
+    }
+
+    private static String formatAlignH(int id) {
+        return switch (id) {
+            case 0 -> "left";
+            case 1 -> "centre";
+            case 2 -> "right";
+            case 3 -> "unknown_3"; // todo
+            default -> throw new IllegalStateException();
+        };
+    }
+
+    private static String formatAlignV(int id) {
+        return switch (id) {
+            case 0 -> "top";
+            case 1 -> "centre";
+            case 2 -> "bottom";
+            case 3 -> "unknown_3"; // todo
+            default -> throw new IllegalStateException();
         };
     }
 

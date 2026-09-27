@@ -8,7 +8,7 @@ import rs3.util.Packet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EffectAnimUnpacker {
+public class SpotUnpacker {
     private static int recolindices;
     private static int retexindices;
 
@@ -35,7 +35,7 @@ public class EffectAnimUnpacker {
             }
 
             case 1 -> lines.add("model=" + Unpacker.format(Type.MODEL, Unpack.VERSION < 681 ? packet.g2null() : packet.gSmart2or4null()));
-            case 2 -> lines.add("seq=" + Unpacker.format(Type.SEQ, packet.gSmart2or4null())); // lua seqID
+            case 2 -> lines.add("anim=" + Unpacker.format(Type.SEQ, packet.gSmart2or4null())); // lua seqID (but anim is more consistent with other config names)
             case 3 -> lines.add("hasalpha=yes");
             case 4 -> lines.add("resizeh=" + packet.g2());
             case 5 -> lines.add("resizev=" + packet.g2());

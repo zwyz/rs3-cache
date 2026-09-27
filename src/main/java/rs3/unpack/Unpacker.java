@@ -1,6 +1,7 @@
 package rs3.unpack;
 
 import rs3.Unpack;
+import rs3.unpack.interfaces.Component;
 import rs3.unpack.script.ScriptUnpacker;
 import rs3.util.CP1252;
 import rs3.util.Packet;
@@ -17,6 +18,7 @@ public class Unpacker {
     public static final Map<Integer, Type> ENUM_OUTPUT_TYPE = new HashMap<>();
     public static final Map<VarDomain, Map<Integer, Type>> VAR_TYPE = new HashMap<>();
     public static final Map<Integer, VarDomain> VARBIT_DOMAIN = new HashMap<>();
+    public static final Map<Integer, Map<Integer, Component>> COMPONENT = new LinkedHashMap<>();
     public static final Map<Integer, Integer> COMPONENT_INTERFACE = new HashMap<>();
 
     public static void reset() {
@@ -29,6 +31,7 @@ public class Unpacker {
         ENUM_OUTPUT_TYPE.clear();
         VAR_TYPE.clear();
         VARBIT_DOMAIN.clear();
+        COMPONENT.clear();
         COMPONENT_INTERFACE.clear();
 
         for (var domain : VarDomain.values()) {
@@ -496,6 +499,16 @@ public class Unpacker {
                 return quote(format(Type.DBCOLUMN, DBUtil.getPackedColumn(table, column), false) + ":" + tuple, safe);
             } else {
                 return quote(format(Type.DBTABLE, table, false) + ":col" + column, safe);
+            }
+        } else if (type == Type.ANIMFRAME) {
+            if (value == -1) {
+                return "null";
+            } else if (Unpack.VERSION < 457) {
+                return "animframe_" + value;
+            } else {
+                var frameset = value >> 16;
+                var frame = value & 0xffff;
+                return "animframe_" + frameset + "_" + frame;
             }
         } else if (type == Type.CLIENTSCRIPT) {
             if (value == -1) {

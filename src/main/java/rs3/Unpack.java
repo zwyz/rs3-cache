@@ -46,7 +46,7 @@ import java.util.function.Function;
 
 // todo: clean this up
 public class Unpack {
-    public static final boolean DUMP_CONFIG_IDS = true;
+    public static final boolean DUMP_CONFIG_IDS = false;
     public static final boolean DUMP_SYMBOLS = true;
     public static final HttpClient HTTP = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
     public static boolean BETA;
@@ -217,6 +217,8 @@ public class Unpack {
         loadGroupNames(Path.of("data/names/graphics.txt"), 8, (id, name) -> Unpacker.setSymbolName(Type.GRAPHIC, id, name));
         loadGroupNames(Path.of("data/names/binaries.txt"), 10, Unpacker.BINARY_NAME::put);
 
+        loadInterfaces(3);
+
         // things stuff depends on
         if (Unpack.VERSION < 751) {
             if (Unpack.VERSION < 488) {
@@ -229,7 +231,7 @@ public class Unpack {
             unpackConfigGroup(2, 16, VarPlayerUnpacker::unpack, root.resolve("config/dump.varp"));
             unpackConfigGroup(2, 19, VarClientUnpacker::unpack, root.resolve("config/dump.varc"));
             unpackConfigGroup(2, 20, VarObjUnpacker::unpack, root.resolve("config/dump.varobj"));
-            unpackConfigGroup(2, 21, VarPlayerUnpacker::unpack, root.resolve("config/dump.varpstr"));
+            unpackConfigGroup(2, 21, VarPlayerStringUnpacker::unpack, root.resolve("config/dump.varpstr"));
             unpackConfigGroup(2, 22, VarSharedUnpacker::unpack, root.resolve("config/dump.vars"));
             unpackConfigGroup(2, 23, VarSharedStringUnpacker::unpack, root.resolve("config/dump.varsstr"));
             unpackConfigGroup(2, 24, VarNpcUnpacker::unpack, root.resolve("config/dump.varn"));
@@ -304,9 +306,9 @@ public class Unpack {
         }
 
         if (Unpack.VERSION < 488) {
-            unpackConfigGroup(2, 13, EffectAnimUnpacker::unpack, root.resolve("config/dump.spot"));
+            unpackConfigGroup(2, 13, SpotUnpacker::unpack, root.resolve("config/dump.spot"));
         } else {
-            unpackConfigArchive(21, 8, EffectAnimUnpacker::unpack, root.resolve("config/dump.spot")); // 13
+            unpackConfigArchive(21, 8, SpotUnpacker::unpack, root.resolve("config/dump.spot")); // 13
         }
 
         unpackConfigGroup(2, 18, AreaUnpacker::unpack, root.resolve("config/dump.area")); // client ignores
@@ -367,7 +369,7 @@ public class Unpack {
         if (!Command.MISSING_OPCODES) unpackScripts(12, root.resolve("script"));
 
         // interface
-        unpackInterfaces(3, InterfaceUnpacker::unpack, root.resolve("interface"));
+        unpackInterfaces(root.resolve("interface"));
 
         // materials
 //        unpackConfigArchive(9, 0, TextureUnpacker::unpack, root.resolve("config/dump.texture")); // TODO: buggy in some revs
@@ -419,7 +421,7 @@ public class Unpack {
         unpackLegacyConfig(config, "obj", ObjUnpacker::unpack, root.resolve("config/dump.obj"));
         unpackLegacyConfig(config, "param", ParamUnpacker::unpack, root.resolve("config/dump.param"));
         unpackLegacyConfig(config, "seq", SeqUnpacker::unpack, root.resolve("config/dump.seq"));
-        unpackLegacyConfig(config, "spotanim", EffectAnimUnpacker::unpack, root.resolve("config/dump.spot"));
+        unpackLegacyConfig(config, "spotanim", SpotUnpacker::unpack, root.resolve("config/dump.spot"));
         unpackLegacyConfig(config, "varp", VarPlayerUnpacker::unpack, root.resolve("config/dump.varp"));
         unpackLegacyConfig(config, "varbit", VarPlayerBitUnpacker::unpack, root.resolve("config/dump.varbit"));
         unpackLegacyConfig(config, "mes", EnumUnpacker::unpack, root.resolve("config/dump.enum"));
@@ -744,7 +746,11 @@ public class Unpack {
 
         for (var group : archiveIndex.groupId) {
             var lines = new ArrayList<>(ScriptUnpacker.unpack(group));
-            lines.addFirst("// " + group);
+
+            if (DUMP_CONFIG_IDS) {
+                lines.addFirst("// " + group);
+            }
+
             Files.write(path.resolve(Unpacker.getScriptName(group) + ".cs2"), lines);
         }
     }
@@ -961,7 +967,7 @@ public class Unpack {
         Files.write(result, lines);
     }
 
-    private static void unpackInterfaces(int archive, BiFunction<Integer, byte[], List<String>> unpack, Path result) throws IOException {
+    private static void loadInterfaces(int archive) {
         var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
         var groups = preloadGroups(archive);
 
@@ -974,21 +980,40 @@ public class Unpack {
             }
 
             var files = Js5Util.unpackGroup(archiveIndex, group, groups[group]);
-            var lines = new ArrayList<String>();
-            boolean scripted = Unpack.VERSION >= 566;
 
             for (var file : files.keySet()) {
                 var data = files.get(file);
-                scripted |= data[0] == -1;
+                    var packet = new Packet(data);
+                    var component = Component.decode((group << 16) + file, packet);
+
+                    if (packet.pos != packet.arr.length) {
+                        throw new IllegalStateException("end of file not reached");
+                    }
+
+                Unpacker.COMPONENT.computeIfAbsent(group, _ -> new LinkedHashMap<>()).put(file, component);
+            }
+        }
+    }
+
+    private static void unpackInterfaces(Path result) throws IOException {
+        for (var interfaceEntry : Unpacker.COMPONENT.entrySet()) {
+            var lines = new ArrayList<String>();
+            var interfaceID = interfaceEntry.getKey();
+            var scripted = false;
+
+            for (var component : interfaceEntry.getValue().values()) {
+                scripted |= component.version > -2;
+
                 if (DUMP_CONFIG_IDS) {
-                    lines.add("// " + group + ":" + file);
+                    lines.add("// " + (component.id >> 16) + ":" + (component.id & 0xFFFF));
                 }
-                lines.addAll(unpack.apply((group << 16) + file, data));
+
+                lines.addAll(InterfaceUnpacker.unpack(component));
                 lines.add("");
             }
 
             String extension = scripted ? "if3" : "if";
-            Files.write(result.resolve(Unpacker.format(Type.INTERFACE, group) + "." + extension), lines);
+            Files.write(result.resolve(Unpacker.format(Type.INTERFACE, interfaceID) + "." + extension), lines);
         }
     }
 }

@@ -34,7 +34,7 @@ public class Main {
 
                 if (parts[1].equals(args[1])) {
                     if (Integer.parseInt(parts[0]) < 226) {
-                        Unpack.unpackOldOpenRS2(args[2], Integer.parseInt(parts[0]), parts[2]);
+                        Unpack.unpackPre226(args[2], Integer.parseInt(parts[0]), parts[2]);
                     } else {
                         Unpack.unpackOpenRS2(args[2], Integer.parseInt(parts[0]), "runescape", Integer.parseInt(parts[2]), false);
                     }

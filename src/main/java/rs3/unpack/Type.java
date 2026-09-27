@@ -249,6 +249,8 @@ public class Type {
     public static final Type CONFIG51 = new Type("config51", BaseVarType.INTEGER);
     public static final Type CONFIG53 = new Type("config53", BaseVarType.INTEGER);
     public static final Type CONFIG74 = new Type("config74", BaseVarType.INTEGER);
+    public static final Type KEYFRAMESET = new Type("keyframeset", BaseVarType.INTEGER);
+    public static final Type ANIMFRAME = new Type("animframe", BaseVarType.INTEGER);
 
     // special
     public static final Type TYPE = new Type("type", BaseVarType.INTEGER);
@@ -261,6 +263,7 @@ public class Type {
     public static final Type DBFILTER = new Type("dbfilter", BaseVarType.INTEGER);
     public static final Type VAR_PLAYER = new Type("var_player", BaseVarType.INTEGER);
     public static final Type VAR_PLAYER_BIT = new Type("var_player_bit", BaseVarType.INTEGER);
+    public static final Type VAR_PLAYER_STRING = new Type("var_player_string", BaseVarType.INTEGER);
     public static final Type VAR_NPC = new Type("var_npc", BaseVarType.INTEGER);
     public static final Type VAR_NPC_BIT = new Type("var_npc_bit", BaseVarType.INTEGER);
     public static final Type VAR_CLIENT = new Type("var_client", BaseVarType.INTEGER);

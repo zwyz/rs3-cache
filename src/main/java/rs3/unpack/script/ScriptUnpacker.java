@@ -116,6 +116,14 @@ public class ScriptUnpacker {
             propagator.run(id, script);
         }
 
+        for (var itf : Unpacker.COMPONENT.entrySet()) {
+            for (var com : itf.getValue().values()) {
+                for (var hook : com.hooks) {
+                    propagator.visitHook(hook);
+                }
+            }
+        }
+
         propagator.finish(SCRIPTS_DECOMPILED.keySet());
     }
 
