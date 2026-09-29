@@ -213,9 +213,9 @@ public class Unpack {
 
         // load names
         loadGroupNamesScriptTrigger(12, Unpacker.SCRIPT_NAME);
-        loadGroupNames(Path.of("data/names/scripts.txt"), 12, Unpacker.SCRIPT_NAME::put);
-        loadGroupNames(Path.of("data/names/graphics.txt"), 8, (id, name) -> Unpacker.setSymbolName(Type.GRAPHIC, id, name));
-        loadGroupNames(Path.of("data/names/binaries.txt"), 10, Unpacker.BINARY_NAME::put);
+        loadGroupNames(Path.of("data/names/scripts.txt"), 12, Unpacker.SCRIPT_NAME::put, false);
+        loadGroupNames(Path.of("data/names/graphics.txt"), 8, (id, name) -> Unpacker.setSymbolName(Type.GRAPHIC, id, name), true);
+        loadGroupNames(Path.of("data/names/binaries.txt"), 10, Unpacker.BINARY_NAME::put, false);
 
         loadInterfaces(3);
 
@@ -525,13 +525,13 @@ public class Unpack {
         }
     }
 
-    private static void loadGroupNames(Path path, int archive, BiConsumer<Integer, String> consumer) throws IOException {
+    private static void loadGroupNames(Path path, int archive, BiConsumer<Integer, String> consumer, boolean sheets) throws IOException {
         if (archive >= MASTER_INDEX.getArchiveCount() || MASTER_INDEX.getArchiveData(archive).getCrc() == 0) {
             return; // empty archives don't get packed
         }
 
         var unhash = new HashMap<Integer, String>();
-        generateNames(path, unhash);
+        generateNames(path, unhash, sheets);
         var archiveIndex = new Js5ArchiveIndex(Js5Util.decompress(PROVIDER.get(255, archive, false, 0)));
 
         if (archiveIndex.groupNameHash == null) {
@@ -608,11 +608,11 @@ public class Unpack {
         }
     }
 
-    private static void generateNames(Path path, Map<Integer, String> names) throws IOException {
+    private static void generateNames(Path path, Map<Integer, String> names, boolean sheets) throws IOException {
         for (var name : Files.readAllLines(path)) {
             var comma = name.lastIndexOf(',');
 
-            if (comma == -1) {
+            if (sheets && comma == -1) {
                 names.put(name.hashCode(), name);
             } else {
                 var sheet = name.substring(0, comma);
