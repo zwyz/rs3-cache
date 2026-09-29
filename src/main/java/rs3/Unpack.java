@@ -610,21 +610,19 @@ public class Unpack {
 
     private static void generateNames(Path path, Map<Integer, String> names) throws IOException {
         for (var name : Files.readAllLines(path)) {
-            generateNames(name, names);
-        }
-    }
+            var comma = name.lastIndexOf(',');
 
-    private static void generateNames(String name, Map<Integer, String> map) {
-        if (name.indexOf('#') != -1) {
-            var index = name.indexOf('#');
-            var a = name.substring(0, index);
-            var b = name.substring(index + 1);
+            if (comma == -1) {
+                names.put(name.hashCode(), name);
+            } else {
+                var sheet = name.substring(0, comma);
+                var count = Integer.parseInt(name.substring(comma + 1));
 
-            for (var i = 0; i < 500; i++) {
-                generateNames(a + i + b, map);
+                for (var i = 0; i < count; i++) {
+                    var current = sheet +"," + i;
+                    names.put(current.hashCode(), current);
+                }
             }
-        } else {
-            map.put(name.hashCode(), name);
         }
     }
 
