@@ -38,6 +38,7 @@ public class VarBitUnpacker {
                 }
 
                 case 16 -> lines.add("wikisync=yes");
+                case 17 -> lines.add("luaexcluded=yes");
 
                 default -> throw new IllegalStateException("unknown opcode");
             }

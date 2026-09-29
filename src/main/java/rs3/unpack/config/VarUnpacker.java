@@ -53,6 +53,7 @@ public class VarUnpacker {
             case 110 -> lines.add("clientcode=" + packet.g2());
             case 7 -> lines.add("legacydefaultvalue=no"); // 216 LegacyDefaultValue
             case 8 -> lines.add("wikisync=yes");
+            case 9 -> lines.add("luaexcluded=yes");
 
             default -> throw new IllegalStateException("unknown opcode");
         }

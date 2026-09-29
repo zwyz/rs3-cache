@@ -22,6 +22,8 @@ public class GameLogEventUnpacker {
                 return lines;
             }
 
+            case 103 -> lines.add("type=" + Type.byID(packet.gSmart1or2()));
+
             default -> throw new IllegalStateException("unknown opcode");
         }
     }
