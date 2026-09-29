@@ -22,7 +22,15 @@ public class Unknown1DefaultsUnpacker {
                 return lines;
             }
 
-            case 1 -> lines.add("unknown1=" + packet.g2() + "," + packet.g2() + "," + packet.g2() + "," + packet.g2() + "," + packet.g2() + "," + packet.g2());
+            case 1 -> {
+                var t1 = Unpacker.format(Type.TEXTURE, packet.g2());
+                var t2 = Unpacker.format(Type.TEXTURE, packet.g2());
+                var t3 = Unpacker.format(Type.TEXTURE, packet.g2());
+                var t4 = Unpacker.format(Type.TEXTURE, packet.g2());
+                var t5 = Unpacker.format(Type.TEXTURE, packet.g2());
+                var t6 = Unpacker.format(Type.TEXTURE, packet.g2());
+                lines.add("unknown1=" + t1 + "," + t2 + "," + t3 + "," + t4 + "," + t5 + "," + t6);
+            }
 
             case 4 -> {
                 var count = packet.g1();
@@ -35,7 +43,18 @@ public class Unknown1DefaultsUnpacker {
                 lines.add("unknown4=" + parts);
             }
 
-            default -> throw new IllegalStateException("unknown opcode");
+            case 5 -> {
+                var count = packet.g1();
+                var parts = new StringJoiner(",");
+
+                for (var i = 0; i < count; i++) {
+                    parts.add(Unpacker.format(Type.ENUM, packet.g2null()));
+                }
+
+                lines.add("unknown5=" + parts);
+            }
+
+            default -> throw new IllegalStateException("unknown opcode: " + (packet.arr[packet.pos - 1] & 0xFF));
         }
     }
 }
