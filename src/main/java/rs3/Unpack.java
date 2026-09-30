@@ -612,7 +612,7 @@ public class Unpack {
         for (var name : Files.readAllLines(path)) {
             var comma = name.lastIndexOf(',');
 
-            if (sheets && comma == -1) {
+            if (!sheets || comma == -1) {
                 names.put(name.hashCode(), name);
             } else {
                 var sheet = name.substring(0, comma);
