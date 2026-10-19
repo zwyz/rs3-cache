@@ -283,6 +283,13 @@ public class SyntaxBuilder {
             return;
         }
 
+        if (command == GAMELOGEVENT) {
+            var argumentTypes = new ArrayList<>(Unpacker.getGameLogEventType((int) stack.get(stack.size() - 1).operand));
+            argumentTypes.add(Type.GAMELOGEVENT);
+            buildCommand(code, index, command, operand, argumentTypes, List.of());
+            return;
+        }
+
         // handle regular command
         var argumentTypes = command.arguments;
         var returnTypes = command.returns;

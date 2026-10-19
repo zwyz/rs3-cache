@@ -40,6 +40,8 @@ public class InvUnpacker {
                 }
             }
 
+            case 24 -> lines.add("luaexcluded=yes");
+
             default -> throw new IllegalStateException("unknown opcode");
         }
     }

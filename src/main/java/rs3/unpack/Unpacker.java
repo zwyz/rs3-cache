@@ -14,6 +14,7 @@ public class Unpacker {
     public static final Map<Integer, String> BINARY_NAME = new HashMap<>();
     public static final Map<Integer, Map<Integer, List<Type>>> DBCOLUMN_TYPE = new HashMap<>();
     public static final Map<Integer, List<Type>> API_EVENT_TYPE = new HashMap<>();
+    public static final Map<Integer, List<Type>> GAMELOGEVENT_TYPE = new HashMap<>();
     public static final Map<Integer, Type> PARAM_TYPE = new HashMap<>();
     public static final Map<Integer, Type> ENUM_INPUT_TYPE = new HashMap<>();
     public static final Map<Integer, Type> ENUM_OUTPUT_TYPE = new HashMap<>();
@@ -28,6 +29,7 @@ public class Unpacker {
         BINARY_NAME.clear();
         DBCOLUMN_TYPE.clear();
         API_EVENT_TYPE.clear();
+        GAMELOGEVENT_TYPE.clear();
         PARAM_TYPE.clear();
         ENUM_INPUT_TYPE.clear();
         ENUM_OUTPUT_TYPE.clear();
@@ -681,6 +683,18 @@ public class Unpacker {
         var types = API_EVENT_TYPE.get(id);
         if (types == null) {
             throw new IllegalStateException("unknown apievent ID " + id);
+        }
+        return types;
+    }
+
+    public static void setGameLogEventType(int id, List<Type> types) {
+        GAMELOGEVENT_TYPE.put(id, List.copyOf(types));
+    }
+
+    public static List<Type> getGameLogEventType(int id) {
+        var types = GAMELOGEVENT_TYPE.get(id);
+        if (types == null) {
+            throw new IllegalStateException("unknown gamelogevent ID " + id);
         }
         return types;
     }

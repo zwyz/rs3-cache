@@ -7,6 +7,7 @@
 [command,unknown_command_124](hook $callback,component $target)
 [command,unknown_command_127]()(int)
 [command,unknown_command_128](int $index)(int)
+[command,unknown_command_129]()
 [command,unknown_command_133]
 [command,pluginapi_search_sortby](int $type)
 [command,pluginapi_search_page](int $page,int $size)
@@ -22,6 +23,10 @@
 [command,plugin_info_request](int $remoteid,int $type)(int)
 [command,plugin_info_int](int $remoteid,int $type,int $subindex)(int)
 [command,unknown_command_142](int $remoteid,int $type,int $subindex)(string)
+[command,unknown_command_143](int $remoteid,int $type,int $value)(int)
+[command,unknown_command_144](int $remoteid,int $type)(int)
+[command,unknown_command_145](int $remoteid,int $value)
+[command,unknown_command_146](int $remoteid)(int)
 [command,unknown_command_147](int $remoteid)(int)
 [command,unknown_command_148]()(int)
 [command,unknown_command_149]()(int,int)

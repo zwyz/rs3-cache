@@ -353,6 +353,7 @@ public class Command {
         DB_GETFIELD = findCommand("db_getfield");
         DB_FILTER_VALUE = findCommand("db_filter_value");
         PLUGINAPI_SEND_EVENT = findCommand("pluginapi_send_event");
+        GAMELOGEVENT = findCommand("gamelogevent");
         RUNJAVASCRIPT = findCommand("runjavascript");
     }
 

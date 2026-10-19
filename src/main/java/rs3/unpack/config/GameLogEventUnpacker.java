@@ -11,6 +11,7 @@ public class GameLogEventUnpacker {
     public static List<String> unpack(int id, byte[] data) {
         var lines = new ArrayList<String>();
         var packet = new Packet(data);
+        var types = new ArrayList<Type>();
         lines.add("[" + Unpacker.format(Type.GAMELOGEVENT, id) + "]");
 
         while (true) switch (packet.g1()) {
@@ -19,10 +20,15 @@ public class GameLogEventUnpacker {
                     throw new IllegalStateException("end of file not reached");
                 }
 
+                Unpacker.setGameLogEventType(id, types);
                 return lines;
             }
 
-            case 103 -> lines.add("type=" + Type.byID(packet.gSmart1or2()));
+            case 103 -> {
+                var type = Type.byID(packet.gSmart1or2());
+                types.add(type);
+                lines.add("type=" + type);
+            }
 
             default -> throw new IllegalStateException("unknown opcode");
         }
