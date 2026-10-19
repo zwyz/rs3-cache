@@ -179,17 +179,26 @@ public class Command {
 
         try {
             var opcodes = new HashMap<String, Integer>();
-            Path commandsPath;
+            Path commandsPath = null;
 
             if (Unpack.VERSION < 685) {
                 commandsPath = Path.of("data/opcodes-unscrambled.txt");
-            } else if (Unpack.VERSION < 917) {
-                commandsPath = Path.of("data/opcodes-" + Unpack.VERSION + "-" + Unpack.ID + ".txt");
             } else {
-                commandsPath = Path.of("data/opcodes-" + Unpack.VERSION + (Unpack.BETA ? "-beta" : "") + ".txt");
+                String suffix = Unpack.BETA && Unpack.VERSION >= 917 ? "-beta" : "";
+                Path[] paths = {
+                        Path.of("data/opcodes-" + Unpack.VERSION + suffix + "-" + Unpack.ID + ".txt"),
+                        Path.of("data/opcodes-" + Unpack.VERSION + suffix + ".txt"),
+                };
+
+                for (var path : paths) {
+                    if (Files.exists(path)) {
+                        commandsPath = path;
+                        break;
+                    }
+                }
             }
 
-            MISSING_OPCODES = !Files.exists(commandsPath);
+            MISSING_OPCODES = commandsPath == null || !Files.exists(commandsPath);
 
             if (MISSING_OPCODES) {
                 System.out.println("missing opcodes file " + commandsPath + ", will skip cs2");
