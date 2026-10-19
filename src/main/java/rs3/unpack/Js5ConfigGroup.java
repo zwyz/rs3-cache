@@ -74,7 +74,8 @@ public enum Js5ConfigGroup {
     SEQGROUPTYPE(77),
     VAR_PLAYER_GROUP(80),
     WORLDAREATYPE(83),
-    ACHIEVEMENTTYPE(85);
+    ACHIEVEMENTTYPE(85),
+    APIEVENTTYPE(86);
 
     public final int id;
 

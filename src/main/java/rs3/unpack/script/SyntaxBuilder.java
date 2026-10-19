@@ -275,6 +275,14 @@ public class SyntaxBuilder {
             return;
         }
 
+        if (command == PLUGINAPI_SEND_EVENT) {
+            var argumentTypes = new ArrayList<>(Unpacker.getAPIEventType((int) stack.get(stack.size() - 2).operand));
+            argumentTypes.add(Type.API_EVENT);
+            argumentTypes.add(Type.INT);
+            buildCommand(code, index, command, operand, argumentTypes, List.of());
+            return;
+        }
+
         // handle regular command
         var argumentTypes = command.arguments;
         var returnTypes = command.returns;

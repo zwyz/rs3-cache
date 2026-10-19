@@ -62,6 +62,7 @@ public class Symbols {
         dumpType(Type.JINGLE, path.resolve("jingle.sym"));
         dumpType(Type.CHATCAT, path.resolve("chatcat.sym"));
         dumpType(Type.CHATPHRASE, path.resolve("chatphrase.sym"));
+        dumpType(Type.API_EVENT, path.resolve("apievent.sym"));
 
         if (Unpack.VERSION < 400) {
             dumpType(Type.VAR_PLAYER, path.resolve("varp.sym"));

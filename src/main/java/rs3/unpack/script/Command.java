@@ -168,6 +168,7 @@ public class Command {
     public static Command DB_FIND_REFINE;
     public static Command DB_GETFIELD;
     public static Command DB_FILTER_VALUE;
+    public static Command PLUGINAPI_SEND_EVENT;
     public static Command RUNJAVASCRIPT;
 
     // load commands
@@ -351,6 +352,7 @@ public class Command {
         DB_FIND_REFINE = findCommand("db_find_refine");
         DB_GETFIELD = findCommand("db_getfield");
         DB_FILTER_VALUE = findCommand("db_filter_value");
+        PLUGINAPI_SEND_EVENT = findCommand("pluginapi_send_event");
         RUNJAVASCRIPT = findCommand("runjavascript");
     }
 

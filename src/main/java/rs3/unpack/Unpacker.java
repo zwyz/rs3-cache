@@ -13,6 +13,7 @@ public class Unpacker {
     public static final Map<Integer, String> SCRIPT_NAME = new HashMap<>();
     public static final Map<Integer, String> BINARY_NAME = new HashMap<>();
     public static final Map<Integer, Map<Integer, List<Type>>> DBCOLUMN_TYPE = new HashMap<>();
+    public static final Map<Integer, List<Type>> API_EVENT_TYPE = new HashMap<>();
     public static final Map<Integer, Type> PARAM_TYPE = new HashMap<>();
     public static final Map<Integer, Type> ENUM_INPUT_TYPE = new HashMap<>();
     public static final Map<Integer, Type> ENUM_OUTPUT_TYPE = new HashMap<>();
@@ -26,6 +27,7 @@ public class Unpacker {
         SCRIPT_NAME.clear();
         BINARY_NAME.clear();
         DBCOLUMN_TYPE.clear();
+        API_EVENT_TYPE.clear();
         PARAM_TYPE.clear();
         ENUM_INPUT_TYPE.clear();
         ENUM_OUTPUT_TYPE.clear();
@@ -669,6 +671,18 @@ public class Unpacker {
     public static void setDBColumnType(int table, int column, List<Type> types) {
         var tableTypes = DBCOLUMN_TYPE.computeIfAbsent(table, _ -> new HashMap<>());
         tableTypes.put(column, types);
+    }
+
+    public static void setAPIEventType(int id, List<Type> types) {
+        API_EVENT_TYPE.put(id, List.copyOf(types));
+    }
+
+    public static List<Type> getAPIEventType(int id) {
+        var types = API_EVENT_TYPE.get(id);
+        if (types == null) {
+            throw new IllegalStateException("unknown apievent ID " + id);
+        }
+        return types;
     }
 
     private static List<Type> getDBColumnType(int table, int column) {

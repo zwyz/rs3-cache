@@ -338,6 +338,7 @@ public class Unpack {
         unpackConfigGroup(2, 76, WaterUnpacker::unpack, root.resolve("config/dump.water"));
         unpackConfigGroup(2, 77, SeqGroupUnpacker::unpack, root.resolve("config/dump.seqgroup"));
         unpackConfigGroup(2, 83, WorldAreaUnpacker::unpack, root.resolve("config/dump.worldarea"));
+        unpackConfigGroup(2, 86, APIEventUnpacker::unpack, root.resolve("config/dump.apievent"));
         unpackConfigArchive(57, 7, AchievementUnpacker::unpack, root.resolve("config/dump.achievement")); // 85
         unpackConfigGroup(27, 0, ParticleEmitterUnpacker::unpack, root.resolve("config/dump.particleemitter"));
         unpackConfigGroup(27, 1, ParticleEffectorUnpacker::unpack, root.resolve("config/dump.particleeffector"));

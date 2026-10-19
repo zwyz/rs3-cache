@@ -156,6 +156,8 @@ public class Type {
     // === 933 end ==
     // === 934 end ==
 
+    public static final Type API_EVENT = new Type("apievent", BaseVarType.INTEGER);
+
     // Group 2
     public static final Type LABEL = new Type("label", BaseVarType.INTEGER);
     public static final Type QUEUE = new Type("queue", BaseVarType.INTEGER);
