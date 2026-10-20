@@ -59,6 +59,8 @@ public class DBRowUnpacker {
                 lines.add("table=" + Unpacker.format(Type.DBTABLE, table));
             }
 
+            case 5 -> lines.add("pluginapi=no");
+
             default -> throw new IllegalStateException("unknown opcode");
         }
     }

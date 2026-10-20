@@ -83,6 +83,8 @@ public class EnumUnpacker {
                 lines.add("outputtype=" + type);
             }
 
+            case 103 -> lines.add("pluginapi=no");
+
             default -> throw new IllegalStateException("unknown opcode");
         }
     }

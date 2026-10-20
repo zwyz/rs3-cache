@@ -169,6 +169,7 @@ public class Command {
     public static Command DB_GETFIELD;
     public static Command DB_FILTER_VALUE;
     public static Command PLUGINAPI_SEND_EVENT;
+    public static Command GAMELOGEVENT;
     public static Command RUNJAVASCRIPT;
 
     // load commands

@@ -35,6 +35,8 @@ public class StructUnpacker {
                 }
             }
 
+            case 251 -> lines.add("pluginapi=no");
+
             default -> throw new IllegalStateException("unknown opcode");
         }
     }
