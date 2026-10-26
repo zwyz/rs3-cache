@@ -2283,10 +2283,10 @@ map_setkeeplods,792
 gamelogevent,1614
 pluginapi_send_event,694
 settrackingid,327
-if_setgraphicname,865
-if_getgraphicname,10
-cc_setgraphicname,805
-cc_getgraphicname,477
+if_sethttpsprite,865
+if_gethttpsprite,10
+cc_sethttpsprite,805
+cc_gethttpsprite,477
 cc_setonpluginsearchevent,627
 if_setonpluginsearchevent,1432
 cc_setonpluginstatusevent,40
