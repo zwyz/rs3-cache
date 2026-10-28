@@ -60,7 +60,7 @@ public enum JavaScriptCommand {
         this(id, params, 0);
     }
 
-    public static JavaScriptCommand byID(int id, int version) {
+    public static JavaScriptCommand byID(int id, double version) {
         JavaScriptCommand best = null;
 
         for (var value : values()) {

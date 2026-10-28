@@ -21,7 +21,7 @@ public class InvComponent extends Component {
         draggable = packet.g1() == 1; // 0x10000000
         interactable = packet.g1() == 1; // 0x40000000
         usable = packet.g1() == 1; // 0x80000000
-        if (Unpack.VERSION >= 245) swappable = packet.g1() == 1; // 0x20000000
+        if (Unpack.VERSION >= 245.2) swappable = packet.g1() == 1; // 0x20000000
         paddingx = packet.g1();
         paddingy = packet.g1();
 

@@ -188,8 +188,8 @@ public class Command {
             } else {
                 String suffix = Unpack.BETA && Unpack.VERSION >= 917 ? "-beta" : "";
                 Path[] paths = {
-                        Path.of("data/opcodes-" + Unpack.VERSION + suffix + "-" + Unpack.ID + ".txt"),
-                        Path.of("data/opcodes-" + Unpack.VERSION + suffix + ".txt"),
+                        Path.of("data/opcodes-" + (int) Unpack.VERSION + suffix + "-" + Unpack.ID + ".txt"),
+                        Path.of("data/opcodes-" + (int) Unpack.VERSION + suffix + ".txt"),
                 };
 
                 for (var path : paths) {
@@ -215,7 +215,7 @@ public class Command {
                 var parts = line.split(",");
 
                 if (parts.length >= 3) {
-                    if (Integer.parseInt(parts[2]) > Unpack.VERSION) {
+                    if (Double.parseDouble(parts[2]) > Unpack.VERSION) {
                         continue; // override for higher version
                     }
                 }
@@ -242,7 +242,7 @@ public class Command {
                     }
 
                     if (matcher.group("version") != null) {
-                        var version = Integer.parseInt(matcher.group("version"));
+                        var version = Double.parseDouble(matcher.group("version"));
 
                         if (version > Unpack.VERSION) {
                             continue; // overrides for higher versions

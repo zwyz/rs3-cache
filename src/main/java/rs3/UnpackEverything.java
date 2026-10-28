@@ -13,7 +13,7 @@ public class UnpackEverything {
 
         for (var cache : caches) {
             var parts = cache.split(",");
-            var build = Integer.parseInt(parts[0]);
+            var build = Double.parseDouble(parts[0]);
             var name = parts[1];
             System.out.println("[Cache Unpacker] Unpacking " + name + " build " + build + " (" + (index + 1) + "/" + caches.size() + ")");
 

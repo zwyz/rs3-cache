@@ -39,6 +39,7 @@ import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.StructuredTaskScope;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -50,7 +51,7 @@ public class Unpack {
     public static final boolean DUMP_SYMBOLS = true;
     public static final HttpClient HTTP = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
     public static boolean BETA;
-    public static int VERSION;
+    public static double VERSION;
     public static int ID;
     public static Js5ResourceProvider PROVIDER;
     public static Js5MasterIndex MASTER_INDEX;
@@ -58,7 +59,7 @@ public class Unpack {
     public static final Gson GSON = new GsonBuilder().serializeSpecialFloatingPointValues().create();
     public static final Gson GSON_PRETTY = new GsonBuilder().serializeSpecialFloatingPointValues().setPrettyPrinting().create();
 
-    public static void unpackOpenRS2(String path, int version, String scope, int id, boolean beta) throws IOException {
+    public static void unpackOpenRS2(String path, double version, String scope, int id, boolean beta) throws IOException {
         VERSION = version;
         BETA = beta;
         ID = id;
@@ -73,7 +74,7 @@ public class Unpack {
         }
     }
 
-    public static void unpackPre226(String path, int build, String url) throws IOException, InterruptedException {
+    public static void unpackPre226(String path, double build, String url) throws IOException, InterruptedException {
         VERSION = build;
         BETA = false;
         ID = -1;
@@ -149,7 +150,7 @@ public class Unpack {
             }
         }
 
-        VERSION = version;
+        VERSION = version + (subversion / 10.0);
         BETA = beta;
         ID = -1;
 

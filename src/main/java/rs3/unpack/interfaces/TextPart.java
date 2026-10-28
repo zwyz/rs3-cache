@@ -42,7 +42,7 @@ public class TextPart {
             colour = packet.g4s();
             colouractive = packet.g4s();
             mouseovercolour = packet.g4s();
-            if (Unpack.VERSION >= 245) mouseovercolouractive = packet.g4s();
+            if (Unpack.VERSION >= 245.2) mouseovercolouractive = packet.g4s();
             return;
         }
 
