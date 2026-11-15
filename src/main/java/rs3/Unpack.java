@@ -768,7 +768,7 @@ public class Unpack {
             }
 
             scope.join();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
 
