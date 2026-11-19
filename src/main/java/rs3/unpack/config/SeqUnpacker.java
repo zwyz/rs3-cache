@@ -188,7 +188,7 @@ public class SeqUnpacker {
                             var line = "sound" + i + "=" + Unpacker.format(soundvorbis ? Type.VORBIS : Type.SYNTH, type) + "," + loops + "," + range;
 
                             for (var j = 1; j < count2; ++j) {
-                                line += "," + packet.g2();
+                                line += "," + Unpacker.format(soundvorbis ? Type.VORBIS : Type.SYNTH, packet.g2());
                             }
 
                             lines.add(line);
