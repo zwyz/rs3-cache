@@ -972,7 +972,7 @@ public class Unpack {
         var groups = preloadGroups(archive);
 
         for (var group : archiveIndex.groupId) {
-            if (ID == 500 && group == 1307 || ID == 1187 && group == 1307) {
+            if (ID == 500 && group == 1307 || ID == 1187 && group == 1307 || ID == 2773 && group == 641) {
                 // skip known broken interfaces in caches
                 // these seem to be interfaces that were intended to be deleted, but were not
                 // properly deleted from the cache, so they refer to invalid scripts.
